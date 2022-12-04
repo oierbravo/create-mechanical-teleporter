@@ -1,0 +1,32 @@
+modLoader = "javafml"
+loaderVersion="[43,)"
+license = "MIT License"
+[[mods]]
+modId = "create_mechanical_teleporter"
+version = "${file.jarVersion}"
+displayName = "Create Mechanical Teleporter"
+logoFile="logo.png"
+description = '''
+Mechanical Teleporter.
+'''
+
+[[dependencies.create_mechanical_teleporter]]
+modId = "forge"
+mandatory = true
+versionRange="[43.0.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.create_mechanical_teleporter]]
+modId = "minecraft"
+mandatory = true
+versionRange="[1.19.2,1.20)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.create_mechanical_teleporter]]
+modId = "create"
+mandatory = true
+versionRange="[0.5.0.f,)"
+ordering = "AFTER"
+side = "BOTH"

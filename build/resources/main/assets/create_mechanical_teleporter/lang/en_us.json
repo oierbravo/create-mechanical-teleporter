@@ -1,0 +1,8 @@
+{
+  "block.create_mechanical_teleporter.mechanical_teleporter": "Mechanical Teleporter",
+  "create_mechanical_teleporter.simple_teleport_controller.bind_position": "Linked to %s",
+  "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1": "Freq. #1",
+  "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_2": "Freq. #2",
+  "item.create_mechanical_teleporter.linked_teleport_controller": "Linked Teleport Controller",
+  "item.create_mechanical_teleporter.simple_teleport_controller": "Simple Teleport Controller"
+}

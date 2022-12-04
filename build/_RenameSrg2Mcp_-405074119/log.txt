@@ -1,0 +1,15 @@
+Java Launcher: /home/oier/.jdks/openjdk-17.0.2/bin/java
+Arguments: '--task, SRG_TO_MCP, --input, /home/oier/.gradle/caches/modules-2/files-2.1/dev.latvian.mods/kubejs-forge/1902.6.0-build.96/c4d91445e6d0d6409973cf3b7d4d34f5a85933e6/kubejs-forge-1902.6.0-build.96.jar, --output, /home/oier/.gradle/caches/forge_gradle/deobf_dependencies/dev/latvian/mods/kubejs-forge/1902.6.0-build.96_mapped_parchment_2022.08.10-1.19.2/kubejs-forge-1902.6.0-build.96_mapped_parchment_2022.08.10-1.19.2.jar, --mcp, /home/oier/.gradle/caches/parchmentgradle/org/parchmentmc/data/parchment-1.19.2/2022.08.10/parchment-1.19.2-2022.08.10.zip, --strip-signatures'
+Classpath:
+ - /home/oier/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/installertools/1.3.0/installertools-1.3.0-fatjar.jar
+Working directory: /home/oier/projects/mc-mods/create-mechanical-traders/build/_RenameSrg2Mcp_-405074119
+Main class: net.minecraftforge.installertools.ConsoleTool
+====================================
+Task: SRG_TO_MCP
+Input:  /home/oier/.gradle/caches/modules-2/files-2.1/dev.latvian.mods/kubejs-forge/1902.6.0-build.96/c4d91445e6d0d6409973cf3b7d4d34f5a85933e6/kubejs-forge-1902.6.0-build.96.jar
+Output: /home/oier/.gradle/caches/forge_gradle/deobf_dependencies/dev/latvian/mods/kubejs-forge/1902.6.0-build.96_mapped_parchment_2022.08.10-1.19.2/kubejs-forge-1902.6.0-build.96_mapped_parchment_2022.08.10-1.19.2.jar
+MCP:    /home/oier/.gradle/caches/parchmentgradle/org/parchmentmc/data/parchment-1.19.2/2022.08.10/parchment-1.19.2-2022.08.10.zip
+Loading MCP Data
+Processing ZIP file
+Stripped Manifest of sha digests
+Process complete

@@ -1,0 +1,39 @@
+To refresh this file, delete it and run /reload command again! Last updated: Oct 17, 2022, 12:18:36 AM
+
+#minecraft:lava
+- minecraft:lava (from Default)
+- minecraft:flowing_lava (from Default)
+
+#create:bottomless/deny
+
+#minecraft:water
+- minecraft:water (from Default)
+- minecraft:flowing_water (from Default)
+
+#forge:chocolate
+- create:flowing_chocolate (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- create:chocolate (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- create:flowing_chocolate (from main)
+- create:chocolate (from main)
+
+#forge:milk
+- minecraft:milk? (from )
+- minecraft:flowing_milk? (from )
+
+#forge:tea
+- create:flowing_tea (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- create:tea (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- create:flowing_tea (from main)
+- create:tea (from main)
+
+#create:bottomless/allow
+- minecraft:water (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- minecraft:lava (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- minecraft:water (from main)
+- minecraft:lava (from main)
+
+#forge:honey
+- create:flowing_honey (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- create:honey (from create-1.19.2-0.5.0.f-15_mapped_parchment_2022.08.10-1.19.2-slim.jar)
+- create:flowing_honey (from main)
+- create:honey (from main)
