@@ -1,6 +1,5 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerPacketBase;
 import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportLinkBehaviour;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -10,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class SimpleTeleportControllerBindPacket extends LinkedTeleportControllerPacketBase {
+public class SimpleTeleportControllerBindPacket extends SimpleTeleportControllerPacketBase {
 
 	private int button = 0;
 	private BlockPos linkLocation;

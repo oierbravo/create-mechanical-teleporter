@@ -1,7 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerServerHandler;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.SimpleTeleportControllerServerHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
 import net.minecraft.world.level.Level;
@@ -24,7 +24,7 @@ public class CommonEvents {
 		if (event.phase == Phase.START)
 			return;
 		Level world = event.level;
-		LinkedTeleportControllerServerHandler.tick(world);
+		SimpleTeleportControllerServerHandler.tick(world);
 		ControlsServerHandler.tick(world);
 	}
 

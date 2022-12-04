@@ -1,6 +1,5 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerPacketBase;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
-public class SimpleTeleportControllerActivatePacket extends LinkedTeleportControllerPacketBase {
+public class SimpleTeleportControllerActivatePacket extends SimpleTeleportControllerPacketBase {
 
 	private Collection<Integer> activatedButtons;
 	private boolean press;

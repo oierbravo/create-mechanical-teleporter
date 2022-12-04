@@ -1,7 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.SimpleTeleportControllerItem;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;

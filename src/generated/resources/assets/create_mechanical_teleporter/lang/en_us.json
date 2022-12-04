@@ -1,0 +1,12 @@
+{
+  "block.create_mechanical_teleporter.mechanical_teleporter": "Mechanical Teleporter",
+  "create_mechanical_teleporter.simple_teleport_controller.bind_position": "Linked to %s",
+  "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1": "Freq. #1",
+  "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_2": "Freq. #2",
+  "create_mechanical_teleporter.simple_teleport_controller.not_fast_enough": "Not enough speed in the destination.",
+  "create_mechanical_teleporter.simple_teleport_controller.not_liquid_enough": "Not enough liquid in the destination.",
+  "create_mechanical_teleporter.simple_teleport_controller.not_valid_fluid": "Liquid not valid in the destination.",
+  "create_mechanical_teleporter.simple_teleport_controller.out_of_range": "Destination out of range.",
+  "create_mechanical_teleporter.simple_teleport_controller.overstressed": "Destination overstressed.",
+  "item.create_mechanical_teleporter.simple_teleport_controller": "Simple Teleport Controller"
+}

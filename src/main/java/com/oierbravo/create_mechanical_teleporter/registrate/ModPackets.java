@@ -1,9 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerBindPacket;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerInputPacket;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerStopLecternPacket;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.SimpleTeleportControllerActivatePacket;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.SimpleTeleportControllerBindPacket;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -25,10 +22,8 @@ import static net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER;
 
 public enum ModPackets {
 
-    LINKED_CONTROLLER_INPUT(LinkedTeleportControllerInputPacket.class, LinkedTeleportControllerInputPacket::new, PLAY_TO_SERVER),
-    LINKED_CONTROLLER_BIND(LinkedTeleportControllerBindPacket.class, LinkedTeleportControllerBindPacket::new, PLAY_TO_SERVER),
-    LINKED_CONTROLLER_USE_LECTERN(LinkedTeleportControllerStopLecternPacket.class, LinkedTeleportControllerStopLecternPacket::new,
-                                  PLAY_TO_SERVER),
+//    LINKED_CONTROLLER_USE_LECTERN(LinkedTeleportControllerStopLecternPacket.class, LinkedTeleportControllerStopLecternPacket::new,
+  //                                PLAY_TO_SERVER),
     SIMPLE_CONTROLLER_INPUT(SimpleTeleportControllerActivatePacket.class, SimpleTeleportControllerActivatePacket::new, PLAY_TO_SERVER),
     SIMPLE_CONTROLLER_BIND(SimpleTeleportControllerBindPacket.class, SimpleTeleportControllerBindPacket::new, PLAY_TO_SERVER);
 

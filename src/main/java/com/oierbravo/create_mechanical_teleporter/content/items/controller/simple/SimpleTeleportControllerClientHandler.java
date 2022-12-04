@@ -1,8 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.multiple.LinkedTeleportControllerStopLecternPacket;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModPackets;
 import com.simibubi.create.AllBlocks;
@@ -71,9 +69,9 @@ public class SimpleTeleportControllerClientHandler {
 		packetCooldown = 0;
 		selectedLocation = BlockPos.ZERO;
 
-		if (inLectern())
-			ModPackets.channel.sendToServer(new LinkedTeleportControllerStopLecternPacket(lecternPos));
-		lecternPos = null;
+		//if (inLectern())
+		//	ModPackets.channel.sendToServer(new LinkedTeleportControllerStopLecternPacket(lecternPos));
+		//lecternPos = null;
 
 		SimpleTeleportControllerItemRenderer.resetButtons();
 	}

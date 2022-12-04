@@ -41,7 +41,7 @@ public class TeleportLinkHandler {
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
 			return;
-		if (ModItems.LINKED_TELEPORT_CONTROLLER.isIn(heldItem))
+		if (ModItems.SIMPLE_TELEPORT_CONTROLLER.isIn(heldItem))
 			return;
 		if (AllItems.WRENCH.isIn(heldItem))
 			return;

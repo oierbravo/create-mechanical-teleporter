@@ -1,0 +1,12 @@
+{
+  "block.create_mechanical_teleporter.mechanical_teleporter": "ɹǝʇɹodǝןǝ⟘ ןɐɔıuɐɥɔǝW",
+  "create_mechanical_teleporter.simple_teleport_controller.bind_position": "%s oʇ pǝʞuıꞀ",
+  "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1": "Ɩ# ˙bǝɹℲ",
+  "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_2": "ᄅ# ˙bǝɹℲ",
+  "create_mechanical_teleporter.simple_teleport_controller.not_fast_enough": "˙uoıʇɐuıʇsǝp ǝɥʇ uı pǝǝds ɥbnouǝ ʇoN",
+  "create_mechanical_teleporter.simple_teleport_controller.not_liquid_enough": "˙uoıʇɐuıʇsǝp ǝɥʇ uı pınbıן ɥbnouǝ ʇoN",
+  "create_mechanical_teleporter.simple_teleport_controller.not_valid_fluid": "˙uoıʇɐuıʇsǝp ǝɥʇ uı pıןɐʌ ʇou pınbıꞀ",
+  "create_mechanical_teleporter.simple_teleport_controller.out_of_range": "˙ǝbuɐɹ ɟo ʇno uoıʇɐuıʇsǝᗡ",
+  "create_mechanical_teleporter.simple_teleport_controller.overstressed": "˙pǝssǝɹʇsɹǝʌo uoıʇɐuıʇsǝᗡ",
+  "item.create_mechanical_teleporter.simple_teleport_controller": "ɹǝןןoɹʇuoƆ ʇɹodǝןǝ⟘ ǝןdɯıS"
+}
