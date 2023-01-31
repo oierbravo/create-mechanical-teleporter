@@ -58,6 +58,7 @@ public class MechanicalTeleporter
         registrate().addRawLang("create_mechanical_teleporter.simple_teleport_controller.not_valid_fluid", "Liquid not valid in the destination.");
         registrate().addRawLang("create_mechanical_teleporter.simple_teleport_controller.not_liquid_enough", "Not enough liquid in the destination.");
         registrate().addRawLang("create_mechanical_teleporter.simple_teleport_controller.out_of_range", "Destination out of range.");
+        registrate().addRawLang("create_mechanical_teleporter.simple_teleport_controller.not_found", "Destination not found or reachable.");
         //registrate().addRawLang("create_mechanical_extruder.ponder.extruder.header", "Block generation");
         //registrate().addRawLang("create_mechanical_extruder.ponder.extruder.text_1", "The Extruder uses rotational force to generate blocks");
         //registrate().addRawLang("create_mechanical_extruder.ponder.extruder.text_2", "Generation depends on side & below blocks.");
@@ -79,6 +80,10 @@ public class MechanicalTeleporter
     }
      public static CreateRegistrate registrate() {
         return registrate.get();
+    }
+    public static CreateRegistrate createRregistrate() {
+        // return Create.REGISTRATE;
+        return Create.registrate();
     }
 
     public static ResourceLocation asResource(String path) {

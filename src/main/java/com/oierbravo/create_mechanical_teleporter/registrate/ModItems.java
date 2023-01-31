@@ -33,9 +33,8 @@ public class ModItems {
 
     public static void register() {
 
-        //Create.registrate().addToSection(LINKED_TELEPORT_CONTROLLER, AllSections.LOGISTICS);
-        //Create.registrate().addToSection(SIMPLE_TELEPORT_CONTROLLER, AllSections.LOGISTICS);
-        Create.REGISTRATE.addToSection(SIMPLE_TELEPORT_CONTROLLER, AllSections.LOGISTICS);
+        MechanicalTeleporter.createRregistrate().addToSection(SIMPLE_TELEPORT_CONTROLLER, AllSections.LOGISTICS);
+        //Create.REGISTRATE.addToSection(SIMPLE_TELEPORT_CONTROLLER, AllSections.LOGISTICS);
     }
 
 }

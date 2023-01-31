@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
-public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITeleportLinkable {
+public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITeleportLinkable{
     public static final BehaviourType<TeleportLinkBehaviour> TYPE = new BehaviourType<>();
     TeleportLinkNetworkHandler.Frequency frequencyFirst;
     TeleportLinkNetworkHandler.Frequency frequencyLast;

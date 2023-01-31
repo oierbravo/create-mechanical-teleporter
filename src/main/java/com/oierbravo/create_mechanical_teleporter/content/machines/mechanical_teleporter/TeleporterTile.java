@@ -1,17 +1,11 @@
 package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
-import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportLinkBehaviour;
-import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
-import com.simibubi.create.foundation.block.BlockStressValues;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -26,12 +20,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.common.world.ForgeChunkManager;
 
 import java.util.List;
 
@@ -120,7 +114,10 @@ public class TeleporterTile extends KineticTileEntity {
             pPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
             Minecraft mc = Minecraft.getInstance();
             LocalPlayer localPlayer = mc.player;
-            localPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+            //try {
+                localPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+
+            //} catch ()
 
         }
 
@@ -173,4 +170,6 @@ public class TeleporterTile extends KineticTileEntity {
         super.setRemoved();
         fluidCapability.invalidate();
     }
+
+
 }

@@ -44,8 +44,6 @@ public class ModBlocks {
 
 
     public static void register() {
-
-        Create.REGISTRATE.addToSection(MECHANICAL_TELEPORTER, AllSections.LOGISTICS);
-        //Create.registrate().addToSection(MECHANICAL_TELEPORTER, AllSections.LOGISTICS);
+        MechanicalTeleporter.createRregistrate().addToSection(MECHANICAL_TELEPORTER, AllSections.LOGISTICS);
     }
 }

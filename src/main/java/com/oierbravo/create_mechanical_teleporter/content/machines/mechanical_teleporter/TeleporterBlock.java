@@ -68,5 +68,8 @@ public class TeleporterBlock extends HorizontalKineticBlock implements ITE<Telep
         return false;
     }
 
-
+    @Override
+    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, worldIn, pos, oldState, isMoving);
+    }
 }

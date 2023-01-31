@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.LevelAccessor;
 import org.apache.logging.log4j.core.jmx.Server;
@@ -49,6 +50,8 @@ public class SimpleTeleportControllerServerHandler {
 			ITeleportLinkable teleportLink = teleport.iterator().next();
 			teleportLink.doTeleport(pPlayer);
 
+		} else {
+			pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.not_found"),true);
 		}
 	}
 
