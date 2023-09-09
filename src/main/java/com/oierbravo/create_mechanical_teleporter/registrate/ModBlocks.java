@@ -10,6 +10,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
@@ -17,14 +18,12 @@ import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 public class ModBlocks {
 
 
-    private static final CreateRegistrate REGISTRATE = MechanicalTeleporter.registrate()
-            .creativeModeTab(() ->  ModCreativeTab.MAIN);
-
+    private static final CreateRegistrate REGISTRATE = MechanicalTeleporter.registrate();
 
     public static final BlockEntry<TeleporterBlock> MECHANICAL_TELEPORTER = REGISTRATE.block("mechanical_teleporter", TeleporterBlock::new)
             .initialProperties(SharedProperties::softMetal)
+            .properties(p -> p.mapColor(MapColor.METAL))
             .properties(p -> p.lightLevel($ -> 5))
-            .properties(p -> p.color(DyeColor.ORANGE.getMaterialColor()))
             .properties(BlockBehaviour.Properties::noOcclusion)
             .transform(pickaxeOnly())
             .transform(BlockStressDefaults.setImpact(8.0))

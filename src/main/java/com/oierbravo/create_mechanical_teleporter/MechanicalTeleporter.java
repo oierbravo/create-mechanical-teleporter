@@ -40,9 +40,6 @@ public class MechanicalTeleporter
         ModBlocks.register();
         ModBlockEntities.register();
         ModItems.register();
-
-        //ModContainerTypes.register();
-
         generateLangEntries();
     }
 

@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -47,9 +48,9 @@ public enum ModGuiTextures implements ScreenElement {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void render(PoseStack ms, int x, int y) {
+    public void render(GuiGraphics pGuiGraphics, int x, int y) {
         bind();
-        GuiComponent.blit(ms, x, y, 0, startX, startY, width, height, 256, 256);
+        pGuiGraphics.blit(MECHANICAL_TELEPORTER.location, x, y, 0, startX, startY, width, height, 256, 256);
     }
 
     @OnlyIn(Dist.CLIENT)

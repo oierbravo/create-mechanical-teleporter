@@ -11,8 +11,7 @@ import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 public class ModItems {
 
 
-    private static final CreateRegistrate REGISTRATE = MechanicalTeleporter.registrate()
-            .creativeModeTab(() ->  ModCreativeTab.MAIN);
+    private static final CreateRegistrate REGISTRATE = MechanicalTeleporter.registrate();
 
     public static final ItemEntry<TeleportWandItem> TELEPORT_WAND =
             REGISTRATE.item("teleport_wand", TeleportWandItem::new)
