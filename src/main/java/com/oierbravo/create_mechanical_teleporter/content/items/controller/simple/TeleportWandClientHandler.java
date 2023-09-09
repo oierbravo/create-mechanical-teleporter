@@ -3,14 +3,10 @@ package com.oierbravo.create_mechanical_teleporter.content.items.controller.simp
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModPackets;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ControlsUtil;
-import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -24,9 +20,9 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 import java.util.*;
 
-public class SimpleTeleportControllerClientHandler {
+public class TeleportWandClientHandler {
 
-	public static final IGuiOverlay OVERLAY = SimpleTeleportControllerClientHandler::renderOverlay;
+	public static final IGuiOverlay OVERLAY = TeleportWandClientHandler::renderOverlay;
 
 	public static Mode MODE = Mode.IDLE;
 	public static int PACKET_RATE = 5;
@@ -41,43 +37,20 @@ public class SimpleTeleportControllerClientHandler {
 	public static void activate() {
 
 		if(MODE == Mode.IDLE){
-			ModPackets.channel.sendToServer(new SimpleTeleportControllerActivatePacket( true));
+			ModPackets.channel.sendToServer(new TeleportWandActivatePacket( true));
 		}
 	}
-
-	public static void activateInLectern(BlockPos lecternAt) {
-		if (MODE == Mode.IDLE) {
-			MODE = Mode.ACTIVE;
-			lecternPos = lecternAt;
-		}
-	}
-
-	public static void deactivateInLectern() {
-		if (MODE == Mode.ACTIVE && inLectern()) {
-			MODE = Mode.IDLE;
-			onReset();
-		}
-	}
-
-	public static boolean inLectern() {
-		return lecternPos != null;
-	}
-
 	protected static void onReset() {
 		ControlsUtil.getControls()
 			.forEach(kb -> kb.setDown(ControlsUtil.isActuallyPressed(kb)));
 		packetCooldown = 0;
 		selectedLocation = BlockPos.ZERO;
 
-		//if (inLectern())
-		//	ModPackets.channel.sendToServer(new LinkedTeleportControllerStopLecternPacket(lecternPos));
-		//lecternPos = null;
 
-		SimpleTeleportControllerItemRenderer.resetButtons();
 	}
 
 	public static void tick() {
-		SimpleTeleportControllerItemRenderer.tick();
+		//TeleportWandItemRenderer.tick();
 
 		if (packetCooldown > 0)
 			packetCooldown--;
@@ -92,21 +65,13 @@ public class SimpleTeleportControllerClientHandler {
 			return;
 		}
 
-		if (!inLectern() && !ModItems.SIMPLE_TELEPORT_CONTROLLER.isIn(heldItem)) {
+		if (!ModItems.TELEPORT_WAND.isIn(heldItem)) {
 			heldItem = player.getOffhandItem();
-			if (!ModItems.SIMPLE_TELEPORT_CONTROLLER.isIn(heldItem)) {
+			if (!ModItems.TELEPORT_WAND.isIn(heldItem)) {
 				MODE = Mode.IDLE;
 				onReset();
 				return;
 			}
-		}
-
-		if (inLectern() && AllBlocks.LECTERN_CONTROLLER.get()
-			.getTileEntityOptional(mc.level, lecternPos)
-			.map(te -> !te.isUsedBy(mc.player))
-			.orElse(true)) {
-			deactivateInLectern();
-			return;
 		}
 
 		/*if (mc.screen != null) {
@@ -125,7 +90,7 @@ public class SimpleTeleportControllerClientHandler {
 
 
 
-		if (MODE == Mode.BIND) {
+		/*if (MODE == Mode.BIND) {
 			VoxelShape shape = mc.level.getBlockState(selectedLocation)
 				.getShape(mc.level, selectedLocation);
 			if (!shape.isEmpty())
@@ -135,13 +100,13 @@ public class SimpleTeleportControllerClientHandler {
 					.lineWidth(1 / 16f);
 			LinkBehaviour linkBehaviour = TileEntityBehaviour.get(mc.level, selectedLocation, LinkBehaviour.TYPE);
 			if (linkBehaviour != null) {
-				ModPackets.channel.sendToServer(new SimpleTeleportControllerBindPacket( selectedLocation));
+				ModPackets.channel.sendToServer(new TeleporWandBindPacket( selectedLocation));
 				Lang.translate("simple_teleport_controller.key_bound", "TODO")
 						.sendStatus(mc.player);
 			}
 			MODE = Mode.IDLE;
 
-		}
+		}*/
 
 	}
 
@@ -158,10 +123,10 @@ public class SimpleTeleportControllerClientHandler {
 		ItemStack heldItem = player.getMainHandItem();
 
 
-		if(!ModItems.SIMPLE_TELEPORT_CONTROLLER.isIn(heldItem)){
+		if(!ModItems.TELEPORT_WAND.isIn(heldItem)){
 			ItemStack offHandItem = player.getOffhandItem();
 
-			if(!ModItems.SIMPLE_TELEPORT_CONTROLLER.isIn(offHandItem)){
+			if(!ModItems.TELEPORT_WAND.isIn(offHandItem)){
 				return;
 			}
 		}
@@ -197,7 +162,7 @@ public class SimpleTeleportControllerClientHandler {
 		poseStack.popPose();
 	}
 
-	public static void activateBind(BlockPos pos) {
+	/*public static void activateBind(BlockPos pos) {
 		selectedLocation = pos;
 		Minecraft mc = Minecraft.getInstance();
 		assert mc.level != null;
@@ -210,8 +175,8 @@ public class SimpleTeleportControllerClientHandler {
 					.lineWidth(1 / 16f);
 		LocalPlayer player = mc.player;
 		AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
-		ModPackets.channel.sendToServer(new SimpleTeleportControllerBindPacket( selectedLocation));
-	}
+		ModPackets.channel.sendToServer(new TeleporWandBindPacket( selectedLocation));
+	}*/
 
 
 	public enum Mode {

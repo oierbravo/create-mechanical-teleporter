@@ -1,11 +1,10 @@
 package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
 import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportLinkBehaviour;
-import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.kinetics.base.IRotate;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -22,15 +21,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.minecraftforge.common.world.ForgeChunkManager;
 
 import java.util.List;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-public class TeleporterTile extends KineticTileEntity {
+public class TeleporterBlockEntity extends KineticBlockEntity {
     //private final FluidTank fluidTankHandler = createFluidTank();
     protected FluidTank fluidTank;
 
@@ -39,17 +35,16 @@ public class TeleporterTile extends KineticTileEntity {
 
     private TeleportLinkBehaviour teleport;
 
-
-    public TeleporterTile(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+    public TeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 
         super(typeIn, pos, state);
-        fluidTank = createFluidTank();
-        fluidCapability = LazyOptional.of(() -> fluidTank);
+        //fluidTank = createFluidTank();
+        //fluidCapability = LazyOptional.of(() -> fluidTank);
     }
-    public static int FLUID_CAPACITY = 2000;
-    public int FLUID_AMOUNT_NEEDED = 1000;
+    //public static int FLUID_CAPACITY = 2000;
+    //public int FLUID_AMOUNT_NEEDED = 1000;
     public ResourceLocation FLUID = new ResourceLocation("minecraft/lava");
-    private FluidTank createFluidTankOld() {
+    /*private FluidTank createFluidTankOld() {
 
         return new FluidTank(FLUID_CAPACITY) {
             @Override
@@ -61,11 +56,11 @@ public class TeleporterTile extends KineticTileEntity {
             }
 
         };
-    }
-    protected SmartFluidTank createFluidTank() {
+    }*/
+    /*protected SmartFluidTank createFluidTank() {
         return new SmartFluidTank(getCapacityMultiplier(), this::onFluidStackChanged);
-    }
-    protected void onFluidStackChanged(FluidStack newFluidStack) {
+    }*/
+    /*protected void onFluidStackChanged(FluidStack newFluidStack) {
         if (!hasLevel())
             return;
 
@@ -75,32 +70,27 @@ public class TeleporterTile extends KineticTileEntity {
         }
 
 
-    }
-    public static int getCapacityMultiplier() {
+    }*/
+    /*public static int getCapacityMultiplier() {
         return FLUID_CAPACITY;
-    }
-    @Override
+    }*/
+    /*@Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (isFluidHandlerCap(cap))
             return fluidCapability.cast();
         return super.getCapability(cap, side);
-    }
+    }*/
 
     @Override
-    public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
 
         createTeleport();
         behaviours.add(teleport);
-
-
     }
 
-
     protected void createTeleport() {
-        Pair<ValueBoxTransform, ValueBoxTransform> slots =
-                ValueBoxTransform.Dual.makeSlots(TeleportLinkFrequencySlot::new);
-        teleport = new TeleportLinkBehaviour(this, slots);
+         teleport = new TeleportLinkBehaviour(this);
     }
 
 
@@ -109,7 +99,7 @@ public class TeleporterTile extends KineticTileEntity {
 
 
         if(checkRequerimentsForTeleport(pPlayer)){
-            consumeFluid();
+            //consumeFluid();
             BlockPos destination = this.getBlockPos().above();
             pPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
             Minecraft mc = Minecraft.getInstance();
@@ -138,21 +128,21 @@ public class TeleporterTile extends KineticTileEntity {
             pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.not_valid_fluid"),true);
             return false;
         }
-        if(this.fluidTank.getFluidAmount() < FLUID_AMOUNT_NEEDED){
+       /* if(this.fluidTank.getFluidAmount() < FLUID_AMOUNT_NEEDED){
             pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.not_enough_fluid"),true);
             return false;
-        }
+        }*/
 
         return true;
     }
-    public void consumeFluid(){
+    /*public void consumeFluid(){
         this.fluidTank.drain(FLUID_AMOUNT_NEEDED, IFluidHandler.FluidAction.EXECUTE);
-    }
+    }*/
 
     public TeleportLinkBehaviour getTeleport() {
         return teleport;
     }
-    @Override
+    /*@Override
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.put("TankContent", fluidTank.writeToNBT(new CompoundTag()));
@@ -164,12 +154,8 @@ public class TeleporterTile extends KineticTileEntity {
         super.read(compound, clientPacket);
         fluidTank.readFromNBT(compound.getCompound("TankContent"));
 
-    }
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        fluidCapability.invalidate();
-    }
+    }*/
+
 
 
 }

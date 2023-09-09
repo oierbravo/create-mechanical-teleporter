@@ -1,14 +1,12 @@
-package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
+package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.ControlsUtil;
-import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -20,8 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
-
-public class SimpleTeleportControllerScreen extends AbstractSimiContainerScreen<SimpleTeleportControllerContainer> {
+/*
+public class TeleporterScreen extends AbstractSimiContainerScreen<TeleporterContainer> {
 
 	protected ModGuiTextures background;
 	private List<Rect2i> extraAreas = Collections.emptyList();
@@ -29,7 +27,7 @@ public class SimpleTeleportControllerScreen extends AbstractSimiContainerScreen<
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	public SimpleTeleportControllerScreen(SimpleTeleportControllerContainer container, Inventory inv, Component title) {
+	public TeleporterScreen(TeleporterContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
 		this.background = ModGuiTextures.SIMPLE_TELEPORT_CONTROLLER;
 	}
@@ -121,4 +119,4 @@ public class SimpleTeleportControllerScreen extends AbstractSimiContainerScreen<
 		return extraAreas;
 	}
 
-}
+}*/

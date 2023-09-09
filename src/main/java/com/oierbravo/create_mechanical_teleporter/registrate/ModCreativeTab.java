@@ -17,6 +17,6 @@ public class ModCreativeTab extends CreativeModeTab {
 
 	@Override
 	public ItemStack makeIcon() {
-		return new ItemStack(Items.ACACIA_BOAT);
+		return new ItemStack(ModBlocks.MECHANICAL_TELEPORTER.get());
 	}
 }

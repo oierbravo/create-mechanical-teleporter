@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
-	"render_layer": "translucent",
+	"render_layer": "minecraft:translucent",
 	"textures": {
 		"4": "create:block/brass_casing",
 		"5": "create:block/brass_gearbox",

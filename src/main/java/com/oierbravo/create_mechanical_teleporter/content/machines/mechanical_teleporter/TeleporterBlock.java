@@ -1,10 +1,8 @@
 package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
-import com.oierbravo.create_mechanical_teleporter.registrate.ModTiles;
-import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticBlock;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.item.ItemHelper;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
+import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
+import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -15,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
-public class TeleporterBlock extends HorizontalKineticBlock implements ITE<TeleporterTile> {
+public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity> {
     public TeleporterBlock(Properties properties) {
         super(properties);
     }
@@ -32,13 +30,13 @@ public class TeleporterBlock extends HorizontalKineticBlock implements ITE<Telep
 
 
     @Override
-    public Class<TeleporterTile> getTileEntityClass() {
-        return TeleporterTile.class;
+    public Class<TeleporterBlockEntity> getBlockEntityClass() {
+        return TeleporterBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends TeleporterTile> getTileEntityType() {
-        return ModTiles.MECHANICAL_TELEPORTER.get();
+    public BlockEntityType<? extends TeleporterBlockEntity> getBlockEntityType() {
+        return ModBlockEntities.MECHANICAL_TELEPORTER.get();
     }
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -57,7 +55,7 @@ public class TeleporterBlock extends HorizontalKineticBlock implements ITE<Telep
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-            withTileEntityDo(worldIn, pos, TeleporterTile::setRemoved);
+            withBlockEntityDo(worldIn, pos, TeleporterBlockEntity::setRemoved);
 
             worldIn.removeBlockEntity(pos);
         }

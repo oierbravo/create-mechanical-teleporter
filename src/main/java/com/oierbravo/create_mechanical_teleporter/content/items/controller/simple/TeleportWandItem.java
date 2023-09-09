@@ -34,8 +34,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class SimpleTeleportControllerItem extends Item  implements MenuProvider {
-    public SimpleTeleportControllerItem(Properties pProperties) {
+//public class TeleportWandItem extends Item  implements MenuProvider {
+public class TeleportWandItem extends Item {
+    public TeleportWandItem(Properties pProperties) {
         super(pProperties);
     }
     @Override
@@ -49,12 +50,8 @@ public class SimpleTeleportControllerItem extends Item  implements MenuProvider 
 
         if (player.mayBuild()) {
             if (player.isShiftKeyDown()) {
-                if (AllBlocks.LECTERN_CONTROLLER.has(hitState)) {
-                    if (!world.isClientSide)
-                        AllBlocks.LECTERN_CONTROLLER.get().withTileEntityDo(world, pos, te ->
-                                te.swapControllers(stack, player, ctx.getHand(), hitState));
-                    return InteractionResult.SUCCESS;
-                }
+
+
             } else {
                 if (ModBlocks.MECHANICAL_TELEPORTER.has(hitState)) {
                     if (world.isClientSide)
@@ -63,17 +60,6 @@ public class SimpleTeleportControllerItem extends Item  implements MenuProvider 
                             .addCooldown(this, 2);
                     return InteractionResult.SUCCESS;
                 }
-
-                if (hitState.is(Blocks.LECTERN) && !hitState.getValue(LecternBlock.HAS_BOOK)) {
-                    if (!world.isClientSide) {
-                        ItemStack lecternStack = player.isCreative() ? stack.copy() : stack.split(1);
-                        AllBlocks.LECTERN_CONTROLLER.get().replaceLectern(hitState, world, pos, lecternStack);
-                    }
-                    return InteractionResult.SUCCESS;
-                }
-
-                if (AllBlocks.LECTERN_CONTROLLER.has(hitState))
-                    return InteractionResult.PASS;
             }
         }
 
@@ -86,9 +72,9 @@ public class SimpleTeleportControllerItem extends Item  implements MenuProvider 
 
         if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!world.isClientSide && player instanceof ServerPlayer && player.mayBuild())
-                NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
-                    buf.writeItem(heldItem);
-                });
+               // NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
+               //     buf.writeItem(heldItem);
+               // });
             return InteractionResultHolder.success(heldItem);
         }
 
@@ -104,21 +90,22 @@ public class SimpleTeleportControllerItem extends Item  implements MenuProvider 
 
     @OnlyIn(Dist.CLIENT)
     private void toggleBindMode(BlockPos pos) {
-        SimpleTeleportControllerClientHandler.toggleBindMode(pos);
+        TeleportWandClientHandler.toggleBindMode(pos);
     }
     @OnlyIn(Dist.CLIENT)
     private void activateBind(BlockPos pos) {
-        SimpleTeleportControllerClientHandler.activateBind(pos);
+
+        //TeleportWandClientHandler.activateBind(pos);
     }
 
 
     @OnlyIn(Dist.CLIENT)
     private void clickActivate() {
-        SimpleTeleportControllerClientHandler.activate();
+        TeleportWandClientHandler.activate();
     }
     public static ItemStackHandler getFrequencyItems(ItemStack stack) {
         ItemStackHandler newInv = new ItemStackHandler(12);
-        if (ModItems.SIMPLE_TELEPORT_CONTROLLER.get() != stack.getItem())
+        if (ModItems.TELEPORT_WAND.get() != stack.getItem())
             throw new IllegalArgumentException("Cannot get frequency items from non-controller: " + stack);
         CompoundTag invNBT = stack.getOrCreateTagElement("Items");
         if (!invNBT.isEmpty())
@@ -126,28 +113,16 @@ public class SimpleTeleportControllerItem extends Item  implements MenuProvider 
         return newInv;
     }
 
-    public static Couple<TeleportLinkNetworkHandler.Frequency> toFrequency(ItemStack controller, int slot) {
-        ItemStackHandler frequencyItems = getFrequencyItems(controller);
-        return Couple.create(TeleportLinkNetworkHandler.Frequency.of(frequencyItems.getStackInSlot(slot * 2)),
-                TeleportLinkNetworkHandler.Frequency.of(frequencyItems.getStackInSlot(slot * 2 + 1)));
-    }
-
-
     @Override
     @OnlyIn(Dist.CLIENT)
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(SimpleCustomRenderer.create(this, new SimpleTeleportControllerItemRenderer()));
+        consumer.accept(SimpleCustomRenderer.create(this, new TeleportWandItemRenderer()));
     }
 
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("item.create_mechanical_teleporter.simple_teleport_controller");
-    }
-
-    @Nullable
+    /*@Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         ItemStack heldItem = pPlayer.getMainHandItem();
-        return SimpleTeleportControllerContainer.create(pContainerId, pPlayerInventory, heldItem);
-    }
+        return TeleporterContainer.create(pContainerId, pPlayerInventory, heldItem);
+    }*/
 }

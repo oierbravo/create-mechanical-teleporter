@@ -6,6 +6,7 @@ import net.minecraft.client.resources.model.BakedModel;
 
 public class MechanicalTeleporterCustomRendererItemModel extends CustomRenderedItemModel {
     public MechanicalTeleporterCustomRendererItemModel(BakedModel template, String basePath) {
-        super(template, MechanicalTeleporter.MODID, basePath);
+        //super(template, MechanicalTeleporter.MODID, basePath);
+        super(template);
     }
 }

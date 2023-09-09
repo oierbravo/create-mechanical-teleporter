@@ -3,13 +3,10 @@ package com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behavio
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.ITeleportLinkable;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportLinkNetworkHandler;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterTile;
-import com.simibubi.create.Create;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlockEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.core.BlockPos;
@@ -20,28 +17,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.function.Consumer;
+import java.util.UUID;
 import java.util.function.Function;
-import java.util.function.IntConsumer;
 
-public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITeleportLinkable{
+public class TeleportLinkBehaviour extends BlockEntityBehaviour implements ITeleportLinkable{
     public static final BehaviourType<TeleportLinkBehaviour> TYPE = new BehaviourType<>();
-    TeleportLinkNetworkHandler.Frequency frequencyFirst;
-    TeleportLinkNetworkHandler.Frequency frequencyLast;
-    ValueBoxTransform firstSlot;
-    ValueBoxTransform secondSlot;
     Vec3 textShift;
+
+    UUID uuid;
 
 
     public boolean newPosition;
     private BooleanConsumer signalCallback;
 
-    public TeleportLinkBehaviour(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots) {
+    public TeleportLinkBehaviour(SmartBlockEntity te) {
         super(te);
-        frequencyFirst = TeleportLinkNetworkHandler.Frequency.EMPTY;
-        frequencyLast = TeleportLinkNetworkHandler.Frequency.EMPTY;
-        firstSlot = slots.getLeft();
-        secondSlot = slots.getRight();
         textShift = Vec3.ZERO;
         newPosition = true;
     }
@@ -52,15 +42,16 @@ public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITelep
     public void doTeleport(ServerPlayer pPlayer) {
         if (!newPosition)
             return;
-        if(this.tileEntity instanceof TeleporterTile tile){
+        if(this.blockEntity instanceof TeleporterBlockEntity tile){
             tile.doTeleport(pPlayer);
         }
 
     }
 
-
-
-
+    @Override
+    public UUID getUUID() {
+        return null;
+    }
 
 
     @Override
@@ -73,13 +64,13 @@ public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITelep
     }
 
     @Override
-    public Couple<TeleportLinkNetworkHandler.Frequency> getNetworkKey() {
-        return Couple.create(frequencyFirst, frequencyLast);
+    public UUID getNetworkKey() {
+        return uuid;
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void unload() {
+        super.unload();
         if (getWorld().isClientSide)
             return;
         getHandler().removeFromNetwork(getWorld(), this);
@@ -90,48 +81,11 @@ public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITelep
         return true;
     }
 
-    @Override
-    public void write(CompoundTag nbt, boolean clientPacket) {
-        super.write(nbt, clientPacket);
-        nbt.put("TeleportFrequencyFirst", frequencyFirst.getStack()
-                .save(new CompoundTag()));
-        nbt.put("TeleportFrequencyLast", frequencyLast.getStack()
-                .save(new CompoundTag()));
-        nbt.putLong("TeleportLastKnownPosition", tileEntity.getBlockPos()
-                .asLong());
-    }
 
-    @Override
-    public void read(CompoundTag nbt, boolean clientPacket) {
-        long positionInTag = tileEntity.getBlockPos()
-                .asLong();
-        long positionKey = nbt.getLong("TeleportLastKnownPosition");
-        newPosition = positionInTag != positionKey;
+    public void setUUID(boolean uuid) {
 
-        super.read(nbt, clientPacket);
-        frequencyFirst = TeleportLinkNetworkHandler.Frequency.of(ItemStack.of(nbt.getCompound("TeleportFrequencyFirst")));
-        frequencyLast = TeleportLinkNetworkHandler.Frequency.of(ItemStack.of(nbt.getCompound("TeleportFrequencyLast")));
-    }
 
-    public void setFrequency(boolean first, ItemStack stack) {
-        stack = stack.copy();
-        stack.setCount(1);
-        ItemStack toCompare = first ? frequencyFirst.getStack() : frequencyLast.getStack();
-        boolean changed =
-                !ItemStack.isSame(stack, toCompare) || !ItemStack.tagMatches(stack, toCompare);
-
-        if (changed)
-            getHandler().removeFromNetwork(getWorld(), this);
-
-        if (first)
-            frequencyFirst = TeleportLinkNetworkHandler.Frequency.of(stack);
-        else
-            frequencyLast = TeleportLinkNetworkHandler.Frequency.of(stack);
-
-        if (!changed)
-            return;
-
-        tileEntity.sendData();
+        blockEntity.sendData();
         getHandler().addToNetwork(getWorld(), this);
     }
 
@@ -141,18 +95,14 @@ public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITelep
     }
 
     private TeleportLinkNetworkHandler getHandler() {
-        return MechanicalTeleporter.TELEPORT_LINK_NETWORK_HANDLER;
+        return MechanicalTeleporter.TELEPORT_NETWORK_HANDLER;
     }
 
     public static class SlotPositioning {
-        Function<BlockState, Pair<Vec3, Vec3>> offsets;
-        Function<BlockState, Vec3> rotation;
         float scale;
 
         public SlotPositioning(Function<BlockState, Pair<Vec3, Vec3>> offsetsForState,
                                Function<BlockState, Vec3> rotationForState) {
-            offsets = offsetsForState;
-            rotation = rotationForState;
             scale = 1;
         }
 
@@ -163,15 +113,15 @@ public class TeleportLinkBehaviour extends TileEntityBehaviour implements ITelep
 
     }
 
-    public boolean testHit(Boolean first, Vec3 hit) {
-        BlockState state = tileEntity.getBlockState();
-        Vec3 localHit = hit.subtract(Vec3.atLowerCornerOf(tileEntity.getBlockPos()));
+   /* public boolean testHit(Boolean first, Vec3 hit) {
+        BlockState state = blockEntity.getBlockState();
+        Vec3 localHit = hit.subtract(Vec3.atLowerCornerOf(blockEntity.getBlockPos()));
         return (first ? firstSlot : secondSlot).testHit(state, localHit);
-    }
+    }*/
 
     @Override
     public boolean isAlive() {
-        return !tileEntity.isRemoved() && getWorld().getBlockEntity(getPos()) == tileEntity;
+        return !blockEntity.isRemoved() && getWorld().getBlockEntity(getPos()) == blockEntity;
     }
 
     @Override

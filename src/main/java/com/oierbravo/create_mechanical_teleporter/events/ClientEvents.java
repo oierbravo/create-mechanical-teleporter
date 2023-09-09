@@ -1,7 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.SimpleTeleportControllerClientHandler;
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportLinkRenderer;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.TeleportWandClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,11 +20,11 @@ public class ClientEvents {
 
 		Level world = Minecraft.getInstance().level;
 		if (event.phase == Phase.START) {
-			SimpleTeleportControllerClientHandler.tick();
+			TeleportWandClientHandler.tick();
 			return;
 		}
 
-		TeleportLinkRenderer.tick();
+		//TeleportLinkRenderer.tick();
 	}
 
 

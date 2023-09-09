@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public enum ModGuiTextures implements ScreenElement {
-    SIMPLE_TELEPORT_CONTROLLER("teleport_controller", 179, 109);
+    MECHANICAL_TELEPORTER("mechinical_teleporter", 179, 109);
     public static final int FONT_COLOR = 0x575F7A;
 
     public final ResourceLocation location;

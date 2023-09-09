@@ -24,10 +24,10 @@ apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'idea'
 
+version = mod_version
 group = "com.${author}.${modid}"
 version = "${minecraft_version}-${mod_version}"
 archivesBaseName = modid
-
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -46,7 +46,7 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: mappings_channel, version: "${parchment_version}-${minecraft_version}"
+    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 

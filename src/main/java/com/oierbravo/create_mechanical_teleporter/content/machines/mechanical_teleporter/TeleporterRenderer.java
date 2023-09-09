@@ -1,30 +1,16 @@
 package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportLinkRenderer;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class TeleporterRenderer extends KineticTileEntityRenderer {
+public class TeleporterRenderer extends KineticBlockEntityRenderer {
     public TeleporterRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
     }
+
     @Override
-    public boolean shouldRenderOffScreen(KineticTileEntity te) {
+    public boolean shouldRenderOffScreen(BlockEntity pBlockEntity) {
         return true;
     }
-    @Override
-    protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        TeleportLinkRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
-
-        super.renderSafe(te,partialTicks,ms,buffer,light,overlay);
-        if (Backend.canUseInstancing(te.getLevel()))
-            return;
-
-
-    }
-
 }
