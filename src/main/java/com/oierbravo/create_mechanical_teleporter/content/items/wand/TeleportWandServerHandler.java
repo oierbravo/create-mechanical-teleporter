@@ -1,18 +1,13 @@
-package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
+package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.ITeleportLinkable;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportLinkNetworkHandler;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.LevelAccessor;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 public class TeleportWandServerHandler {
 

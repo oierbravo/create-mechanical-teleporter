@@ -1,20 +1,18 @@
-package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
+package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModPackets;
-import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
@@ -110,8 +108,8 @@ public class TeleportWandClientHandler {
 
 	}
 
-	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width1,
-		int height1) {
+	public static void renderOverlay(ForgeGui gui, GuiGraphics pGuiGraphics, float partialTicks, int width1,
+									 int height1) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui)
 			return;
@@ -130,6 +128,7 @@ public class TeleportWandClientHandler {
 				return;
 			}
 		}
+		PoseStack poseStack = pGuiGraphics.pose();
 		poseStack.pushPose();
 		Screen tooltipScreen = new Screen(Components.immutableEmpty()) {
 		};
@@ -157,7 +156,7 @@ public class TeleportWandClientHandler {
 		int y = height1 - height - 24;
 
 		// TODO
-		tooltipScreen.renderComponentTooltip(poseStack, list, x, y);
+		//tooltipScreen.renderComponentTooltip(poseStack, list, x, y);
 
 		poseStack.popPose();
 	}

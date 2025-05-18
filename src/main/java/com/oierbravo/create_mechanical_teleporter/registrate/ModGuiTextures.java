@@ -7,8 +7,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.utility.Color;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -54,13 +54,13 @@ public enum ModGuiTextures implements ScreenElement {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void render(PoseStack ms, int x, int y, GuiComponent component) {
+    public void render(PoseStack ms, int x, int y, Component component) {
         bind();
-        component.blit(ms, x, y, startX, startY, width, height);
+        //component.blit(ms, x, y, startX, startY, width, height);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void render(PoseStack ms, int x, int y, Color c) {
+    public void render(GuiGraphics ms, int x, int y, Color c) {
         bind();
         UIRenderHelper.drawColoredTexture(ms, c, x, y, startX, startY, width, height);
     }

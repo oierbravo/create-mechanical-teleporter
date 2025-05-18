@@ -36,16 +36,15 @@ public class MechanicalTeleporter
         REGISTRATE.registerEventListeners(modEventBus);
 
 
-        new ModCreativeTab("main");
         ModBlocks.register();
         ModBlockEntities.register();
         ModItems.register();
+        ModCreativeTabs.register(modEventBus);
         generateLangEntries();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
 
-        LOGGER.info("Create Teleport init!");
         ModPackets.registerPackets();
     }
     private void generateLangEntries(){

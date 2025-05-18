@@ -1,36 +1,25 @@
-package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
+package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
-import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportLinkNetworkHandler;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlocks;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
-import com.simibubi.create.foundation.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.NetworkHooks;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -79,8 +68,11 @@ public class TeleportWandItem extends Item {
         }
 
         if (!player.isShiftKeyDown()) {
-            if (world.isClientSide)
+            if (world.isClientSide){
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::clickActivate);
+                getPlayerPOVHitResult();
+                ge
+            }
             player.getCooldowns()
                     .addCooldown(this, 2);
         }

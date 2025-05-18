@@ -21,13 +21,10 @@ public class ModCreativeTabs {
 
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = TAB_REGISTER.register("main",
             () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.create_mechanical_extruder:main"))
-                    .withTabsBefore(AllCreativeModeTabs.BUILDING_BLOCKS_TAB.getId())
+                    .title(Component.translatable("itemGroup.create_mechanical_teleporterr:main"))
+                    .withTabsBefore(AllCreativeModeTabs.PALETTES_CREATIVE_TAB.getId())
                     .icon(ModBlocks.MECHANICAL_TELEPORTER::asStack)
                     .displayItems((pParameters, pOutput) -> {
-                        for (RegistryEntry<Block> entry : MechanicalTeleporter.REGISTRATE.getAll(Registries.BLOCK)) {
-                            pOutput.accept(entry.get());
-                        }
                         for (RegistryEntry<Item> entry : MechanicalTeleporter.REGISTRATE.getAll(Registries.ITEM)) {
                             pOutput.accept(entry.get());
                         }

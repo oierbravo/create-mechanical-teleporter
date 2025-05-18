@@ -1,6 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.TeleportWandClientHandler;
+import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;

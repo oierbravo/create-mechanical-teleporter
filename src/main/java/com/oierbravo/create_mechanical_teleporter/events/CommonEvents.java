@@ -1,7 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.TeleportWandServerHandler;
+import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandServerHandler;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;

@@ -13,20 +13,21 @@ Mechanical Teleporter.
 [[dependencies.create_mechanical_teleporter]]
 modId = "forge"
 mandatory = true
-versionRange="[43.0.0,)"
+versionRange="[47,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.create_mechanical_teleporter]]
 modId = "minecraft"
 mandatory = true
-versionRange="[1.19.2,1.20)"
+versionRange="[1.20.1,1.21)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.create_mechanical_teleporter]]
 modId = "create"
 mandatory = true
-versionRange="[0.5.1.c,)"
+versionRange="[0.5.1.h,)"
 ordering = "AFTER"
 side = "BOTH"
+

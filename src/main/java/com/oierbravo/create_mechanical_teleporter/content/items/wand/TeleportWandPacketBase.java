@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.items.controller.simple;
+package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.simibubi.create.foundation.networking.SimplePacketBase;

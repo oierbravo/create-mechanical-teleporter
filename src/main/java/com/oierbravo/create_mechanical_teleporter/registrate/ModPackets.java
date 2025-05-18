@@ -1,7 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.simple.TeleportWandActivatePacket;
+import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandActivatePacket;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,8 +21,6 @@ import static net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER;
 
 public enum ModPackets {
 
-//    LINKED_CONTROLLER_USE_LECTERN(LinkedTeleportControllerStopLecternPacket.class, LinkedTeleportControllerStopLecternPacket::new,
-  //                                PLAY_TO_SERVER),
     WAND_ACTIVATE(TeleportWandActivatePacket.class, TeleportWandActivatePacket::new, PLAY_TO_SERVER);
 
     public static final ResourceLocation CHANNEL_NAME = MechanicalTeleporter.asResource("main");
