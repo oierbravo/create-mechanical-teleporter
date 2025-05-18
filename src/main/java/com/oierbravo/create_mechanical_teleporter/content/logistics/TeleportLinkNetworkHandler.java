@@ -1,8 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.simibubi.create.foundation.utility.WorldHelper;
-import net.minecraft.world.level.Level;
+import net.createmod.catnip.levelWrappers.WorldHelper;
 import net.minecraft.world.level.LevelAccessor;
 
 import java.util.*;
@@ -24,8 +23,8 @@ public class TeleportLinkNetworkHandler {
 		MechanicalTeleporter.LOGGER.debug("Removed Teleport Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
-	public Set<ITeleportLinkable> getNetworkOf(LevelAccessor world, UUID actor) {
-		Map<String, Set<ITeleportLinkable>> networksInWorld = networksIn(world);
+	public Set<ITeleportLinkable> getNetworkOf(LevelAccessor level, UUID actor) {
+		Map<String, Set<ITeleportLinkable>> networksInWorld = networksIn(level);
 		UUID key = actor;
 		//if (!networksInWorld.containsKey(key))
 		//	networksInWorld.put(key, new LinkedHashSet<>());

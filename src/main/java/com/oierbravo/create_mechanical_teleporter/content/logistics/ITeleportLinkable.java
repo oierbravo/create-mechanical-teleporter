@@ -1,6 +1,5 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
-import com.simibubi.create.foundation.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 

@@ -2,16 +2,15 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.simibubi.create.Create;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.element.ScreenElement;
-import com.simibubi.create.foundation.utility.Color;
+import com.oierbravo.create_mechanical_teleporter.ModConstants;
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.ScreenElement;
+import net.createmod.catnip.theme.Color;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public enum ModGuiTextures implements ScreenElement {
     MECHANICAL_TELEPORTER("mechinical_teleporter", 179, 109);
@@ -30,11 +29,11 @@ public enum ModGuiTextures implements ScreenElement {
     }
 
     private ModGuiTextures(String location, int startX, int startY, int width, int height) {
-        this(MechanicalTeleporter.MODID, location, startX, startY, width, height);
+        this(ModConstants.MODID, location, startX, startY, width, height);
     }
 
     private ModGuiTextures(String namespace, String location, int startX, int startY, int width, int height) {
-        this.location = new ResourceLocation(namespace, "textures/gui/" + location + ".png");
+        this.location = ResourceLocation.fromNamespaceAndPath(namespace, "textures/gui/" + location + ".png");
         this.width = width;
         this.height = height;
         this.startX = startX;

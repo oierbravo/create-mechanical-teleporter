@@ -1,26 +1,26 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
+import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TravelHandler;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlocks;
-import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
+import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 //public class TeleportWandItem extends Item  implements MenuProvider {
@@ -43,8 +43,8 @@ public class TeleportWandItem extends Item {
 
             } else {
                 if (ModBlocks.MECHANICAL_TELEPORTER.has(hitState)) {
-                    if (world.isClientSide)
-                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.activateBind(ctx.getClickedPos()));
+                    //if (world.isClientSide)
+                    //    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.activateBind(ctx.getClickedPos()));
                     player.getCooldowns()
                             .addCooldown(this, 2);
                     return InteractionResult.SUCCESS;
@@ -56,65 +56,110 @@ public class TeleportWandItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        ItemStack heldItem = player.getItemInHand(hand);
-
-        if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            if (!world.isClientSide && player instanceof ServerPlayer && player.mayBuild())
-               // NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
-               //     buf.writeItem(heldItem);
-               // });
-            return InteractionResultHolder.success(heldItem);
-        }
-
-        if (!player.isShiftKeyDown()) {
-            if (world.isClientSide){
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::clickActivate);
-                getPlayerPOVHitResult();
-                ge
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (getActivationStatus(stack).isAir()) {
+            if (tryPerformAction(level, player, stack)) {
+                return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
             }
-            player.getCooldowns()
-                    .addCooldown(this, 2);
+            return InteractionResultHolder.fail(stack);
         }
-
-        return InteractionResultHolder.pass(heldItem);
+        return super.use(level, player, hand);
     }
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if (!(entity instanceof Player player))
+            return;
 
-    @OnlyIn(Dist.CLIENT)
-    private void toggleBindMode(BlockPos pos) {
-        TeleportWandClientHandler.toggleBindMode(pos);
+        List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
+
+        if(level.isClientSide) {
+            entity.getPersistentData()
+                    .putInt("PlayerHasAir", Math.round(backtanks.stream()
+                            .map(BacktankUtil::getAir)
+                            .reduce(0, Integer::sum)));
+
+        }
     }
-    @OnlyIn(Dist.CLIENT)
-    private void activateBind(BlockPos pos) {
-
-        //TeleportWandClientHandler.activateBind(pos);
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    private void clickActivate() {
-        TeleportWandClientHandler.activate();
-    }
-    public static ItemStackHandler getFrequencyItems(ItemStack stack) {
-        ItemStackHandler newInv = new ItemStackHandler(12);
-        if (ModItems.TELEPORT_WAND.get() != stack.getItem())
-            throw new IllegalArgumentException("Cannot get frequency items from non-controller: " + stack);
-        CompoundTag invNBT = stack.getOrCreateTagElement("Items");
-        if (!invNBT.isEmpty())
-            newInv.deserializeNBT(invNBT);
-        return newInv;
-    }
-
+    @SuppressWarnings("removal")
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer) {
         consumer.accept(SimpleCustomRenderer.create(this, new TeleportWandItemRenderer()));
     }
-
-    /*@Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        ItemStack heldItem = pPlayer.getMainHandItem();
-        return TeleporterContainer.create(pContainerId, pPlayerInventory, heldItem);
-    }*/
+    public boolean isBarVisible(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        return BacktankUtil.getBarWidth(stack, maxUses());
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return BacktankUtil.getBarColor(stack, maxUses());
+    }
+    private static int maxUses() {
+        return AllConfigs.server().equipment.airInBacktank.get() / MConfigs.server().teleportWand.airAmount.get();
+    }
+
+    private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
+        boolean isCreative = player.isCreative();
+        if (TravelHandler.hasResources(player) || isCreative) {
+            if (performAction(this, level, player)) {
+                if (!level.isClientSide() && !isCreative) {
+                    TravelHandler.consumeResources(player);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    public boolean performAction(Item item, Level level, Player player) {
+        if (!player.isShiftKeyDown()) {
+            if (TravelHandler.shortTeleport(level, player)) {
+                player.getCooldowns().addCooldown(item, MConfigs.server().teleportWand.cooldown.get());
+                return true;
+            }
+        } else {
+            if (TravelHandler.blockTeleport(level, player)) {
+                player.getCooldowns().addCooldown(item, MConfigs.server().teleportWand.cooldown.get());
+                return true;
+            }/* else if (TravelHandler.interact(level, player)) {
+                player.getCooldowns().addCooldown(this, MConfigs.server().teleportWand.cooldown.get());
+                return true;
+            }*/
+        }
+        return false;
+    }
+
+    protected ActivationStatus getActivationStatus(ItemStack stack) {
+        return ActivationStatus.ALL;
+    }
+    protected enum ActivationStatus {
+        BLOCK(true, false), AIR(false, true), ALL(true, true);
+
+        private final boolean isBlock;
+        private final boolean isAir;
+
+        ActivationStatus(boolean isBlock, boolean isAir) {
+            this.isBlock = isBlock;
+            this.isAir = isAir;
+        }
+
+        public boolean isBlock() {
+            return isBlock;
+        }
+
+        public boolean isAir() {
+            return isAir;
+        }
+    }
 }

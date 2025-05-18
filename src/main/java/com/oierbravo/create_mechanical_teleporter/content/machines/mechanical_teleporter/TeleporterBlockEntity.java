@@ -4,33 +4,26 @@ import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviou
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TeleporterBlockEntity extends KineticBlockEntity {
     //private final FluidTank fluidTankHandler = createFluidTank();
     protected FluidTank fluidTank;
 
-    protected LazyOptional<IFluidHandler> fluidCapability;
+    protected Optional<IFluidHandler> fluidCapability;
     //private LazyOptional<IFluidHandler> outputFluidHandler = LazyOptional.of(() -> fluidTankHandler);
 
     private TeleportLinkBehaviour teleport;
@@ -43,7 +36,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
     }
     //public static int FLUID_CAPACITY = 2000;
     //public int FLUID_AMOUNT_NEEDED = 1000;
-    public ResourceLocation FLUID = new ResourceLocation("minecraft/lava");
+    public ResourceLocation FLUID = ResourceLocation.fromNamespaceAndPath("minecraft","lava");
     /*private FluidTank createFluidTankOld() {
 
         return new FluidTank(FLUID_CAPACITY) {

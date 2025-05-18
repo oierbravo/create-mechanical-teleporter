@@ -2,36 +2,45 @@ package com.oierbravo.create_mechanical_teleporter;
 
 import com.mojang.logging.LogUtils;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportLinkNetworkHandler;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.registrate.*;
-import com.simibubi.create.Create;
+import com.oierbravo.mechanicals.utility.RegistrateLangBuilder;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.foundation.utility.WorldAttached;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.minecraft.resources.ResourceLocation;
+import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.KineticStats;
+import com.simibubi.create.foundation.item.TooltipModifier;
+import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import org.slf4j.Logger;
 
+import static com.oierbravo.create_mechanical_teleporter.ModConstants.DISPLAY_NAME;
+import static com.oierbravo.create_mechanical_teleporter.ModConstants.MODID;
+
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(MechanicalTeleporter.MODID)
+@Mod(MODID)
 public class MechanicalTeleporter
 {
-    public static final String MODID = "create_mechanical_teleporter";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MODID);
-
+    public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MODID).defaultCreativeTab(ModCreativeTabs.MAIN_TAB.getKey());
+    static {
+        REGISTRATE.setTooltipModifierFactory(item ->
+                new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)
+                        .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
+        );
+    }
     public static final TeleportLinkNetworkHandler TELEPORT_NETWORK_HANDLER = new TeleportLinkNetworkHandler();
 
-    public MechanicalTeleporter()
+    public MechanicalTeleporter(IEventBus modEventBus, ModContainer modContainer)
     {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::setup);
+        ModLoadingContext modLoadingContext = ModLoadingContext.get();
 
         REGISTRATE.registerEventListeners(modEventBus);
 
@@ -39,17 +48,23 @@ public class MechanicalTeleporter
         ModBlocks.register();
         ModBlockEntities.register();
         ModItems.register();
+
+        MConfigs.register(modLoadingContext,modContainer);
+
+
         ModCreativeTabs.register(modEventBus);
+        modEventBus.addListener(ModMessages::registerNetworking);
+
         generateLangEntries();
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
-
-        ModPackets.registerPackets();
-    }
     private void generateLangEntries(){
-        registrate().addRawLang("create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1", "Freq. #1");
+        new RegistrateLangBuilder(MODID, registrate())
+                .addCreativeTab(DISPLAY_NAME)
+                .add("simple_teleport_controller.frequency_slot_1", "Freq. #1");
+
     }
+
     @SubscribeEvent
     public static void onLoadWorld(LevelEvent.Load event) {
         LevelAccessor world = event.getLevel();
@@ -64,10 +79,6 @@ public class MechanicalTeleporter
     }
     public static CreateRegistrate registrate() {
         return REGISTRATE;
-    }
-
-    public static ResourceLocation asResource(String path) {
-        return new ResourceLocation(MODID, path);
     }
 
 }
