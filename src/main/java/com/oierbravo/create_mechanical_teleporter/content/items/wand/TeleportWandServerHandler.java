@@ -1,13 +1,10 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
-import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.ITeleportLinkable;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.LevelAccessor;
 
-import java.util.*;
+import java.util.UUID;
 
 public class TeleportWandServerHandler {
 
@@ -38,14 +35,13 @@ public class TeleportWandServerHandler {
 	}
 
 	public static void receiveActivated(LevelAccessor world, BlockPos pos, UUID uniqueID, BlockPos destinationPos, ServerPlayer pPlayer) {
-		Set<ITeleportLinkable> teleport = MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.getNetworkOf(world, uniqueID);
+		/*Set<ITeleportLinkable> teleport = MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.getNetworkOf(world, uniqueID);
 		if(!teleport.isEmpty()){
 			ITeleportLinkable teleportLink = teleport.iterator().next();
 			teleportLink.doTeleport(pPlayer);
-
 		} else {
 			pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.not_found"),true);
-		}
+		}*/
 	}
 
 

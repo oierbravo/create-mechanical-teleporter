@@ -1,6 +1,8 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TravelHandler;
+import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.ITeleportLinkable;
+import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportHandler;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
@@ -20,7 +22,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 //public class TeleportWandItem extends Item  implements MenuProvider {
@@ -80,6 +85,22 @@ public class TeleportWandItem extends Item {
                             .reduce(0, Integer::sum)));
 
         }
+        if(player.isShiftKeyDown()){
+            List<ITeleportLinkable> teleporters = MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.getTeleporters(level);
+            for(ITeleportLinkable teleporter : teleporters){
+                int a = 0;
+                List<BlockPos> includedBlockPositions = Collections.singletonList(teleporter.getBlockPos());
+                Set<BlockPos> positions = new HashSet<>(includedBlockPositions);
+
+
+                /*Outliner.getInstance().showCluster(Pair.of(teleporter.getBlockPos(), 1), positions)
+
+                        .colored(0xFFFFFF)
+                        .lineWidth(1 / 16f)
+                        .disableCull()
+                        .withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);*/
+            }
+        }
     }
     @SuppressWarnings("removal")
     @Override
@@ -107,10 +128,10 @@ public class TeleportWandItem extends Item {
 
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
         boolean isCreative = player.isCreative();
-        if (TravelHandler.hasResources(player) || isCreative) {
+        if (TeleportHandler.hasResources(player) || isCreative) {
             if (performAction(this, level, player)) {
                 if (!level.isClientSide() && !isCreative) {
-                    TravelHandler.consumeResources(player);
+                    TeleportHandler.consumeResources(player);
                 }
 
                 return true;
@@ -124,15 +145,15 @@ public class TeleportWandItem extends Item {
 
     public boolean performAction(Item item, Level level, Player player) {
         if (!player.isShiftKeyDown()) {
-            if (TravelHandler.shortTeleport(level, player)) {
+            if (TeleportHandler.shortTeleport(level, player)) {
                 player.getCooldowns().addCooldown(item, MConfigs.server().teleportWand.cooldown.get());
                 return true;
             }
         } else {
-            if (TravelHandler.blockTeleport(level, player)) {
+            if (TeleportHandler.blockTeleport(level, player)) {
                 player.getCooldowns().addCooldown(item, MConfigs.server().teleportWand.cooldown.get());
                 return true;
-            }/* else if (TravelHandler.interact(level, player)) {
+            }/* else if (TeleportHandler.interact(level, player)) {
                 player.getCooldowns().addCooldown(this, MConfigs.server().teleportWand.cooldown.get());
                 return true;
             }*/

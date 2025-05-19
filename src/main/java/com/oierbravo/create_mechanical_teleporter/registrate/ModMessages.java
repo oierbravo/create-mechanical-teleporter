@@ -1,6 +1,8 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportHandler;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportPayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -13,7 +15,7 @@ public class ModMessages {
         //Going to Client
         //registrar.playToClient(ItemSyncPayload.TYPE, ItemSyncPayload.STREAM_CODEC, ItemSyncPacket.get()::handle);
         //Going to server
-        //registrar.playToServer(ActivateWandPayload.TYPE, ActivateWandPayload.STREAM_CODEC, ActivateWandHandler.get()::handle);
+        registrar.playToServer(RequestTeleportPayload.TYPE, RequestTeleportPayload.STREAM_CODEC, RequestTeleportHandler.get()::handle);
 
     }
     public static void sendToAllClients(CustomPacketPayload message) {

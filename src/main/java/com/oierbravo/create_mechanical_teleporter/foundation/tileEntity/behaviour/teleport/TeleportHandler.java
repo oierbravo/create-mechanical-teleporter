@@ -1,13 +1,16 @@
 package com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport;
 
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -29,7 +33,7 @@ import java.util.Optional;
 
 //From EnderIO
 //License CCO
-public class TravelHandler {
+public class TeleportHandler {
 
     public static final int MIN_TELEPORTATION_DISTANCE_SQUARED = 25;
 
@@ -48,9 +52,9 @@ public class TravelHandler {
         return player.getItemInHand(hand).is(ModItems.TELEPORT_WAND.asItem());
     }
 
-    /*public static boolean canBlockTeleport(Player player) {
-        return IntegrationManager.anyMatch(integration -> integration.canBlockTeleport(player));
-    }*/
+    public static boolean canBlockTeleport(Player player) {
+        return player.getBlockStateOn().getBlock() instanceof TeleporterBlock;
+    }
 
     public static boolean hasResources(Player player) {
         List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
@@ -81,9 +85,9 @@ public class TravelHandler {
                         player.setPose(Pose.SWIMMING);
                     }
 
-                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    //player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 } else {
-                    player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
+                    //player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
                 }
             }
             return true;
@@ -91,17 +95,30 @@ public class TravelHandler {
             return false;
         }
     }
-
-    public static boolean blockTeleport(Level level, Player player) {
-        //return blockTeleport(level, player, false);
-        return true;
+    public static boolean teleportToTeleporter(Level level, Player pPlayer, BlockPos teleporterBlockPos){
+        BlockPos destination = teleporterBlockPos.above();
+        if(isTeleportPositionClear(level, teleporterBlockPos.above()).isPresent()){
+            pPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
+            pPlayer.getPersistentData().put("lastTeleportedPos", NbtUtils.writeBlockPos(pPlayer.getOnPos()));
+            return true;
+        }
+        return false;
     }
 
-    /*public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
-        return getTeleportAnchorTarget(player)
+    public static boolean blockTeleport(Level level, Player player) {
+        return blockTeleport(level, player, false);
+    }
+
+    public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
+        BlockEntity onBlockEntity = level.getBlockEntity(player.getOnPos());
+        if(onBlockEntity instanceof TeleporterBlockEntity teleporterBlockEntity){
+            ModMessages.sendToServer(new RequestTeleportPayload(player.getUUID(), teleporterBlockEntity.getTeleport().getNetworkKey()));
+        }
+        return true;
+        /*return getTeleportTarget(player)
                 .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer))
-                .isPresent();
-    }*/
+                .isPresent();*/
+    }
 
     /*public static boolean interact(Level level, Player player) {
         return getInteractionTarget(player).filter(iTravelTarget -> interactWithTarget(level, player, iTravelTarget))
