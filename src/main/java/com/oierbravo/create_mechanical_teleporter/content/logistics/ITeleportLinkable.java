@@ -11,7 +11,7 @@ public interface ITeleportLinkable {
 
 	public boolean isAlive();
 	
-	public Couple<TeleportLinkNetworkHandler.Frequency> getNetworkKey();
+	public Couple<TeleportLinkNetwork.Frequency> getNetworkKey();
 	
 	public BlockPos getLocation();
 

@@ -1,15 +1,22 @@
 package com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport;
 
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlock;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportersNetwork;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.NewTeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.NewTeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.foundation.ContraptionUtils;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
-import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportPayload;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.ContraptionCollider;
+import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Pose;
@@ -20,6 +27,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -30,6 +39,9 @@ import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static com.simibubi.create.content.contraptions.actors.seat.SeatBlock.sitDown;
 
 //From EnderIO
 //License CCO
@@ -37,9 +49,6 @@ public class TeleportHandler {
 
     public static final int MIN_TELEPORTATION_DISTANCE_SQUARED = 25;
 
-    /*public static boolean canTeleport(Player player) {
-        return canItemTeleport(player) || canBlockTeleport(player);
-    }*/
     public static boolean canTeleport(Player player) {
         return canItemTeleport(player);
     }
@@ -52,8 +61,25 @@ public class TeleportHandler {
         return player.getItemInHand(hand).is(ModItems.TELEPORT_WAND.asItem());
     }
 
-    public static boolean canBlockTeleport(Player player) {
-        return player.getBlockStateOn().getBlock() instanceof TeleporterBlock;
+    public static boolean  canBlockTeleport(Player player) {
+        if(player.getBlockStateOn().getBlock() instanceof NewTeleporterBlock)
+            return true;
+
+        BlockPos playerPos = player.getOnPos();
+        Vec3 worldPos = playerPos.getBottomCenter().add(0, -0.2, 0);
+        return ContraptionUtils.getIntersectionContraptionsStream(player.level(), player).anyMatch(cEntity -> {
+            Vec3 localPos = ContraptionCollider.worldToLocalPos(worldPos, cEntity);
+
+            BlockPos blockPos = BlockPos.containing(localPos);
+            Contraption contraption = cEntity.getContraption();
+            StructureTemplate.StructureBlockInfo info = contraption.getBlocks()
+                    .get(blockPos);
+
+            if (info == null)
+                return false;
+
+            return true;
+        });
     }
 
     public static boolean hasResources(Player player) {
@@ -95,11 +121,47 @@ public class TeleportHandler {
             return false;
         }
     }
+    public static void teleportToFrequency(UUID frequency, ServerPlayer player){
+        if(MechanicalTeleporter.TELEPORTERS.teleportersNetworks.containsKey(frequency)){
+            TeleportersNetwork network = MechanicalTeleporter.TELEPORTERS.teleportersNetworks.get(frequency);
+            boolean foundCurrent = false;
+            GlobalPos destinationGlobalPos = null;
+
+            for(GlobalPos globalPos : network.loadedLinks) {
+                if(!globalPos.pos().equals(player.getOnPos())) {
+                    if(foundCurrent) {
+                        destinationGlobalPos = globalPos;
+                        break;
+                    }
+                } else {
+                    foundCurrent = true;
+                }
+
+
+            }
+            if(destinationGlobalPos == null) {
+                for(GlobalPos globalPos : network.loadedLinks) {
+                    if(!globalPos.pos().equals(player.getOnPos())) {
+                        destinationGlobalPos = globalPos;
+                        break;
+                    }
+                }
+            }
+            if(destinationGlobalPos != null){
+                boolean succes = TeleportHandler.teleportToGlobalPos(destinationGlobalPos, player);
+                if(succes && player.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock){
+                    sitDown(player.level(),destinationGlobalPos.pos().above(), player);
+
+                }
+
+            }
+        }
+    }
+
     public static boolean teleportToTeleporter(Level level, Player pPlayer, BlockPos teleporterBlockPos){
         BlockPos destination = teleporterBlockPos.above();
         if(isTeleportPositionClear(level, teleporterBlockPos.above()).isPresent()){
             pPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
-            pPlayer.getPersistentData().put("lastTeleportedPos", NbtUtils.writeBlockPos(pPlayer.getOnPos()));
             return true;
         }
         return false;
@@ -111,49 +173,12 @@ public class TeleportHandler {
 
     public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
         BlockEntity onBlockEntity = level.getBlockEntity(player.getOnPos());
-        if(onBlockEntity instanceof TeleporterBlockEntity teleporterBlockEntity){
-            ModMessages.sendToServer(new RequestTeleportPayload(player.getUUID(), teleporterBlockEntity.getTeleport().getNetworkKey()));
-        }
-        return true;
-        /*return getTeleportTarget(player)
-                .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer))
-                .isPresent();*/
-    }
-
-    /*public static boolean interact(Level level, Player player) {
-        return getInteractionTarget(player).filter(iTravelTarget -> interactWithTarget(level, player, iTravelTarget))
-                .isPresent();
-    }*/
-
-
-    /*public static boolean blockTeleportTo(Level level, Player player, TravelTarget target, boolean sendToServer) {
-        Optional<Double> height = isTeleportPositionClear(level, target.pos());
-        if (height.isEmpty()) {
-            return false;
-        }
-        BlockPos blockPos = target.pos();
-        Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1,
-                blockPos.getZ() + 0.5f);
-        teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
-        if (teleportPosition != null) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
-                // Stop "moved too quickly" warnings
-                serverPlayer.connection.resetPosition();
-                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
-            } else if (sendToServer) {
-                ModMessages.sendToServer(new RequestTravelPacket(target.pos()));
-            }
-
-            player.resetFallDistance();
+        if (onBlockEntity instanceof NewTeleporterBlockEntity newTeleporterBlockEntity){
+            ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(newTeleporterBlockEntity.teleporterBehavior.freqId));
             return true;
         }
         return false;
-    }*/
-
-    /*private static boolean interactWithTarget(Level level, Player player, TravelTarget target) {
-        return target.interact(level, player);
-    }*/
+    }
 
     public static Optional<Vec3> teleportPosition(Level level, Player player) {
         @Nullable
@@ -248,31 +273,6 @@ public class TeleportHandler {
         return null;
     }
 
-    /*public static Optional<TravelTarget> getInteractionTarget(Player player) {
-        Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
-
-        return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-                .filter(TravelTarget::canInteract)
-                .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
-                .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
-                        player.getXRot())) <= Math.toRadians(15))
-                .min(Comparator.comparingDouble(target -> Math
-                        .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
-    }*/
-
-    /*public static Optional<TravelTarget> getTeleportAnchorTarget(Player player) {
-        Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
-
-        return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-                .filter(TravelTarget::canTeleportTo)
-                .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
-                .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
-                        player.getXRot())) <= Math.toRadians(15))
-                .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
-                .min(Comparator.comparingDouble(target -> Math
-                        .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
-    }*/
-
     private static double getAngleRadians(Vec3 positionVec, BlockPos anchor, float yRot, float xRot) {
         Vec3 blockVec = new Vec3(anchor.getX() + 0.5 - positionVec.x, anchor.getY() + 1.0 - positionVec.y,
                 anchor.getZ() + 0.5 - positionVec.z).normalize();
@@ -311,5 +311,26 @@ public class TeleportHandler {
         }
 
         return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
+    }
+
+    public static boolean teleportToGlobalPos(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer) {
+        BlockPos destination = destinationGlobalPos.pos().above();
+        if(serverPlayer.level().dimension() != destinationGlobalPos.dimension()){
+            ServerLevel targetDimension = serverPlayer.level().getServer().getLevel(destinationGlobalPos.dimension());
+            if(targetDimension == null)
+                return false;
+            DimensionTransition transition = new DimensionTransition(targetDimension, new Vec3(destination.getX() + (double)0.5F, destination.getY(), destination.getZ() + (double)0.5F), Vec3.ZERO, serverPlayer.getYRot(), serverPlayer.getXRot(), false, DimensionTransition.DO_NOTHING);
+            if(targetDimension.isLoaded(destination) && isTeleportPositionClear(targetDimension,destination).isPresent()){
+                serverPlayer.changeDimension(transition);
+                return true;
+            }
+            return false;
+        }
+        if(serverPlayer.level().isLoaded(destination)){
+            serverPlayer.dismountTo(0.5,0.5,0.5);
+            serverPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
+            return true;
+        }
+        return false;
     }
 }

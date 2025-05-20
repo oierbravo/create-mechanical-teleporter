@@ -1,7 +1,8 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.NewTeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleporterBlockItem;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.ModStress;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -20,7 +21,7 @@ public class ModBlocks {
 
     private static final CreateRegistrate REGISTRATE = MechanicalTeleporter.registrate();
 
-    public static final BlockEntry<TeleporterBlock> MECHANICAL_TELEPORTER = REGISTRATE.block("mechanical_teleporter", TeleporterBlock::new)
+    public static final BlockEntry<NewTeleporterBlock> MECHANICAL_TELEPORTER = REGISTRATE.block("mechanical_teleporter", NewTeleporterBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.METAL))
             .properties(p -> p.lightLevel($ -> 5))
@@ -29,7 +30,7 @@ public class ModBlocks {
             .addLayer(() -> RenderType::translucent)
             .transform(ModStress.setImpact(8.0))
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
-            .item()
+            .item(TeleporterBlockItem::new)
             .transform(customItemModel("_", "block"))
             .register();
 

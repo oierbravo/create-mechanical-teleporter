@@ -16,7 +16,6 @@ public class CommonEvents {
 		//	return;
 		Level world = event.getLevel();
 		TeleportWandServerHandler.tick(world);
-		//ControlsServerHandler.tick(world);
 	}
 	@SubscribeEvent
 	public static void onLoadWorld(LevelEvent.Load event) {

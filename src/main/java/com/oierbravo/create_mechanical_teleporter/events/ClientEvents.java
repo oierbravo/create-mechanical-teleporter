@@ -1,7 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterRenderer;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.TeleporterClientHandler;
 import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportHandler;
 import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportersDisplayOverlay;
 import net.minecraft.client.Minecraft;
@@ -25,7 +25,7 @@ public class ClientEvents {
 	public static void onTick(ClientTickEvent.Post event) {
 		if (!isGameActive())
 			return;
-		TeleporterRenderer.tick();
+		TeleporterClientHandler.tick();
 
 	}
 
@@ -47,6 +47,7 @@ public class ClientEvents {
 			return;
 		}
 		if (isNewJump) {
+
 			boolean success = TeleportHandler.blockTeleport(player.level(), player, true);
 
 			if (success) {

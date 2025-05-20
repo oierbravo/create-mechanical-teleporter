@@ -1,48 +1,46 @@
-package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global;
 
-import com.oierbravo.create_mechanical_teleporter.ModLang;
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportLinkBehaviour;
+import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleporterBehavior;
+import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.gui.AllIcons;
-import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportHandler.teleportToTeleporter;
+import static com.simibubi.create.content.contraptions.actors.seat.SeatBlock.sitDown;
 
-public class TeleporterBlockEntity extends KineticBlockEntity {
+public class NewTeleporterBlockEntity extends KineticBlockEntity {
     //private final FluidTank fluidTankHandler = createFluidTank();
 
-    protected UUID owner;
+    public UUID placedBy;
 
     protected FluidTank fluidTank;
 
     protected Optional<IFluidHandler> fluidCapability;
     //private LazyOptional<IFluidHandler> outputFluidHandler = LazyOptional.of(() -> fluidTankHandler);
+    public TeleporterBehavior teleporterBehavior;
 
-    private TeleportLinkBehaviour teleport;
-    protected ScrollOptionBehaviour<TeleporterMode> teleporterMode;
+    //private TeleportLinkBehaviour teleport;
 
-    public TeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+    public NewTeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 
         super(typeIn, pos, state);
+        setLazyTickRate(10);
+        placedBy = null;
         //fluidTank = createFluidTank();
         //fluidCapability = LazyOptional.of(() -> fluidTank);
     }
@@ -85,32 +83,49 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
             return fluidCapability.cast();
         return super.getCapability(cap, side);
     }*/
+    @Override
+    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(tag, registries, clientPacket);
+        if (placedBy != null)
+            tag.putUUID("PlacedBy", placedBy);
+    }
+
+    @Override
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(tag, registries, clientPacket);
+        placedBy = tag.contains("PlacedBy") ? tag.getUUID("PlacedBy") : null;
+    }
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        super.addBehaviours(behaviours);
-
-        behaviours.add(teleporterMode = new ScrollOptionBehaviour<>(TeleporterMode.class,
-                ModLang.translate("teleporter.mode").component(), this, new TeleporterModeSlot()));
-
-
-        createTeleport();
-        behaviours.add(teleport);
+        behaviours.add(teleporterBehavior = new TeleporterBehavior(this, true));
     }
 
-    protected void createTeleport() {
+
+    /*protected void createTeleport() {
         Pair<ValueBoxTransform, ValueBoxTransform> slots =
                 ValueBoxTransform.Dual.makeSlots(TeleportLinkFrequencySlot::new);
 
          teleport = new TeleportLinkBehaviour(this, slots, new TeleporterModeSlot(), owner);
-    }
+    }*/
 
 
 
     public void doTeleport(ServerPlayer pPlayer) {
         if(checkRequerimentsForTeleport(pPlayer)){
             //consumeFluid();
-            teleportToTeleporter(this.level, pPlayer,this.getBlockPos());
+            Block blockAbove = this.level.getBlockState(this.getBlockPos().above()).getBlock();
+
+            pPlayer.dismountTo(0.5,0.5,0.5);
+
+            if(blockAbove instanceof SeatBlock seatBlock){
+                sitDown(this.level,this.getBlockPos().above(), pPlayer);
+            } else {
+                teleportToTeleporter(this.level, pPlayer,this.getBlockPos());
+
+            }
+
+
             //Minecraft mc = Minecraft.getInstance();
             //LocalPlayer localPlayer = mc.player;
             //try {
@@ -148,9 +163,9 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
         this.fluidTank.drain(FLUID_AMOUNT_NEEDED, IFluidHandler.FluidAction.EXECUTE);
     }*/
 
-    public TeleportLinkBehaviour getTeleport() {
+    /*public TeleportLinkBehaviour getTeleport() {
         return teleport;
-    }
+    }*/
     /*@Override
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
@@ -164,46 +179,35 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
         fluidTank.readFromNBT(compound.getCompound("TankContent"));
 
     }*/
+    //ToDo: Chunkload?
+    /*@Override
+    public void tick() {
+        super.tick();
+        assert level != null;
+        if (level.isClientSide) {
+            return;
+        }
+
+        ServerLevel serverLevel = (ServerLevel) this.level;
+
+        for (int i = -2; i <= 2; i++) {
+            for (int j = -2; j <= 2; j++) {
+                serverLevel.setChunkForced(
+                        new ChunkPos(getBlockPos()).x + i,
+                        new ChunkPos(getBlockPos()).z + j,
+                        Math.abs(this.getSpeed()) >= 16 * 8 * Math.max(Math.abs(i), Math.abs(j))
+                );
+            }
+        }
+    }*/
 
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
-        compound.putUUID("owner", this.owner);
+    public void initialize() {
+        super.initialize();
+        teleporterBehavior.redstonePowerChanged(NewTeleporterBlock.getPower(getBlockState(), level, worldPosition));
     }
-
-    @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
-        this.owner = compound.getUUID("owner");
-    }
-
-    public void setOwner(UUID uuid){
-        this.owner = uuid;
-    }
-
-    public enum TeleporterMode implements INamedIconOptions {
-        PUBLIC(AllIcons.I_WHITELIST),
-        PRIVATE(AllIcons.I_BLACKLIST),
-
-        ;
-
-        private final String translationKey;
-        private final AllIcons icon;
-
-        TeleporterMode(AllIcons icon) {
-            this.icon = icon;
-            this.translationKey = "teleporter.mode." + Lang.asId(name());
-        }
-
-        @Override
-        public AllIcons getIcon() {
-            return icon;
-        }
-
-        @Override
-        public String getTranslationKey() {
-            return translationKey;
-        }
+    public void setPlacedBy(UUID uuid){
+        this.placedBy = uuid;
     }
 
 }

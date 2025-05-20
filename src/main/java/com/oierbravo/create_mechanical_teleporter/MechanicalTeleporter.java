@@ -1,23 +1,21 @@
 package com.oierbravo.create_mechanical_teleporter;
 
 import com.mojang.logging.LogUtils;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportLinkNetworkHandler;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.GlobalTeleportersManager;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportLinkNetwork;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.data.ModDataGen;
 import com.oierbravo.create_mechanical_teleporter.registrate.*;
 import com.oierbravo.mechanicals.utility.RegistrateLangBuilder;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
-import net.createmod.catnip.data.WorldAttached;
 import net.createmod.catnip.lang.FontHelper;
-import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.level.LevelEvent;
 import org.slf4j.Logger;
 
 import static com.oierbravo.create_mechanical_teleporter.ModConstants.DISPLAY_NAME;
@@ -36,7 +34,8 @@ public class MechanicalTeleporter
                         .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
         );
     }
-    public static final TeleportLinkNetworkHandler TELEPORT_NETWORK_HANDLER = new TeleportLinkNetworkHandler();
+    public static final TeleportLinkNetwork TELEPORT_NETWORK_HANDLER = new TeleportLinkNetwork();
+    public static final GlobalTeleportersManager TELEPORTERS = new GlobalTeleportersManager();
 
     public MechanicalTeleporter(IEventBus modEventBus, ModContainer modContainer)
     {
@@ -48,12 +47,18 @@ public class MechanicalTeleporter
         ModBlocks.register();
         ModBlockEntities.register();
         ModItems.register();
-
+        ModMenuTypes.register();
         MConfigs.register(modLoadingContext,modContainer);
+
 
 
         ModCreativeTabs.register(modEventBus);
         modEventBus.addListener(ModMessages::registerNetworking);
+        ModPackets.register();
+        ModDataComponents.register(modEventBus);
+        modEventBus.addListener(this::registerCapabilities);
+
+        modEventBus.addListener(ModDataGen::gatherData);
 
         generateLangEntries();
     }
@@ -65,18 +70,11 @@ public class MechanicalTeleporter
 
     }
 
-    @SubscribeEvent
-    public static void onLoadWorld(LevelEvent.Load event) {
-        LevelAccessor world = event.getLevel();
-        MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.onLoadWorld(world);
+    @net.neoforged.bus.api.SubscribeEvent
+    public void registerCapabilities(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent event) {
+
     }
 
-    @SubscribeEvent
-    public static void onUnloadWorld(LevelEvent.Unload event) {
-        LevelAccessor world = event.getLevel();
-        MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.onUnloadWorld(world);
-        WorldAttached.invalidateWorld(world);
-    }
     public static CreateRegistrate registrate() {
         return REGISTRATE;
     }

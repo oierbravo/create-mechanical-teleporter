@@ -16,9 +16,9 @@ import net.minecraft.world.level.LevelAccessor;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TeleportLinkNetworkHandler {
+public class TeleportLinkNetwork {
 
-	static final Map<LevelAccessor, Map<Couple<TeleportLinkNetworkHandler.Frequency>, Set<ITeleportLinkable>>> connections =
+	static final Map<LevelAccessor, Map<Couple<TeleportLinkNetwork.Frequency>, Set<ITeleportLinkable>>> connections =
 			new IdentityHashMap<>();
 
 	public final AtomicInteger globalPowerVersion = new AtomicInteger();
@@ -33,15 +33,15 @@ public class TeleportLinkNetworkHandler {
 	}
 
 	public Set<ITeleportLinkable> getNetworkOf(LevelAccessor level, ITeleportLinkable actor) {
-		Map<Couple<TeleportLinkNetworkHandler.Frequency>, Set<ITeleportLinkable>> networksInWorld = networksIn(level);
-		Couple<TeleportLinkNetworkHandler.Frequency> key = actor.getNetworkKey();
+		Map<Couple<TeleportLinkNetwork.Frequency>, Set<ITeleportLinkable>> networksInWorld = networksIn(level);
+		Couple<TeleportLinkNetwork.Frequency> key = actor.getNetworkKey();
 		if (!networksInWorld.containsKey(key))
 			networksInWorld.put(key, new LinkedHashSet<>());
 		return networksInWorld.get(key);
 	}
 
-	public Set<ITeleportLinkable> getNetworkOf(LevelAccessor level, Couple<TeleportLinkNetworkHandler.Frequency> key ) {
-		Map<Couple<TeleportLinkNetworkHandler.Frequency>, Set<ITeleportLinkable>> networksInWorld = networksIn(level);
+	public Set<ITeleportLinkable> getNetworkOf(LevelAccessor level, Couple<TeleportLinkNetwork.Frequency> key ) {
+		Map<Couple<TeleportLinkNetwork.Frequency>, Set<ITeleportLinkable>> networksInWorld = networksIn(level);
 		if (!networksInWorld.containsKey(key))
 			networksInWorld.put(key, new LinkedHashSet<>());
 		return networksInWorld.get(key);
@@ -104,7 +104,7 @@ public class TeleportLinkNetworkHandler {
 			.closerThan(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());*/
 	}
 
-	public Map<Couple<TeleportLinkNetworkHandler.Frequency>, Set<ITeleportLinkable>> networksIn(LevelAccessor world) {
+	public Map<Couple<TeleportLinkNetwork.Frequency>, Set<ITeleportLinkable>> networksIn(LevelAccessor world) {
 		if (!connections.containsKey(world)) {
 			MechanicalTeleporter.LOGGER.warn("Tried to Access unprepared network space of " + WorldHelper.getDimensionID(world));
 			return new HashMap<>();
@@ -119,24 +119,29 @@ public class TeleportLinkNetworkHandler {
 		});
 		return allTeleporters;
 	}
+	public static class Frequencies {
+		public static Couple<Frequency> from(ItemStack first, ItemStack second){
+			return Couple.create(Frequency.of(first),Frequency.of(second));
+		}
+	}
 	public static class Frequency {
-		public static final TeleportLinkNetworkHandler.Frequency EMPTY = new TeleportLinkNetworkHandler.Frequency(ItemStack.EMPTY);
-		private static final Map<Item, TeleportLinkNetworkHandler.Frequency> simpleFrequencies = new IdentityHashMap<>();
+		public static final TeleportLinkNetwork.Frequency EMPTY = new TeleportLinkNetwork.Frequency(ItemStack.EMPTY);
+		private static final Map<Item, TeleportLinkNetwork.Frequency> simpleFrequencies = new IdentityHashMap<>();
 		private ItemStack stack;
 		private Item item;
 		private int color;
 
-		public static StreamCodec<RegistryFriendlyByteBuf, Frequency> STREAM_CODEC = STREAM_CODEC = StreamCodec.composite(
+		public static StreamCodec<RegistryFriendlyByteBuf, Frequency> STREAM_CODEC = StreamCodec.composite(
 				ByteBufCodecs.registry(Registries.ITEM), i -> i.item,
 				Frequency::new
 		);
 
-		public static TeleportLinkNetworkHandler.Frequency of(ItemStack stack) {
+		public static TeleportLinkNetwork.Frequency of(ItemStack stack) {
 			if (stack.isEmpty())
 				return EMPTY;
 			if (stack.getComponents().isEmpty())
-				return simpleFrequencies.computeIfAbsent(stack.getItem(), $ -> new TeleportLinkNetworkHandler.Frequency(stack));
-			return new TeleportLinkNetworkHandler.Frequency(stack);
+				return simpleFrequencies.computeIfAbsent(stack.getItem(), $ -> new TeleportLinkNetwork.Frequency(stack));
+			return new TeleportLinkNetwork.Frequency(stack);
 		}
 		private Frequency(Item item){
 			this(new ItemStack(item));

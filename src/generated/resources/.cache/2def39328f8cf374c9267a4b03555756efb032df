@@ -1,8 +1,0 @@
-// 1.19.2	2023-08-05T15:18:49.171582384	Registrate Provider for create_mechanical_teleporter [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
-59ff3d78f1b68f10edd487cc238c48211123db3e assets/create_mechanical_teleporter/blockstates/mechanical_teleporter.json
-0d0d5a48e5a915da5761d61da593e550fc90d06e assets/create_mechanical_teleporter/lang/en_ud.json
-a55b51be4ee7ec5e4163b58676543d3aff831f3d assets/create_mechanical_teleporter/lang/en_us.json
-995e4613d035da55316b8c5f13f8f3791e76e748 assets/create_mechanical_teleporter/models/item/mechanical_teleporter.json
-274516a1c40463f418123533fab156fe4779d25b assets/create_mechanical_teleporter/models/item/teleport_wand.json
-5b028c914ad03bd20a2e30c04531e6afb67481fc data/create_mechanical_teleporter/loot_tables/blocks/mechanical_teleporter.json
-7a9179abffdd6399f63db3b02946b54d5c402a2f data/minecraft/tags/blocks/mineable/pickaxe.json
