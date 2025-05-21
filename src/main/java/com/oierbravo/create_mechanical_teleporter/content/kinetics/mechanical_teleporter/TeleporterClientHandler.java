@@ -1,6 +1,5 @@
 package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
-import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.outliner.Outliner;
@@ -28,7 +27,7 @@ public class TeleporterClientHandler {
 			return;
 		ItemStack mainHandItem = player.getMainHandItem();
 		if (!(mainHandItem.getItem() instanceof TeleporterBlockItem)
-			|| !LogisticallyLinkedBlockItem.isTuned(mainHandItem))
+			|| !TeleporterBlockItem.isTuned(mainHandItem))
 			return;
 
 		CompoundTag tag = mainHandItem.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
@@ -56,30 +55,9 @@ public class TeleporterClientHandler {
 						.move(be.getBlockPos()), 2)
 					.lineWidth(1 / 32f)
 					.disableLineNormals()
-					.colored(AnimationTickHolder.getTicks() % 16 < 8 ? 0x708DAD : 0x90ADCD);
+					.colored(AnimationTickHolder.getTicks() % 16 < 8 ? 0x009999 : 0x008888);
 			}
 
 		}
 	}
-
-	/*public static void tickPanel(FactoryPanelBehaviour fpb) {
-		if (previouslyHeldFrequency == null)
-			return;
-		if (!previouslyHeldFrequency.equals(fpb.network))
-			return;
-		LocalPlayer player = Minecraft.getInstance().player;
-		if (player == null)
-			return;
-		if (!player.blockPosition()
-			.closerThan(fpb.getPos(), 64))
-			return;
-
-		Outliner.getInstance()
-			.showAABB(fpb, FactoryPanelConnectionHandler.getBB(fpb.blockEntity.getBlockState(), fpb.getPanelPosition())
-				.inflate(-1.5 / 128f))
-			.lineWidth(1 / 32f)
-			.disableLineNormals()
-			.colored(AnimationTickHolder.getTicks() % 16 < 8 ? 0x708DAD : 0x90ADCD);
-	}*/
-
 }

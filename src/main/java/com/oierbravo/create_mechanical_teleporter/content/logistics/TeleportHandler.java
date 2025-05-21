@@ -18,6 +18,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -111,9 +113,9 @@ public class TeleportHandler {
                         player.setPose(Pose.SWIMMING);
                     }
 
-                    //player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 } else {
-                    //player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
+                    player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
                 }
             }
             return true;
@@ -128,9 +130,9 @@ public class TeleportHandler {
             GlobalPos destinationGlobalPos = null;
 
             for(GlobalPos globalPos : network.loadedLinks) {
-                if(!globalPos.pos().equals(player.getOnPos())) {
-                    if(foundCurrent) {
-                        destinationGlobalPos = (TeleportHandler.teleportToGlobalPos(globalPos, player, true)) ? globalPos : null;
+                if(!globalPos.equals(new GlobalPos(player.level().dimension(),player.getOnPos()))) {
+                    if(foundCurrent && TeleportHandler.tryTeleportToGlobalPos(globalPos, player, true)) {
+                        destinationGlobalPos = globalPos;
                         break;
                     }
                 } else {
@@ -141,19 +143,26 @@ public class TeleportHandler {
             }
             if(destinationGlobalPos == null) {
                 for(GlobalPos globalPos : network.loadedLinks) {
-                    if(!globalPos.pos().equals(player.getOnPos())) {
-                        destinationGlobalPos = (TeleportHandler.teleportToGlobalPos(globalPos, player, true)) ? globalPos : null;
-                        break;
+                    if(!globalPos.equals(new GlobalPos(player.level().dimension(),player.getOnPos()))) {
+                        if(TeleportHandler.tryTeleportToGlobalPos(globalPos, player, true)){
+                            destinationGlobalPos = globalPos;
+                            break;
+                        }
                     }
                 }
             }
             if(destinationGlobalPos != null){
-                boolean succes = TeleportHandler.teleportToGlobalPos(destinationGlobalPos, player, false);
+                boolean succes = TeleportHandler.tryTeleportToGlobalPos(destinationGlobalPos, player, false);
+
                 if(succes && player.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock){
                     sitDown(player.level(),destinationGlobalPos.pos().above(), player);
                 }
+                if(succes)
+                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+
             } else {
                 player.displayClientMessage(ModLang.translate("logisitcs.valid_teleporter_not_found").component(),true);
+                player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
             }
         }
     }
@@ -312,36 +321,58 @@ public class TeleportHandler {
         return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
     }
 
-    public static boolean teleportToGlobalPos(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer, boolean simulate) {
-        BlockPos destination = destinationGlobalPos.pos().above();
-        if(serverPlayer.level().dimension() != destinationGlobalPos.dimension()){
-            ServerLevel targetDimension = serverPlayer.level().getServer().getLevel(destinationGlobalPos.dimension());
-            if(targetDimension == null)
+    public static boolean tryTeleportToGlobalPos(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer, boolean simulate) {
+        BlockPos teleportDestination = destinationGlobalPos.pos().above();
+        ServerLevel targetDimension = (ServerLevel) serverPlayer.level();
+        boolean sameDimension = serverPlayer.level().dimension() == destinationGlobalPos.dimension();
+        if(!sameDimension) {
+            targetDimension = serverPlayer.level().getServer().getLevel(destinationGlobalPos.dimension());
+        }
+
+        if(targetDimension == null)
+            return false;
+
+        if(!targetDimension.isLoaded(destinationGlobalPos.pos()))
+            return false;
+
+        if(isTeleportPositionClear(targetDimension,teleportDestination).isEmpty())
+            return false;
+
+        BlockEntity be = targetDimension.getBlockEntity(destinationGlobalPos.pos());
+
+        if(be instanceof TeleporterBlockEntity teleporterBlockEntity){
+            if(!teleporterBlockEntity.checkRequerimentsForTeleport())
                 return false;
-            DimensionTransition transition = new DimensionTransition(targetDimension, new Vec3(destination.getX() + (double)0.5F, destination.getY(), destination.getZ() + (double)0.5F), Vec3.ZERO, serverPlayer.getYRot(), serverPlayer.getXRot(), false, DimensionTransition.DO_NOTHING);
-            if(checkTeleporterRequirements(targetDimension, destinationGlobalPos.pos(), serverPlayer) && isTeleportPositionClear(targetDimension,destination).isPresent()){
-                if(!simulate)
-                    serverPlayer.changeDimension(transition);
-                return true;
-            }
+        } else {
             return false;
         }
-        if(checkTeleporterRequirements(serverPlayer.level(), destinationGlobalPos.pos(), serverPlayer) && isTeleportPositionClear(serverPlayer.level(),destination).isPresent()){
-            if(!simulate){
-                serverPlayer.dismountTo(0.5,0.5,0.5);
-                serverPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
-            }
+        /*if(!checkTeleporterRequirements(targetDimension, destinationGlobalPos.pos()))
+            return false;*/
+
+
+
+        if(simulate)
+            return true;
+
+        if(!sameDimension) {
+            DimensionTransition transition = new DimensionTransition(targetDimension, new Vec3(teleportDestination.getX() + (double) 0.5F, teleportDestination.getY(), teleportDestination.getZ() + (double) 0.5F), Vec3.ZERO, serverPlayer.getYRot(), serverPlayer.getXRot(), false, DimensionTransition.DO_NOTHING);
+            serverPlayer.changeDimension(transition);
+            consumeTeleporterResources(serverPlayer.level(), destinationGlobalPos.pos());
             return true;
         }
-        return false;
+        serverPlayer.dismountTo(0.5,0.5,0.5);
+        serverPlayer.teleportTo(teleportDestination.getX() + 0.5,teleportDestination.getY()+ 0.5,teleportDestination.getZ()+ 0.5);
+        consumeTeleporterResources(serverPlayer.level(), destinationGlobalPos.pos());
+        return true;
     }
-    public static boolean checkTeleporterRequirements(Level level, BlockPos pos, ServerPlayer serverPlayer){
-        if(!level.isLoaded(pos))
-            return false;
+    public static boolean checkTeleporterRequirements(Level level, BlockPos pos){
+        return false;
+
+    }
+    public static void consumeTeleporterResources(Level level, BlockPos pos){
         BlockEntity be = level.getBlockEntity(pos);
         if(be instanceof TeleporterBlockEntity teleporterBlockEntity){
-            return teleporterBlockEntity.checkRequerimentsForTeleport(serverPlayer);
+            teleporterBlockEntity.consumeFluid();
         }
-        return false;
     }
 }

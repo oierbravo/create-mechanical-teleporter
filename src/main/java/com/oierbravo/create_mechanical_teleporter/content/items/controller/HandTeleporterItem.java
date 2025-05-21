@@ -81,7 +81,7 @@ public class HandTeleporterItem extends Item {
 
         if (player == null)
             return InteractionResult.FAIL;
-        if (player.isShiftKeyDown())
+        if (!player.isShiftKeyDown())
             return super.useOn(pContext);
 
         TeleporterBehavior link = BlockEntityBehaviour.get(level, pos, TeleporterBehavior.TYPE);

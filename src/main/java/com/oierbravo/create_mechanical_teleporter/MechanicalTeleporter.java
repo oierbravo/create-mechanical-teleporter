@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import static com.oierbravo.create_mechanical_teleporter.ModConstants.DISPLAY_NAME;
 import static com.oierbravo.create_mechanical_teleporter.ModConstants.MODID;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(MODID)
 public class MechanicalTeleporter
 {
