@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;

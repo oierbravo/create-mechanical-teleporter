@@ -31,7 +31,7 @@ public class TeleportWandItemRenderer extends CustomRenderedItemModelRenderer {
 		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 		int maxLight = LightTexture.FULL_BRIGHT;
 		Player player = Minecraft.getInstance().player;
-		boolean playerHasAir = player != null && player.getPersistentData().contains("PlayerHasAir") && player.getPersistentData().getInt("PlayerHasAir") > MConfigs.server().teleportWand.airAmount.get();
+		boolean playerHasAir = player != null && player.getPersistentData().contains("PlayerHasAir") && player.getPersistentData().getInt("PlayerHasAir") > MConfigs.server().wand.airAmount.get();
 
         renderer.render(model.getOriginalModel(), light);
 

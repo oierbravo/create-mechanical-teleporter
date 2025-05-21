@@ -1,8 +1,9 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlock;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.ModLang;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.foundation.ContraptionUtils;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
@@ -81,18 +82,18 @@ public class TeleportHandler {
         });
     }
 
-    public static boolean hasResources(Player player) {
+    public static boolean hasResources(Player player, int amountRequired) {
         List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
         if(backtanks.isEmpty())
             return false;
         if(!BacktankUtil.hasAirRemaining(backtanks.getFirst()))
             return false;
-        return BacktankUtil.getAir(backtanks.getFirst()) >= MConfigs.server().teleportWand.airAmount.get();
+        return BacktankUtil.getAir(backtanks.getFirst()) >= amountRequired;
     }
 
-    public static void consumeResources(Player player) {
+    public static void consumeResources(Player player, int amount) {
         List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
-        BacktankUtil.consumeAir(player, backtanks.getFirst(), MConfigs.server().teleportWand.airAmount.get());
+        BacktankUtil.consumeAir(player, backtanks.getFirst(), amount);
     }
 
     public static boolean shortTeleport(Level level, Player player) {
@@ -129,7 +130,7 @@ public class TeleportHandler {
             for(GlobalPos globalPos : network.loadedLinks) {
                 if(!globalPos.pos().equals(player.getOnPos())) {
                     if(foundCurrent) {
-                        destinationGlobalPos = globalPos;
+                        destinationGlobalPos = (TeleportHandler.teleportToGlobalPos(globalPos, player, true)) ? globalPos : null;
                         break;
                     }
                 } else {
@@ -141,18 +142,18 @@ public class TeleportHandler {
             if(destinationGlobalPos == null) {
                 for(GlobalPos globalPos : network.loadedLinks) {
                     if(!globalPos.pos().equals(player.getOnPos())) {
-                        destinationGlobalPos = globalPos;
+                        destinationGlobalPos = (TeleportHandler.teleportToGlobalPos(globalPos, player, true)) ? globalPos : null;
                         break;
                     }
                 }
             }
             if(destinationGlobalPos != null){
-                boolean succes = TeleportHandler.teleportToGlobalPos(destinationGlobalPos, player);
+                boolean succes = TeleportHandler.teleportToGlobalPos(destinationGlobalPos, player, false);
                 if(succes && player.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock){
                     sitDown(player.level(),destinationGlobalPos.pos().above(), player);
-
                 }
-
+            } else {
+                player.displayClientMessage(ModLang.translate("logisitcs.valid_teleporter_not_found").component(),true);
             }
         }
     }
@@ -187,8 +188,7 @@ public class TeleportHandler {
         // inspired by Entity#pick
         Vec3 playerPos = player.getEyePosition();
         Vec3 lookVec = player.getLookAngle().normalize();
-        //int range = BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_RANGE.get();
-        int range = 10;
+        int range = MConfigs.server().wand.range.get();
         Vec3 toPos = playerPos.add(lookVec.scale(range));
 
         ClipContext clipCtx = new ClipContext(playerPos, toPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE,
@@ -312,23 +312,35 @@ public class TeleportHandler {
         return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
     }
 
-    public static boolean teleportToGlobalPos(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer) {
+    public static boolean teleportToGlobalPos(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer, boolean simulate) {
         BlockPos destination = destinationGlobalPos.pos().above();
         if(serverPlayer.level().dimension() != destinationGlobalPos.dimension()){
             ServerLevel targetDimension = serverPlayer.level().getServer().getLevel(destinationGlobalPos.dimension());
             if(targetDimension == null)
                 return false;
             DimensionTransition transition = new DimensionTransition(targetDimension, new Vec3(destination.getX() + (double)0.5F, destination.getY(), destination.getZ() + (double)0.5F), Vec3.ZERO, serverPlayer.getYRot(), serverPlayer.getXRot(), false, DimensionTransition.DO_NOTHING);
-            if(targetDimension.isLoaded(destination) && isTeleportPositionClear(targetDimension,destination).isPresent()){
-                serverPlayer.changeDimension(transition);
+            if(checkTeleporterRequirements(targetDimension, destinationGlobalPos.pos(), serverPlayer) && isTeleportPositionClear(targetDimension,destination).isPresent()){
+                if(!simulate)
+                    serverPlayer.changeDimension(transition);
                 return true;
             }
             return false;
         }
-        if(serverPlayer.level().isLoaded(destination)){
-            serverPlayer.dismountTo(0.5,0.5,0.5);
-            serverPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
+        if(checkTeleporterRequirements(serverPlayer.level(), destinationGlobalPos.pos(), serverPlayer) && isTeleportPositionClear(serverPlayer.level(),destination).isPresent()){
+            if(!simulate){
+                serverPlayer.dismountTo(0.5,0.5,0.5);
+                serverPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
+            }
             return true;
+        }
+        return false;
+    }
+    public static boolean checkTeleporterRequirements(Level level, BlockPos pos, ServerPlayer serverPlayer){
+        if(!level.isLoaded(pos))
+            return false;
+        BlockEntity be = level.getBlockEntity(pos);
+        if(be instanceof TeleporterBlockEntity teleporterBlockEntity){
+            return teleporterBlockEntity.checkRequerimentsForTeleport(serverPlayer);
         }
         return false;
     }

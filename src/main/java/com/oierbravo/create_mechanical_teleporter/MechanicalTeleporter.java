@@ -1,7 +1,9 @@
 package com.oierbravo.create_mechanical_teleporter;
 
 import com.mojang.logging.LogUtils;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.GlobalTeleportersManager;
+import com.oierbravo.create_mechanical_teleporter.foundation.ChunkManager;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.data.ModDataGen;
 import com.oierbravo.create_mechanical_teleporter.registrate.*;
@@ -15,6 +17,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import org.slf4j.Logger;
 
 import static com.oierbravo.create_mechanical_teleporter.ModConstants.DISPLAY_NAME;
@@ -41,6 +44,7 @@ public class MechanicalTeleporter
 
         REGISTRATE.registerEventListeners(modEventBus);
 
+        ChunkManager.init();
 
         ModBlocks.register();
         ModBlockEntities.register();
@@ -55,7 +59,7 @@ public class MechanicalTeleporter
         ModPackets.register();
         ModDataComponents.register(modEventBus);
         modEventBus.addListener(this::registerCapabilities);
-
+        modEventBus.addListener(this::registerChunkLoaders);
         modEventBus.addListener(ModDataGen::gatherData);
 
         generateLangEntries();
@@ -70,9 +74,11 @@ public class MechanicalTeleporter
 
     @net.neoforged.bus.api.SubscribeEvent
     public void registerCapabilities(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent event) {
-
+        TeleporterBlockEntity.registerCapabilities(event);
     }
-
+    private void registerChunkLoaders(RegisterTicketControllersEvent event) {
+        event.register(ChunkManager.TICKET_CONTROLLER);
+    }
     public static CreateRegistrate registrate() {
         return REGISTRATE;
     }

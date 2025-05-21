@@ -1,8 +1,14 @@
-package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
+import com.oierbravo.create_mechanical_teleporter.ModLang;
+import com.oierbravo.create_mechanical_teleporter.foundation.ChunkManager;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +18,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
@@ -20,7 +28,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler.teleportToTeleporter;
-import static com.simibubi.create.content.contraptions.actors.seat.SeatBlock.sitDown;
 
 public class TeleporterBlockEntity extends KineticBlockEntity {
     //private final FluidTank fluidTankHandler = createFluidTank();
@@ -32,6 +39,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
     protected Optional<IFluidHandler> fluidCapability;
     //private LazyOptional<IFluidHandler> outputFluidHandler = LazyOptional.of(() -> fluidTankHandler);
     public TeleporterBehavior teleporterBehavior;
+    public SmartFluidTankBehaviour inputTank;
 
     //private TeleportLinkBehaviour teleport;
 
@@ -40,6 +48,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
         super(typeIn, pos, state);
         setLazyTickRate(10);
         placedBy = null;
+
         //fluidTank = createFluidTank();
         //fluidCapability = LazyOptional.of(() -> fluidTank);
     }
@@ -97,11 +106,30 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+        inputTank = SmartFluidTankBehaviour.single(this, 1000);
+        behaviours.add(inputTank);
+
         behaviours.add(teleporterBehavior = new TeleporterBehavior(this, true));
     }
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        invalidateCapabilities();
+    }
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                ModBlockEntities.MECHANICAL_TELEPORTER.get(),
+                (be, context) -> be.inputTank.getCapability());
+    }
 
-    /*protected void createTeleport() {
+    @Override
+    public void remove() {
+        if(MConfigs.server().teleporter.autoChunkLoad.get())
+            ChunkManager.unLoadForcedChunks(this.level, this.getBlockPos());
+    }
+/*protected void createTeleport() {
         Pair<ValueBoxTransform, ValueBoxTransform> slots =
                 ValueBoxTransform.Dual.makeSlots(TeleportLinkFrequencySlot::new);
 
@@ -118,7 +146,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
             pPlayer.dismountTo(0.5,0.5,0.5);
 
             if(blockAbove instanceof SeatBlock seatBlock){
-                sitDown(this.level,this.getBlockPos().above(), pPlayer);
+                SeatBlock.sitDown(this.level,this.getBlockPos().above(), pPlayer);
             } else {
                 teleportToTeleporter(this.level, pPlayer,this.getBlockPos());
 
@@ -137,15 +165,17 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
     }
 
     public boolean checkRequerimentsForTeleport(ServerPlayer pPlayer){
+        if(isPowered())
+            return false;
         if(this.overStressed){
-            pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.overstressed"),true);
+            //pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.overstressed"),true);
             return false;
         }
 
-        /*if(this.speed < IRotate.SpeedLevel.MEDIUM.getSpeedValue()){
-            pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.not_fast_enough"),true);
+        if(!this.isSpeedRequirementFulfilled()){
+            //pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.not_fast_enough"),true);
             return false;
-        }*/
+        }
         /*String fluidType = this.fluidTank.getFluid().getFluid().getFluidType().toString();
         if(fluidType == FLUID.toString()){
             pPlayer.displayClientMessage(Component.translatable("create_mechanical_teleporter.simple_teleport_controller.not_valid_fluid"),true);
@@ -178,35 +208,30 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
         fluidTank.readFromNBT(compound.getCompound("TankContent"));
 
     }*/
-    //ToDo: Chunkload?
-    /*@Override
-    public void tick() {
-        super.tick();
-        assert level != null;
-        if (level.isClientSide) {
-            return;
-        }
 
-        ServerLevel serverLevel = (ServerLevel) this.level;
-
-        for (int i = -2; i <= 2; i++) {
-            for (int j = -2; j <= 2; j++) {
-                serverLevel.setChunkForced(
-                        new ChunkPos(getBlockPos()).x + i,
-                        new ChunkPos(getBlockPos()).z + j,
-                        Math.abs(this.getSpeed()) >= 16 * 8 * Math.max(Math.abs(i), Math.abs(j))
-                );
-            }
-        }
-    }*/
 
     @Override
     public void initialize() {
         super.initialize();
         teleporterBehavior.redstonePowerChanged(TeleporterBlock.getPower(getBlockState(), level, worldPosition));
-    }
-    public void setPlacedBy(UUID uuid){
-        this.placedBy = uuid;
+        if(MConfigs.server().teleporter.autoChunkLoad.get())
+            ChunkManager.loadForcedChunks(this.level, this.getBlockPos());
     }
 
+
+    @Override
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+        if(!MConfigs.server().teleporter.autoChunkLoad.get())
+            return added;
+        if(!isSpeedRequirementFulfilled())
+            return added;
+
+        ModLang.translate("chunk_loader.loaded").style(ChatFormatting.GREEN).forGoggles(tooltip);
+        return true;
+    }
+    private boolean isPowered(){
+        return this.getBlockState().getProperties().contains(TeleporterBlock.POWERED) && this.getBlockState().getValue(TeleporterBlock.POWERED);
+    }
 }
+

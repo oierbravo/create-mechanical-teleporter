@@ -1,7 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterClientHandler;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.world.entity.player.Player;

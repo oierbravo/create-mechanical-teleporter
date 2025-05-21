@@ -102,15 +102,15 @@ public class TeleportWandItem extends Item {
         return BacktankUtil.getBarColor(stack, maxUses());
     }
     private static int maxUses() {
-        return AllConfigs.server().equipment.airInBacktank.get() / MConfigs.server().teleportWand.airAmount.get();
+        return AllConfigs.server().equipment.airInBacktank.get() / MConfigs.server().wand.airAmount.get();
     }
 
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
         boolean isCreative = player.isCreative();
-        if (TeleportHandler.hasResources(player) || isCreative) {
+        if (TeleportHandler.hasResources(player, MConfigs.server().wand.airAmount.get()) || isCreative) {
             if (performAction(this, level, player)) {
                 if (!level.isClientSide() && !isCreative) {
-                    TeleportHandler.consumeResources(player);
+                    TeleportHandler.consumeResources(player, MConfigs.server().wand.airAmount.get());
                 }
 
                 return true;
@@ -125,12 +125,12 @@ public class TeleportWandItem extends Item {
     public boolean performAction(Item item, Level level, Player player) {
         if (!player.isShiftKeyDown()) {
             if (TeleportHandler.shortTeleport(level, player)) {
-                player.getCooldowns().addCooldown(item, MConfigs.server().teleportWand.cooldown.get());
+                player.getCooldowns().addCooldown(item, MConfigs.server().wand.cooldown.get());
                 return true;
             }
         } else {
             if (TeleportHandler.blockTeleport(level, player)) {
-                player.getCooldowns().addCooldown(item, MConfigs.server().teleportWand.cooldown.get());
+                player.getCooldowns().addCooldown(item, MConfigs.server().wand.cooldown.get());
                 return true;
             }/* else if (TeleportHandler.interact(level, player)) {
                 player.getCooldowns().addCooldown(this, MConfigs.server().teleportWand.cooldown.get());

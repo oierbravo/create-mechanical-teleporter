@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;

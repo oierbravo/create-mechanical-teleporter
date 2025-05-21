@@ -1,6 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBehavior;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
