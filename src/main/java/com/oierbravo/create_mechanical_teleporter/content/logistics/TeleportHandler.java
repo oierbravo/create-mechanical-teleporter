@@ -1,9 +1,8 @@
-package com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport;
+package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportersNetwork;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.NewTeleporterBlock;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.NewTeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.foundation.ContraptionUtils;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
@@ -62,7 +61,7 @@ public class TeleportHandler {
     }
 
     public static boolean  canBlockTeleport(Player player) {
-        if(player.getBlockStateOn().getBlock() instanceof NewTeleporterBlock)
+        if(player.getBlockStateOn().getBlock() instanceof TeleporterBlock)
             return true;
 
         BlockPos playerPos = player.getOnPos();
@@ -173,8 +172,8 @@ public class TeleportHandler {
 
     public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
         BlockEntity onBlockEntity = level.getBlockEntity(player.getOnPos());
-        if (onBlockEntity instanceof NewTeleporterBlockEntity newTeleporterBlockEntity){
-            ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(newTeleporterBlockEntity.teleporterBehavior.freqId));
+        if (sendToServer && onBlockEntity instanceof TeleporterBlockEntity teleporterBlockEntity){
+            ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(teleporterBlockEntity.teleporterBehavior.freqId));
             return true;
         }
         return false;

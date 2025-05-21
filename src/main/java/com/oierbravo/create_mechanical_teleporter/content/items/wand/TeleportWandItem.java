@@ -1,8 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
-import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.ITeleportLinkable;
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportHandler;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
@@ -22,10 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 //public class TeleportWandItem extends Item  implements MenuProvider {
@@ -84,22 +79,6 @@ public class TeleportWandItem extends Item {
                             .map(BacktankUtil::getAir)
                             .reduce(0, Integer::sum)));
 
-        }
-        if(player.isShiftKeyDown()){
-            List<ITeleportLinkable> teleporters = MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.getTeleporters(level);
-            for(ITeleportLinkable teleporter : teleporters){
-                int a = 0;
-                List<BlockPos> includedBlockPositions = Collections.singletonList(teleporter.getBlockPos());
-                Set<BlockPos> positions = new HashSet<>(includedBlockPositions);
-
-
-                /*Outliner.getInstance().showCluster(Pair.of(teleporter.getBlockPos(), 1), positions)
-
-                        .colored(0xFFFFFF)
-                        .lineWidth(1 / 16f)
-                        .disableCull()
-                        .withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);*/
-            }
         }
     }
     @SuppressWarnings("removal")

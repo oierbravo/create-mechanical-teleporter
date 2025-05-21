@@ -2,7 +2,6 @@ package com.oierbravo.create_mechanical_teleporter;
 
 import com.mojang.logging.LogUtils;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.GlobalTeleportersManager;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportLinkNetwork;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.data.ModDataGen;
 import com.oierbravo.create_mechanical_teleporter.registrate.*;
@@ -34,7 +33,6 @@ public class MechanicalTeleporter
                         .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
         );
     }
-    public static final TeleportLinkNetwork TELEPORT_NETWORK_HANDLER = new TeleportLinkNetwork();
     public static final GlobalTeleportersManager TELEPORTERS = new GlobalTeleportersManager();
 
     public MechanicalTeleporter(IEventBus modEventBus, ModContainer modContainer)

@@ -1,6 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.infrastructure.network;
 
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportHandler;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 

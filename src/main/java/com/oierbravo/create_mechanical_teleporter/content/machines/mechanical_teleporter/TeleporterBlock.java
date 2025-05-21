@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global;
+package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
 import com.mojang.serialization.MapCodec;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
@@ -22,12 +22,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
-public class NewTeleporterBlock extends HorizontalKineticBlock implements IBE<NewTeleporterBlockEntity>, IWrenchable {
+public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity>, IWrenchable {
     public static final MapCodec<PackagerLinkBlock> CODEC = simpleCodec(PackagerLinkBlock::new);
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 
-    public NewTeleporterBlock(Properties properties) {
+    public TeleporterBlock(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(POWERED, false));
     }
@@ -51,12 +51,12 @@ public class NewTeleporterBlock extends HorizontalKineticBlock implements IBE<Ne
 
 
     @Override
-    public Class<NewTeleporterBlockEntity> getBlockEntityClass() {
-        return NewTeleporterBlockEntity.class;
+    public Class<TeleporterBlockEntity> getBlockEntityClass() {
+        return TeleporterBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends NewTeleporterBlockEntity> getBlockEntityType() {
+    public BlockEntityType<? extends TeleporterBlockEntity> getBlockEntityType() {
         return ModBlockEntities.MECHANICAL_TELEPORTER.get();
     }
     @Override
@@ -96,7 +96,7 @@ public class NewTeleporterBlock extends HorizontalKineticBlock implements IBE<Ne
     /*@Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-            withBlockEntityDo(worldIn, pos, NewTeleporterBlockEntity::setRemoved);
+            withBlockEntityDo(worldIn, pos, TeleporterBlockEntity::setRemoved);
 
             worldIn.removeBlockEntity(pos);
         }

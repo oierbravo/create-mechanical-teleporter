@@ -1,7 +1,5 @@
-package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global;
+package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleporterBehavior;
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleporterBlockItem;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.createmod.catnip.animation.AnimationTickHolder;

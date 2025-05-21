@@ -1,9 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
-import com.oierbravo.create_mechanical_teleporter.ModConstants;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.TeleporterClientHandler;
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportHandler;
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportersDisplayOverlay;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler;
+import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.TeleporterClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.world.entity.player.Player;
@@ -12,8 +10,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
@@ -68,11 +64,4 @@ public class ClientEvents {
 		}
 	}
 
-	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
-	public static class ModBusEvents {
-		@SubscribeEvent
-		public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
-			event.registerAbove(VanillaGuiLayers.AIR_LEVEL, ModConstants.asResource("teleporters_display"), TeleportersDisplayOverlay.INSTANCE);
-		}
-	}
 }

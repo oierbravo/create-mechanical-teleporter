@@ -1,6 +1,5 @@
-package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global;
+package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
-import com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleporterBehavior;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -20,10 +19,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport.TeleportHandler.teleportToTeleporter;
+import static com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler.teleportToTeleporter;
 import static com.simibubi.create.content.contraptions.actors.seat.SeatBlock.sitDown;
 
-public class NewTeleporterBlockEntity extends KineticBlockEntity {
+public class TeleporterBlockEntity extends KineticBlockEntity {
     //private final FluidTank fluidTankHandler = createFluidTank();
 
     public UUID placedBy;
@@ -36,7 +35,7 @@ public class NewTeleporterBlockEntity extends KineticBlockEntity {
 
     //private TeleportLinkBehaviour teleport;
 
-    public NewTeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+    public TeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 
         super(typeIn, pos, state);
         setLazyTickRate(10);
@@ -204,7 +203,7 @@ public class NewTeleporterBlockEntity extends KineticBlockEntity {
     @Override
     public void initialize() {
         super.initialize();
-        teleporterBehavior.redstonePowerChanged(NewTeleporterBlock.getPower(getBlockState(), level, worldPosition));
+        teleporterBehavior.redstonePowerChanged(TeleporterBlock.getPower(getBlockState(), level, worldPosition));
     }
     public void setPlacedBy(UUID uuid){
         this.placedBy = uuid;

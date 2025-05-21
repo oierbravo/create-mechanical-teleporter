@@ -1,8 +1,7 @@
-package com.oierbravo.create_mechanical_teleporter.foundation.tileEntity.behaviour.teleport;
+package com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter;
 
 import com.google.common.cache.Cache;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.machines.mechanical_teleporter.global.NewTeleporterBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -126,7 +125,7 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         if (!addedGlobally && global) {
             addedGlobally = true;
             blockEntity.setChanged();
-            if (blockEntity instanceof NewTeleporterBlockEntity tbe)
+            if (blockEntity instanceof TeleporterBlockEntity tbe)
                 MechanicalTeleporter.TELEPORTERS.linkAdded(freqId, getGlobalPos(), tbe.placedBy);
         }
 

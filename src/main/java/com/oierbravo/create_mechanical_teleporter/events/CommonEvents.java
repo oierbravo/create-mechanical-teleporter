@@ -16,18 +16,18 @@ public class CommonEvents {
 		//	return;
 		Level world = event.getLevel();
 		TeleportWandServerHandler.tick(world);
+		MechanicalTeleporter.TELEPORTERS.tick(world);
 	}
 	@SubscribeEvent
 	public static void onLoadWorld(LevelEvent.Load event) {
 		LevelAccessor world = event.getLevel();
-		MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.onLoadWorld(world);
+		MechanicalTeleporter.TELEPORTERS.levelLoaded(world);
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onUnloadWorld(LevelEvent.Unload event) {
 		LevelAccessor world = event.getLevel();
-		MechanicalTeleporter.TELEPORT_NETWORK_HANDLER.onUnloadWorld(world);
-	}
+	}*/
 
 
 
