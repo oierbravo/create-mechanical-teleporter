@@ -67,6 +67,7 @@ public class MechanicalTeleporter
     private void generateLangEntries(){
         new RegistrateLangBuilder(MODID, registrate())
                 .addCreativeTab(DISPLAY_NAME)
+                .add("chunk_loader.loaded", "Chunk loaded")
                 .add("hand_teleporter.tooltip.clear", "Hold shift + right click to clear")
                 .add("hand_teleporter.tooltip.address", "Address: %s")
                 .add("hand_teleporter.message.cleared", "Frequency cleared")

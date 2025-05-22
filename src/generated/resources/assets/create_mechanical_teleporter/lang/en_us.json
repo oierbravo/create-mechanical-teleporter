@@ -4,6 +4,7 @@
   "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour1": "Tunes to the teleporter network",
   "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.condition0": "When placed",
   "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.condition1": "R-Click on another Teleporter",
+  "create_mechanical_teleporter.chunk_loader.loaded": "Chunk loaded",
   "create_mechanical_teleporter.hand_teleporter.message.cleared": "Frequency cleared",
   "create_mechanical_teleporter.hand_teleporter.tooltip.address": "Address: %s",
   "create_mechanical_teleporter.hand_teleporter.tooltip.clear": "Hold shift + right click to clear",
