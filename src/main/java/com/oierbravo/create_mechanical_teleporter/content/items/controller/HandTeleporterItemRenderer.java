@@ -127,10 +127,10 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 		int index = 0;
 
 
-		ms.pushPose();
+		/*ms.pushPose();
 		msr.translate(3.5 * s, 0, 5 * s);
 		renderButton(renderer, ms, light, pt, button, b, index++, renderDepression);
-		ms.popPose();
+		ms.popPose();*/
 
 		ms.popPose();
 

@@ -111,7 +111,6 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
 
     public void onAddressEdited(String s) {
         this.address = s;
-        //CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(FilterScreenPacket.Option.UPDATE_ADDRESS, tag));
         ModMessages.sendToServer(new SetAddressToItemPayload(s,this.targetSlot));
     }
 
