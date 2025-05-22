@@ -104,12 +104,6 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 			msr.rotateZDegrees(equip * -30);
 		}
 
-		if (transformType == ItemDisplayContext.GUI) {
-			if (stack == mc.player.getMainHandItem())
-				active = true;
-			if (stack == mc.player.getOffhandItem() && noControllerInMain)
-				active = true;
-		}
 
 		renderDepression = true;
 
