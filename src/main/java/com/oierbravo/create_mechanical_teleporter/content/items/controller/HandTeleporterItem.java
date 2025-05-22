@@ -1,19 +1,24 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 
+import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -22,6 +27,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 public class HandTeleporterItem extends Item {
@@ -45,27 +51,17 @@ public class HandTeleporterItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
 
-        /*if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            if (!world.isClientSide && player instanceof ServerPlayer && player.mayBuild())
-                player.openMenu(this, buf -> {
-                    ItemStack.STREAM_CODEC.encode(buf, heldItem);
-                });
-            return InteractionResultHolder.success(heldItem);
-        }*/
         if(player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND){
             clearFrequency(heldItem, player);
         }
 
         if (!player.isShiftKeyDown()) {
+            TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromHandTeleporter(heldItem);
             if (world.isClientSide)
-                //CatnipServices.PLATFORM.executeOnClientOnly(() -> {
-                if(getFrequency(heldItem) != null) {
-                    ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(getFrequency(heldItem)));
+                if(teleporterFrequency.freqId() != null) {
+                    ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(teleporterFrequency));
                 }
 
-                //    return true;
-                //});
-            //CatnipServices.PLATFORM.executeOnClientOnly(() -> this::toggleActive);
             player.getCooldowns()
                     .addCooldown(this, 2);
         }
@@ -93,7 +89,7 @@ public class HandTeleporterItem extends Item {
             if (!link.mayInteractMessage(player))
                 return InteractionResult.SUCCESS;
 
-            assignFrequency(stack, player, link.freqId);
+            assignFrequency(stack, player, link.freqId, link.signBasedAddress);
             return InteractionResult.SUCCESS;
         }
 
@@ -107,23 +103,21 @@ public class HandTeleporterItem extends Item {
     }
 
 
-    public static void assignFrequency(ItemStack stack, Player player, UUID frequency) {
+    public static void assignFrequency(ItemStack stack, Player player, UUID frequency, String address) {
         CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         tag.putUUID("Freq", frequency);
-
+        tag.putString("Address", address);
         player.displayClientMessage(CreateLang.translateDirect("logistically_linked.tuned"), true);
 
-        //BlockEntity.addEntityType(tag, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType());
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
     public static void clearFrequency(ItemStack stack, Player player) {
         CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         tag.remove("Freq");
+        tag.remove("Address");
+        player.displayClientMessage(ModLang.translate("hand_teleporter.message.cleared").component(), true);
 
-        player.displayClientMessage(CreateLang.translateDirect("logistically_linked.tuned"), true);
-
-        //BlockEntity.addEntityType(tag, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType());
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
     @Nullable
@@ -134,5 +128,35 @@ public class HandTeleporterItem extends Item {
         return tag.getUUID("Freq");
     }
 
+    public static String getAddress(ItemStack stack){
+        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if(!tag.contains("Address"))
+            return "";
+        return tag.getString("Address");
+    }
 
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext tooltipContext,
+                                @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, tooltipContext, tooltipComponents, tooltipFlag);
+
+        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if (!tag.hasUUID("Freq"))
+            return;
+
+        CreateLang.translate("logistically_linked.tooltip")
+                .style(ChatFormatting.GOLD)
+                .addTo(tooltipComponents);
+
+        ModLang.translate("hand_teleporter.tooltip.clear")
+                .style(ChatFormatting.GRAY)
+                .addTo(tooltipComponents);
+
+        if (!tag.contains("Address"))
+            return;
+        String address = tag.getString("Address");
+        ModLang.translate("hand_teleporter.tooltip.address", (address != "") ? address: "*")
+                .style(ChatFormatting.GRAY)
+                .addTo(tooltipComponents);
+    }
 }

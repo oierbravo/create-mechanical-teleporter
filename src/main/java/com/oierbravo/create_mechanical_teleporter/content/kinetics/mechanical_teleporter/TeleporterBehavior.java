@@ -7,11 +7,17 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.TickBasedCache;
+import net.createmod.catnip.data.Iterate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -31,6 +37,7 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
 
     public int redstonePower;
     public UUID freqId;
+    public String signBasedAddress;
 
     private boolean addedGlobally = false;
     private boolean loadedGlobally = false;
@@ -47,6 +54,8 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         this.global = global;
         linkId = LINK_ID_GENERATOR.getAndIncrement();
         freqId = UUID.randomUUID();
+        signBasedAddress = "";
+
     }
 
     public static Collection<TeleporterBehavior> getAllPresent(UUID freq, boolean sortByPriority) {
@@ -109,6 +118,9 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
     @Override
     public void lazyTick() {
         keepAlive(this);
+        if (blockEntity.getLevel().isClientSide())
+            return;
+        updateSignAddress();
     }
 
     @Override
@@ -195,6 +207,7 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         tag.putUUID("Freq", freqId);
         tag.putInt("Power", redstonePower);
         tag.putBoolean("Added", addedGlobally);
+        tag.putString("SignAddress", signBasedAddress);
     }
 
     @Override
@@ -204,10 +217,39 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
             freqId = tag.getUUID("Freq");
         redstonePower = tag.getInt("Power");
         addedGlobally = tag.getBoolean("Added");
+        signBasedAddress = tag.getString("SignAddress");
+    }
+    protected void updateSignAddress() {
+        signBasedAddress = "";
+        for (Direction side : Iterate.directions) {
+            String address = getSign(side);
+            if (address == null || address.isBlank())
+                continue;
+            signBasedAddress = address;
+        }
+    }
+    protected String getSign(Direction side) {
+        BlockEntity sideBlockEntity = blockEntity.getLevel().getBlockEntity(blockEntity.getBlockPos().relative(side));
+        if (!(sideBlockEntity instanceof SignBlockEntity sign))
+            return null;
+        for (boolean front : Iterate.trueAndFalse) {
+            SignText text = sign.getText(front);
+            String address = "";
+            for (Component component : text.getMessages(false)) {
+                String string = component.getString();
+                if (!string.isBlank())
+                    address += string.trim() + " ";
+            }
+            if (!address.isBlank())
+                return address.trim();
+        }
+        return null;
     }
 
     @Override
     public BehaviourType<?> getType() {
         return TYPE;
     }
+
+
 }

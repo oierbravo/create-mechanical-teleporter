@@ -1,7 +1,21 @@
 {
   "block.create_mechanical_teleporter.mechanical_teleporter": "Mechanical Teleporter",
+  "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour0": "Generates a new frequency or uses the tuned one",
+  "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.condition0": "When placed",
+  "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.condition1": "R-Click on another Teleporter",
+  "create_mechanical_teleporter.hand_teleporter.message.cleared": "Frequency cleared",
+  "create_mechanical_teleporter.hand_teleporter.tooltip.address": "Address: %s",
+  "create_mechanical_teleporter.hand_teleporter.tooltip.clear": "Hold shift + right click to clear",
   "create_mechanical_teleporter.itemGroup:main": "Create Mechanical Teleporter",
   "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1": "Freq. #1",
   "item.create_mechanical_teleporter.hand_teleporter": "Hand teleporter",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour0": "Teleports to the configured frequency",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour1": "Tunes to the telporter network",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour2": "Clears the frequency",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition0": "When used",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition1": "R-Click on Teleporter",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition2": "R-Click while Sneaking",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.summary": "Hold one frequency",
+  "item.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour1": "Tunes to the telporter network",
   "item.create_mechanical_teleporter.teleport_wand": "Teleport Wand"
 }

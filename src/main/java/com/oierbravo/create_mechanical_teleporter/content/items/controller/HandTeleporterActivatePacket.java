@@ -1,5 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
@@ -10,8 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.UUID;
 
 public class HandTeleporterActivatePacket implements ServerboundPacketPayload {
 	public static final StreamCodec<ByteBuf, HandTeleporterActivatePacket> STREAM_CODEC = StreamCodec.composite(
@@ -37,9 +36,9 @@ public class HandTeleporterActivatePacket implements ServerboundPacketPayload {
 		if (player.isSpectator())
 			return;
 
-		UUID freqId = HandTeleporterItem.getFrequency(handTeleporter);
-		if(freqId != null)
-			ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(freqId));
+		TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromHandTeleporter(handTeleporter);
+		if(teleporterFrequency.freqId() != null)
+			ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(teleporterFrequency));
 
 	}
 

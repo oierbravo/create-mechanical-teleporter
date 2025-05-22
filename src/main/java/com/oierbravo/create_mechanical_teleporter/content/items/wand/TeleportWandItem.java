@@ -132,10 +132,7 @@ public class TeleportWandItem extends Item {
             if (TeleportHandler.blockTeleport(level, player)) {
                 player.getCooldowns().addCooldown(item, MConfigs.server().wand.cooldown.get());
                 return true;
-            }/* else if (TeleportHandler.interact(level, player)) {
-                player.getCooldowns().addCooldown(this, MConfigs.server().teleportWand.cooldown.get());
-                return true;
-            }*/
+            }
         }
         return false;
     }

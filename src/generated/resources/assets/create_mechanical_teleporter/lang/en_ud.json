@@ -1,7 +1,21 @@
 {
   "block.create_mechanical_teleporter.mechanical_teleporter": "ɹǝʇɹodǝןǝ⟘ ןɐɔıuɐɥɔǝW",
+  "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour0": "ǝuo pǝunʇ ǝɥʇ sǝsn ɹo ʎɔuǝnbǝɹɟ ʍǝu ɐ sǝʇɐɹǝuǝ⅁",
+  "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.condition0": "pǝɔɐןd uǝɥM",
+  "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.condition1": "ɹǝʇɹodǝןǝ⟘ ɹǝɥʇouɐ uo ʞɔıןƆ-ᴚ",
+  "create_mechanical_teleporter.hand_teleporter.message.cleared": "pǝɹɐǝןɔ ʎɔuǝnbǝɹℲ",
+  "create_mechanical_teleporter.hand_teleporter.tooltip.address": "%s :ssǝɹppⱯ",
+  "create_mechanical_teleporter.hand_teleporter.tooltip.clear": "ɹɐǝןɔ oʇ ʞɔıןɔ ʇɥbıɹ + ʇɟıɥs pןoH",
   "create_mechanical_teleporter.itemGroup:main": "ɹǝʇɹodǝןǝ⟘ ןɐɔıuɐɥɔǝW ǝʇɐǝɹƆ",
   "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1": "Ɩ# ˙bǝɹℲ",
   "item.create_mechanical_teleporter.hand_teleporter": "ɹǝʇɹodǝןǝʇ puɐH",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour0": "ʎɔuǝnbǝɹɟ pǝɹnbıɟuoɔ ǝɥʇ oʇ sʇɹodǝןǝ⟘",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour1": "ʞɹoʍʇǝu ɹǝʇɹodןǝʇ ǝɥʇ oʇ sǝun⟘",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour2": "ʎɔuǝnbǝɹɟ ǝɥʇ sɹɐǝןƆ",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition0": "pǝsn uǝɥM",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition1": "ɹǝʇɹodǝןǝ⟘ uo ʞɔıןƆ-ᴚ",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition2": "buıʞɐǝuS ǝןıɥʍ ʞɔıןƆ-ᴚ",
+  "item.create_mechanical_teleporter.hand_teleporter.tooltip.summary": "ʎɔuǝnbǝɹɟ ǝuo pןoH",
+  "item.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour1": "ʞɹoʍʇǝu ɹǝʇɹodןǝʇ ǝɥʇ oʇ sǝun⟘",
   "item.create_mechanical_teleporter.teleport_wand": "puɐM ʇɹodǝןǝ⟘"
 }

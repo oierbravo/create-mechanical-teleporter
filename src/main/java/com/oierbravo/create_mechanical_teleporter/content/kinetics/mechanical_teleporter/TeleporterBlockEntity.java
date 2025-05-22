@@ -33,11 +33,9 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
     public SmartFluidTankBehaviour inputTank;
 
     public TeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
-
         super(typeIn, pos, state);
         setLazyTickRate(10);
         placedBy = null;
-
     }
     public static int FLUID_CAPACITY = 4000;
 
@@ -54,6 +52,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
         placedBy = tag.contains("PlacedBy") ? tag.getUUID("PlacedBy") : null;
+
     }
 
     @Override
@@ -70,7 +69,6 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
         invalidateCapabilities();
     }
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.MECHANICAL_TELEPORTER.get(),
@@ -129,5 +127,6 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
     private boolean isPowered(){
         return this.getBlockState().getProperties().contains(TeleporterBlock.POWERED) && this.getBlockState().getValue(TeleporterBlock.POWERED);
     }
+
 }
 

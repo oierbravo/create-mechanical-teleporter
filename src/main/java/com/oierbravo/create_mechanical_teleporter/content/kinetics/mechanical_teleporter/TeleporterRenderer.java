@@ -13,10 +13,5 @@ public class TeleporterRenderer extends KineticBlockEntityRenderer<TeleporterBlo
     @Override
     protected void renderSafe(TeleporterBlockEntity blockEntity, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
                               int overlay) {
-        //renderOnBlockEntity(blockEntity, partialTicks, ms, buffer, light, overlay);
     }
-
-
-
-
 }

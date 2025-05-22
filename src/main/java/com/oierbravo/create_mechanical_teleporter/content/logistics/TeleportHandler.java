@@ -2,6 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.ModLang;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.foundation.ContraptionUtils;
@@ -13,6 +14,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionCollider;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
+import net.createmod.catnip.data.Glob;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
@@ -45,8 +47,7 @@ import java.util.UUID;
 
 import static com.simibubi.create.content.contraptions.actors.seat.SeatBlock.sitDown;
 
-//From EnderIO
-//License CCO
+
 public class TeleportHandler {
 
     public static final int MIN_TELEPORTATION_DISTANCE_SQUARED = 25;
@@ -98,6 +99,8 @@ public class TeleportHandler {
         BacktankUtil.consumeAir(player, backtanks.getFirst(), amount);
     }
 
+    //From EnderIO:
+    //License CCO
     public static boolean shortTeleport(Level level, Player player) {
         Optional<Vec3> pos = teleportPosition(level, player);
         if (pos.isPresent()) {
@@ -123,15 +126,21 @@ public class TeleportHandler {
             return false;
         }
     }
-    public static void teleportToFrequency(UUID frequency, ServerPlayer player){
-        if(MechanicalTeleporter.TELEPORTERS.teleportersNetworks.containsKey(frequency)){
-            TeleportersNetwork network = MechanicalTeleporter.TELEPORTERS.teleportersNetworks.get(frequency);
+    public static void teleportToFrequency(TeleporterFrequency frequency, ServerPlayer player){
+
+        UUID freqId = frequency.freqId();
+        String address = frequency.address();
+        /*if(address.isBlank())
+            address = "*";*/
+
+        if(MechanicalTeleporter.TELEPORTERS.teleportersNetworks.containsKey(freqId)){
+            TeleportersNetwork network = MechanicalTeleporter.TELEPORTERS.teleportersNetworks.get(freqId);
             boolean foundCurrent = false;
             GlobalPos destinationGlobalPos = null;
 
             for(GlobalPos globalPos : network.loadedLinks) {
                 if(!globalPos.equals(new GlobalPos(player.level().dimension(),player.getOnPos()))) {
-                    if(foundCurrent && TeleportHandler.tryTeleportToGlobalPos(globalPos, player, true)) {
+                    if(foundCurrent && TeleportHandler.tryTeleportToGlobalPos(globalPos, address, player, true)) {
                         destinationGlobalPos = globalPos;
                         break;
                     }
@@ -144,7 +153,7 @@ public class TeleportHandler {
             if(destinationGlobalPos == null) {
                 for(GlobalPos globalPos : network.loadedLinks) {
                     if(!globalPos.equals(new GlobalPos(player.level().dimension(),player.getOnPos()))) {
-                        if(TeleportHandler.tryTeleportToGlobalPos(globalPos, player, true)){
+                        if(TeleportHandler.tryTeleportToGlobalPos(globalPos, address, player, true)){
                             destinationGlobalPos = globalPos;
                             break;
                         }
@@ -152,7 +161,7 @@ public class TeleportHandler {
                 }
             }
             if(destinationGlobalPos != null){
-                boolean succes = TeleportHandler.tryTeleportToGlobalPos(destinationGlobalPos, player, false);
+                boolean succes = TeleportHandler.tryTeleportToGlobalPos(destinationGlobalPos, address, player, false);
 
                 if(succes && player.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock){
                     sitDown(player.level(),destinationGlobalPos.pos().above(), player);
@@ -183,12 +192,14 @@ public class TeleportHandler {
     public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
         BlockEntity onBlockEntity = level.getBlockEntity(player.getOnPos());
         if (sendToServer && onBlockEntity instanceof TeleporterBlockEntity teleporterBlockEntity){
-            ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(teleporterBlockEntity.teleporterBehavior.freqId));
+            ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(TeleporterFrequency.fromTeleporter(teleporterBlockEntity)));
             return true;
         }
         return false;
     }
 
+    //From EnderIO:
+    //License CCO
     public static Optional<Vec3> teleportPosition(Level level, Player player) {
         @Nullable
         BlockPos target = null;
@@ -281,12 +292,6 @@ public class TeleportHandler {
         return null;
     }
 
-    private static double getAngleRadians(Vec3 positionVec, BlockPos anchor, float yRot, float xRot) {
-        Vec3 blockVec = new Vec3(anchor.getX() + 0.5 - positionVec.x, anchor.getY() + 1.0 - positionVec.y,
-                anchor.getZ() + 0.5 - positionVec.z).normalize();
-        Vec3 lookVec = Vec3.directionFromRotation(xRot, yRot).normalize();
-        return Math.acos(lookVec.dot(blockVec));
-    }
 
     /**
      *
@@ -321,7 +326,7 @@ public class TeleportHandler {
         return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
     }
 
-    public static boolean tryTeleportToGlobalPos(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer, boolean simulate) {
+    public static boolean tryTeleportToGlobalPos(GlobalPos destinationGlobalPos,String address, ServerPlayer serverPlayer, boolean simulate) {
         BlockPos teleportDestination = destinationGlobalPos.pos().above();
         ServerLevel targetDimension = (ServerLevel) serverPlayer.level();
         boolean sameDimension = serverPlayer.level().dimension() == destinationGlobalPos.dimension();
@@ -340,16 +345,16 @@ public class TeleportHandler {
 
         BlockEntity be = targetDimension.getBlockEntity(destinationGlobalPos.pos());
 
-        if(be instanceof TeleporterBlockEntity teleporterBlockEntity){
-            if(!teleporterBlockEntity.checkRequerimentsForTeleport())
-                return false;
-        } else {
+        if(!(be instanceof TeleporterBlockEntity))
             return false;
-        }
-        /*if(!checkTeleporterRequirements(targetDimension, destinationGlobalPos.pos()))
-            return false;*/
 
+        TeleporterBlockEntity teleporterBlockEntity = (TeleporterBlockEntity) be;
 
+        if(!teleporterBlockEntity.checkRequerimentsForTeleport())
+            return false;
+
+        if(!matchAddress(teleporterBlockEntity, address))
+            return false;
 
         if(simulate)
             return true;
@@ -374,5 +379,20 @@ public class TeleportHandler {
         if(be instanceof TeleporterBlockEntity teleporterBlockEntity){
             teleporterBlockEntity.consumeFluid();
         }
+    }
+    public static boolean matchAddress(TeleporterBlockEntity teleporterBlockEntity, String address){
+        return matchAddress(teleporterBlockEntity.teleporterBehavior, address);
+    }
+    public static boolean matchAddress(TeleporterBehavior teleporterBehavior, String address){
+        return matchAddress(teleporterBehavior.signBasedAddress, address);
+    }
+    public static boolean matchAddress(String teleporterAddress, String address) {
+        if (address.isBlank())
+            return teleporterAddress.isBlank();
+        if (address.equals("*") || teleporterAddress.equals("*"))
+            return true;
+        String matcher = Glob.toRegexPattern(address, "");
+        String boxMatcher = Glob.toRegexPattern(teleporterAddress, "");
+        return address.matches(boxMatcher) || teleporterAddress.matches(matcher);
     }
 }

@@ -82,7 +82,9 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
         boolean previouslyPowered = state.getValue(POWERED);
         if (previouslyPowered != powered)
             worldIn.setBlock(pos, state.cycle(POWERED), 2);
-        withBlockEntityDo(worldIn, pos, link -> link.teleporterBehavior.redstonePowerChanged(power));
+        withBlockEntityDo(worldIn, pos, teleporterBlockEntity -> {
+            teleporterBlockEntity.teleporterBehavior.redstonePowerChanged(power);
+        });
     }
 
 
