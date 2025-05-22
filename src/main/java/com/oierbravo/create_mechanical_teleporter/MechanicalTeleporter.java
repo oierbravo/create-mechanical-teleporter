@@ -71,6 +71,7 @@ public class MechanicalTeleporter
                 .add("hand_teleporter.tooltip.address", "Address: %s")
                 .add("hand_teleporter.message.cleared", "Frequency cleared")
                 .add("ui.no_valid_teleporter", "No valid teleporter found")
+                .add("ui.not_tuned", "Not tuned to a network")
                 .addBlockTooltipCondition("mechanical_teleporter",0, "When placed")
                 .addBlockTooltipBehaviour("mechanical_teleporter",0, "Generates a new frequency or uses the tuned one")
                 .addBlockTooltipCondition("mechanical_teleporter",1,"R-Click on another Teleporter")

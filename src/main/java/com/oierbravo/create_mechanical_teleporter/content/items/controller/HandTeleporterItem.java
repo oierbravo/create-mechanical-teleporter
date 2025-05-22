@@ -38,11 +38,6 @@ public class HandTeleporterItem extends Item {
         super(properties);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private void clickActivate() {
-        //SimpleTeleportControllerClientHandler.activate();
-        //ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(getFrequency()));
-    }
     public static boolean isTuned(ItemStack pStack) {
         return getFrequency(pStack) != null;
     }
@@ -54,11 +49,15 @@ public class HandTeleporterItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
 
+        if(!isTuned(heldItem)){
+            player.displayClientMessage(ModLang.translate("ui.not_tuned").component(),true);
+            return InteractionResultHolder.pass(heldItem);
+        }
+
+
         if(player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND){
-            //clearFrequency(heldItem, player);
             if (world.isClientSide)
                 CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> openScreen(player, heldItem));
-            //heldItem.set(AllDataComponents.CLIPBOARD_TYPE, ClipboardOverrides.ClipboardType.EDITING);
 
             return InteractionResultHolder.success(heldItem);
         }

@@ -1,7 +1,7 @@
-// 1.21.1	2025-05-22T23:22:18.674227124	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-05-22T23:41:08.895256387	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 bbfea454fea8376168410fbab21147ac695f8369 assets/create_mechanical_teleporter/blockstates/mechanical_teleporter.json
-b4ec2c0c339a4293820b135e3bfc40d67ec04c9d assets/create_mechanical_teleporter/lang/en_ud.json
-d4d02d8976f48f87aa484c04e1c4e8ef28bce209 assets/create_mechanical_teleporter/lang/en_us.json
+f4c33bfef4c7b8d088c6186713f7f82ad468e754 assets/create_mechanical_teleporter/lang/en_ud.json
+8e764a897d5a927363a8daa63a6fd1b598e3e976 assets/create_mechanical_teleporter/lang/en_us.json
 391777f5d4478f6fde6098d9cd367e1706fbe4c7 assets/create_mechanical_teleporter/models/item/hand_teleporter.json
 995e4613d035da55316b8c5f13f8f3791e76e748 assets/create_mechanical_teleporter/models/item/mechanical_teleporter.json
 274516a1c40463f418123533fab156fe4779d25b assets/create_mechanical_teleporter/models/item/teleport_wand.json

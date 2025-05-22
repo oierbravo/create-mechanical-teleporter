@@ -10,6 +10,7 @@
   "create_mechanical_teleporter.itemGroup:main": "Create Mechanical Teleporter",
   "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1": "Freq. #1",
   "create_mechanical_teleporter.ui.no_valid_teleporter": "No valid teleporter found",
+  "create_mechanical_teleporter.ui.not_tuned": "Not tuned to a network",
   "item.create_mechanical_teleporter.hand_teleporter": "Hand teleporter",
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour1": "Teleports to the __configured frequency__",
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour2": "Tunes to the __teleporter__ network",
