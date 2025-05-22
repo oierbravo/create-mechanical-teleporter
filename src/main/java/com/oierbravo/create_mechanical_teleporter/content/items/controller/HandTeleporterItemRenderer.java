@@ -2,8 +2,8 @@ package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
-import com.simibubi.create.content.redstone.link.controller.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -71,54 +71,47 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 	protected static void renderNormal(ItemStack stack, CustomRenderedItemModel model,
 									   PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
 									   int light) {
-		render(stack, model, renderer, transformType, ms, light, HandTeleporterItemRenderer.RenderType.NORMAL, false, false);
+		render(stack, model, renderer, transformType, ms, light,  false, false);
 	}
 
-	public static void renderInLectern(ItemStack stack, CustomRenderedItemModel model,
-									   PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
-									   int light, boolean active, boolean renderDepression) {
-		render(stack, model, renderer, transformType, ms, light, HandTeleporterItemRenderer.RenderType.LECTERN, active, renderDepression);
-	}
+
 
 	protected static void render(ItemStack stack, CustomRenderedItemModel model,
                                  PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
-                                 int light, HandTeleporterItemRenderer.RenderType renderType, boolean active, boolean renderDepression) {
+                                 int light, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
 		var msr = TransformStack.of(ms);
 
 		ms.pushPose();
 
-		if (renderType == RenderType.NORMAL) {
-			Minecraft mc = Minecraft.getInstance();
-			boolean rightHanded = mc.options.mainHand().get() == HumanoidArm.RIGHT;
-			ItemDisplayContext mainHand =
-					rightHanded ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
-			ItemDisplayContext offHand =
-					rightHanded ? ItemDisplayContext.FIRST_PERSON_LEFT_HAND : ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
+		Minecraft mc = Minecraft.getInstance();
+		boolean rightHanded = mc.options.mainHand().get() == HumanoidArm.RIGHT;
+		ItemDisplayContext mainHand =
+				rightHanded ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
+		ItemDisplayContext offHand =
+				rightHanded ? ItemDisplayContext.FIRST_PERSON_LEFT_HAND : ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
 
-			active = false;
-			boolean noControllerInMain = !ModItems.HAND_TELEPORTER.isIn(mc.player.getMainHandItem());
+		TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromItemStack(stack);
 
-			if (transformType == mainHand || (transformType == offHand && noControllerInMain)) {
-				float equip = equipProgress.getValue(pt);
-				int handModifier = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ? -1 : 1;
-				msr.translate(0, equip / 4, equip / 4 * handModifier);
-				msr.rotateYDegrees(equip * -30 * handModifier);
-				msr.rotateZDegrees(equip * -30);
-				active = true;
-			}
+		active = teleporterFrequency.isPresent();
+		boolean noControllerInMain = !ModItems.HAND_TELEPORTER.isIn(mc.player.getMainHandItem());
 
-			if (transformType == ItemDisplayContext.GUI) {
-				if (stack == mc.player.getMainHandItem())
-					active = true;
-				if (stack == mc.player.getOffhandItem() && noControllerInMain)
-					active = true;
-			}
-
-			active &= LinkedControllerClientHandler.MODE != LinkedControllerClientHandler.Mode.IDLE;
-
-			renderDepression = true;
+		if (transformType == mainHand || (transformType == offHand && noControllerInMain)) {
+			float equip = equipProgress.getValue(pt);
+			int handModifier = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ? -1 : 1;
+			msr.translate(0, equip / 4, equip / 4 * handModifier);
+			msr.rotateYDegrees(equip * -30 * handModifier);
+			msr.rotateZDegrees(equip * -30);
 		}
+
+		if (transformType == ItemDisplayContext.GUI) {
+			if (stack == mc.player.getMainHandItem())
+				active = true;
+			if (stack == mc.player.getOffhandItem() && noControllerInMain)
+				active = true;
+		}
+
+		renderDepression = true;
 
 		//renderer.render( model.getOriginalModel(), light);
 		renderer.render(active ? POWERED.get() : model.getOriginalModel(), light);
@@ -133,16 +126,11 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 		float b = s * -.75f;
 		int index = 0;
 
-		/*if (renderType == RenderType.NORMAL) {
-			if (SimpleTeleportControllerClientHandler.MODE == SimpleTeleportControllerClientHandler.Mode.BIND) {
-				int i = (int) Mth.lerp((Mth.sin(AnimationTickHolder.getRenderTime() / 4f) + 1) / 2, 5, 15);
-				light = i << 20;
-			}
-		}*/
 
 		ms.pushPose();
-		msr.translate(2 * s, 0, 8 * s);
+		msr.translate(3.5 * s, 0, 5 * s);
 		renderButton(renderer, ms, light, pt, button, b, index++, renderDepression);
+		ms.popPose();
 
 		ms.popPose();
 
@@ -158,12 +146,6 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 		}
 		renderer.renderSolid(button, light);
 		ms.popPose();
-	}
-
-
-
-	protected enum RenderType {
-		NORMAL, LECTERN;
 	}
 
 }

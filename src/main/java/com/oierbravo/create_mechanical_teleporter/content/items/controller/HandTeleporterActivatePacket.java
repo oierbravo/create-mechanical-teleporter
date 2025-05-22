@@ -36,7 +36,7 @@ public class HandTeleporterActivatePacket implements ServerboundPacketPayload {
 		if (player.isSpectator())
 			return;
 
-		TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromHandTeleporter(handTeleporter);
+		TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromItemStack(handTeleporter);
 		if(teleporterFrequency.freqId() != null)
 			ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(teleporterFrequency));
 

@@ -35,7 +35,7 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
     public HandTeleporterScreen(int targetSlot, ItemStack item){
         this.item = item;
         this.targetSlot = targetSlot;
-        this.address = TeleporterFrequency.fromHandTeleporter(this.item).address();
+        this.address = TeleporterFrequency.fromItemStack(this.item).address();
         icon = ModItems.HAND_TELEPORTER.asStack();
     }
 

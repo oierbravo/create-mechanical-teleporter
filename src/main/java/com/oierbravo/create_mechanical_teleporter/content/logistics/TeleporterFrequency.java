@@ -23,7 +23,14 @@ public record TeleporterFrequency(UUID freqId, String address){
         public static TeleporterFrequency fromBehavior(TeleporterBehavior teleporterBehavior){
             return new TeleporterFrequency(teleporterBehavior.freqId, teleporterBehavior.signBasedAddress);
         }
-        public static TeleporterFrequency fromHandTeleporter(ItemStack itemStack){
+        public static TeleporterFrequency fromItemStack(ItemStack itemStack){
             return new TeleporterFrequency(HandTeleporterItem.getFrequency(itemStack), HandTeleporterItem.getAddress(itemStack));
         }
+
+    public boolean isPresent() {
+        return freqId != null;
     }
+    public boolean isEmpty(){
+        return freqId == null;
+    }
+}

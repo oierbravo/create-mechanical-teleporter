@@ -6,6 +6,7 @@ import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFr
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.platform.CatnipServices;
@@ -27,11 +28,13 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class HandTeleporterItem extends Item {
     public HandTeleporterItem(Properties properties) {
@@ -40,10 +43,6 @@ public class HandTeleporterItem extends Item {
 
     public static boolean isTuned(ItemStack pStack) {
         return getFrequency(pStack) != null;
-    }
-    @Override
-    public boolean isFoil(@NotNull ItemStack pStack) {
-        return isTuned(pStack);
     }
 
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
@@ -63,7 +62,7 @@ public class HandTeleporterItem extends Item {
         }
 
         if (!player.isShiftKeyDown()) {
-            TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromHandTeleporter(heldItem);
+            TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromItemStack(heldItem);
             if (world.isClientSide)
                 if(teleporterFrequency.freqId() != null) {
                     ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(teleporterFrequency));
@@ -178,5 +177,12 @@ public class HandTeleporterItem extends Item {
     private void openScreen(Player player, ItemStack stack) {
         if (Minecraft.getInstance().player == player)
             ScreenOpener.open(new HandTeleporterScreen(player.getInventory().selected,stack));
+    }
+
+    @SuppressWarnings("removal")
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(SimpleCustomRenderer.create(this, new HandTeleporterItemRenderer()));
     }
 }

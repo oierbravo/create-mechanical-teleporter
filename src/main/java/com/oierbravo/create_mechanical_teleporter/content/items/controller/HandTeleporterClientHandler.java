@@ -17,7 +17,16 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.UUID;
 
 public class HandTeleporterClientHandler {
+    public static int PACKET_RATE = 5;
+    private static int packetCooldown;
+
+
     public static void tick() {
+        /*HandTeleporterItemRenderer.tick();
+
+        if (packetCooldown > 0)
+            packetCooldown--;*/
+
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null)
             return;
@@ -55,4 +64,5 @@ public class HandTeleporterClientHandler {
 
         }
     }
+
 }
