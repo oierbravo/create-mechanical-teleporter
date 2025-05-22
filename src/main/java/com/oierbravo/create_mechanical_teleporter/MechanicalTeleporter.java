@@ -70,19 +70,19 @@ public class MechanicalTeleporter
                 .add("hand_teleporter.tooltip.clear", "Hold shift + right click to clear")
                 .add("hand_teleporter.tooltip.address", "Address: %s")
                 .add("hand_teleporter.message.cleared", "Frequency cleared")
-
+                .add("ui.no_valid_teleporter", "No valid teleporter found")
                 .addBlockTooltipCondition("mechanical_teleporter",0, "When placed")
                 .addBlockTooltipBehaviour("mechanical_teleporter",0, "Generates a new frequency or uses the tuned one")
                 .addBlockTooltipCondition("mechanical_teleporter",1,"R-Click on another Teleporter")
-                .addItemTooltipBehaviour("mechanical_teleporter",1,"Tunes to the telporter network")
+                .addBlockTooltipBehaviour("mechanical_teleporter",1,"Tunes to the teleporter network")
 
-                .addItemTooltipSummary("hand_teleporter", "Hold one frequency")
-                .addItemTooltipCondition("hand_teleporter",0,"When used")
-                .addItemTooltipBehaviour("hand_teleporter",0,"Teleports to the configured frequency")
-                .addItemTooltipCondition("hand_teleporter",1,"R-Click on Teleporter")
-                .addItemTooltipBehaviour("hand_teleporter",1,"Tunes to the telporter network")
-                .addItemTooltipCondition("hand_teleporter",2,"R-Click while Sneaking")
-                .addItemTooltipBehaviour("hand_teleporter",2,"Clears the frequency")
+                .addItemTooltipSummary("hand_teleporter", "Holds one frequency")
+                .addItemTooltipCondition("hand_teleporter",1,"When used")
+                .addItemTooltipBehaviour("hand_teleporter",1,"Teleports to the __configured frequency__")
+                .addItemTooltipCondition("hand_teleporter",2,"R-Click on Teleporter")
+                .addItemTooltipBehaviour("hand_teleporter",2,"Tunes to the __teleporter__ network")
+                .addItemTooltipCondition("hand_teleporter",3,"R-Click while Sneaking")
+                .addItemTooltipBehaviour("hand_teleporter",3,"__Clears__ the frequency")
                 .add("simple_teleport_controller.frequency_slot_1", "Freq. #1");
 
     }

@@ -7,7 +7,10 @@ import com.oierbravo.create_mechanical_teleporter.infrastructure.network.Request
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -52,7 +55,12 @@ public class HandTeleporterItem extends Item {
         ItemStack heldItem = player.getItemInHand(hand);
 
         if(player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND){
-            clearFrequency(heldItem, player);
+            //clearFrequency(heldItem, player);
+            if (world.isClientSide)
+                CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> openScreen(player, heldItem));
+            //heldItem.set(AllDataComponents.CLIPBOARD_TYPE, ClipboardOverrides.ClipboardType.EDITING);
+
+            return InteractionResultHolder.success(heldItem);
         }
 
         if (!player.isShiftKeyDown()) {
@@ -135,6 +143,13 @@ public class HandTeleporterItem extends Item {
         return tag.getString("Address");
     }
 
+    public static void setAddress(ItemStack stack, String address) {
+        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        tag.putString("Address", address);
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+    }
+
+
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext tooltipContext,
                                 @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
@@ -158,5 +173,11 @@ public class HandTeleporterItem extends Item {
         ModLang.translate("hand_teleporter.tooltip.address", (address != "") ? address: "*")
                 .style(ChatFormatting.GRAY)
                 .addTo(tooltipComponents);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(Player player, ItemStack stack) {
+        if (Minecraft.getInstance().player == player)
+            ScreenOpener.open(new HandTeleporterScreen(player.getInventory().selected,stack));
     }
 }

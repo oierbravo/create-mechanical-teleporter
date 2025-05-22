@@ -130,8 +130,6 @@ public class TeleportHandler {
 
         UUID freqId = frequency.freqId();
         String address = frequency.address();
-        /*if(address.isBlank())
-            address = "*";*/
 
         if(MechanicalTeleporter.TELEPORTERS.teleportersNetworks.containsKey(freqId)){
             TeleportersNetwork network = MechanicalTeleporter.TELEPORTERS.teleportersNetworks.get(freqId);
@@ -170,7 +168,7 @@ public class TeleportHandler {
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
 
             } else {
-                player.displayClientMessage(ModLang.translate("logisitcs.valid_teleporter_not_found").component(),true);
+                player.displayClientMessage(ModLang.translate("ui.no_valid_teleporter").component(),true);
                 player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
             }
         }

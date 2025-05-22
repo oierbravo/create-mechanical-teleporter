@@ -9,8 +9,8 @@ import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public class ModMenuTypes {
-    /*public static final MenuEntry<SimpleTeleportControllerMenu> SIMPLE_TELEPORT_CONTROLLER =
-            register("simple_teleport_controller", SimpleTeleportControllerMenu::new, () -> SimpleTeleportControllerScreen::new);*/
+    /*public static final MenuEntry<SimpleTeleportControllerMenu> HAND_TELEPORTER =
+            register("hand_teleporter", SimpleTeleportControllerMenu::new, () -> SimpleTeleportControllerScreen::new);*/
     private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
             String name, MenuBuilder.ForgeMenuFactory<C> factory, NonNullSupplier<MenuBuilder.ScreenFactory<C, S>> screenFactory) {
         return MechanicalTeleporter.registrate()

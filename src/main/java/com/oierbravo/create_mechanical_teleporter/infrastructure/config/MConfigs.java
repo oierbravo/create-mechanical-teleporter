@@ -30,6 +30,7 @@ public class MConfigs {
     public static ModConfigServer server() {
         return server;
     }
+
     public static ModConfigClient client() { return client; }
 
     public static ConfigBase byType(ModConfig.Type type) {
