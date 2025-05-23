@@ -3,15 +3,10 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlock;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
-import com.oierbravo.create_mechanical_teleporter.foundation.ContraptionUtils;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
-import com.simibubi.create.content.contraptions.Contraption;
-import com.simibubi.create.content.contraptions.ContraptionCollider;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -30,9 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -66,24 +59,8 @@ public class TeleportHandler {
     }
 
     public static boolean  canBlockTeleport(Player player) {
-        if(player.getBlockStateOn().getBlock() instanceof TeleporterBlock)
-            return true;
-
-        BlockPos playerPos = player.getOnPos();
-        Vec3 worldPos = playerPos.getBottomCenter().add(0, -0.2, 0);
-        return ContraptionUtils.getIntersectionContraptionsStream(player.level(), player).anyMatch(cEntity -> {
-            Vec3 localPos = ContraptionCollider.worldToLocalPos(worldPos, cEntity);
-
-            BlockPos blockPos = BlockPos.containing(localPos);
-            Contraption contraption = cEntity.getContraption();
-            StructureTemplate.StructureBlockInfo info = contraption.getBlocks()
-                    .get(blockPos);
-
-            if (info == null)
-                return false;
-
-            return true;
-        });
+        TeleporterBehavior link = BlockEntityBehaviour.get(player.level(), player.getOnPos(), TeleporterBehavior.TYPE);
+        return link != null;
     }
 
     public static boolean hasResources(Player player, int amountRequired) {
