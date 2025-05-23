@@ -22,13 +22,11 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-public class TeleporterBlockEntity extends KineticBlockEntity {
+public class TeleporterBlockEntity extends KineticBlockEntity implements TeleporterBehavior.TeleporterBehaviourSpecifics {
     public UUID placedBy;
 
-    protected Optional<IFluidHandler> fluidCapability;
     public TeleporterBehavior teleporterBehavior;
     public SmartFluidTankBehaviour inputTank;
 
@@ -97,9 +95,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
 
         return true;
     }
-    public void consumeFluid(){
-        this.inputTank.getPrimaryHandler().drain(MConfigs.server().teleporter.requiredFluidAmount.get(), IFluidHandler.FluidAction.EXECUTE);
-    }
+
 
     @Override
     public void initialize() {
@@ -124,8 +120,13 @@ public class TeleporterBlockEntity extends KineticBlockEntity {
         ModLang.translate("chunk_loader.loaded").style(ChatFormatting.GREEN).forGoggles(tooltip);
         return true;
     }
-    private boolean isPowered(){
+    protected boolean isPowered(){
         return this.getBlockState().getProperties().contains(TeleporterBlock.POWERED) && this.getBlockState().getValue(TeleporterBlock.POWERED);
+    }
+
+    @Override
+    public void consumeResources() {
+        this.inputTank.getPrimaryHandler().drain(MConfigs.server().teleporter.requiredFluidAmount.get(), IFluidHandler.FluidAction.EXECUTE);
     }
 
 }

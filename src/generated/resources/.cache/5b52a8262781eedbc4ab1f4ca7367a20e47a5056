@@ -1,9 +1,12 @@
-// 1.21.1	2025-05-23T01:00:10.374732099	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
-bbfea454fea8376168410fbab21147ac695f8369 assets/create_mechanical_teleporter/blockstates/mechanical_teleporter.json
-2e2d75ca698bd183ad50a172c5a5f89572066942 assets/create_mechanical_teleporter/lang/en_ud.json
-beb7371d586a6b5a1800e66f874626467683e33b assets/create_mechanical_teleporter/lang/en_us.json
+// 1.21.1	2025-05-23T02:28:02.165435929	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+17fd0cd7dafdf9b77fc3a6062b1e8a201297cf6e assets/create_mechanical_teleporter/blockstates/creative_teleporter.json
+2884241d0b9fd4cb5eaea465b79c693232d4978d assets/create_mechanical_teleporter/blockstates/mechanical_teleporter.json
+9dbfb67e7a051624669b3e3c0f9ae1d2fb810259 assets/create_mechanical_teleporter/lang/en_ud.json
+717ad794c201fdd2c300e44f7a9cc0f428660b39 assets/create_mechanical_teleporter/lang/en_us.json
+575665b4973ee5716eaf9d816f6a4ef954bd76e0 assets/create_mechanical_teleporter/models/item/creative_teleporter.json
 391777f5d4478f6fde6098d9cd367e1706fbe4c7 assets/create_mechanical_teleporter/models/item/hand_teleporter.json
 995e4613d035da55316b8c5f13f8f3791e76e748 assets/create_mechanical_teleporter/models/item/mechanical_teleporter.json
 274516a1c40463f418123533fab156fe4779d25b assets/create_mechanical_teleporter/models/item/teleport_wand.json
+2f721fe491827f0481424e00b8c68074f3ec72f5 data/create_mechanical_teleporter/loot_table/blocks/creative_teleporter.json
 07bead470b3671888b8f6a295e466a3bc1cd2828 data/create_mechanical_teleporter/loot_table/blocks/mechanical_teleporter.json
-7a9179abffdd6399f63db3b02946b54d5c402a2f data/minecraft/tags/block/mineable/pickaxe.json
+92a54ce586d6578ad25215e88a93ce6a4b0d6daf data/minecraft/tags/block/mineable/pickaxe.json

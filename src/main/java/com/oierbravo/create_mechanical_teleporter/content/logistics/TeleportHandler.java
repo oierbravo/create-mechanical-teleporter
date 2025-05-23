@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionCollider;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.createmod.catnip.data.Glob;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -188,9 +189,9 @@ public class TeleportHandler {
     }
 
     public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
-        BlockEntity onBlockEntity = level.getBlockEntity(player.getOnPos());
-        if (sendToServer && onBlockEntity instanceof TeleporterBlockEntity teleporterBlockEntity){
-            ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(TeleporterFrequency.fromTeleporter(teleporterBlockEntity)));
+        TeleporterBehavior link = BlockEntityBehaviour.get(level, player.getOnPos(), TeleporterBehavior.TYPE);
+        if (sendToServer && link != null){
+            ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(TeleporterFrequency.from(link)));
             return true;
         }
         return false;
@@ -341,17 +342,12 @@ public class TeleportHandler {
         if(isTeleportPositionClear(targetDimension,teleportDestination).isEmpty())
             return false;
 
-        BlockEntity be = targetDimension.getBlockEntity(destinationGlobalPos.pos());
+        TeleporterBehavior link = BlockEntityBehaviour.get(targetDimension, destinationGlobalPos.pos(), TeleporterBehavior.TYPE);
 
-        if(!(be instanceof TeleporterBlockEntity))
+        if(!link.checkRequerimentsForTeleport())
             return false;
 
-        TeleporterBlockEntity teleporterBlockEntity = (TeleporterBlockEntity) be;
-
-        if(!teleporterBlockEntity.checkRequerimentsForTeleport())
-            return false;
-
-        if(!matchAddress(teleporterBlockEntity, address))
+        if(!matchAddress(link, address))
             return false;
 
         if(simulate)
@@ -368,19 +364,13 @@ public class TeleportHandler {
         consumeTeleporterResources(serverPlayer.level(), destinationGlobalPos.pos());
         return true;
     }
-    public static boolean checkTeleporterRequirements(Level level, BlockPos pos){
-        return false;
 
-    }
     public static void consumeTeleporterResources(Level level, BlockPos pos){
-        BlockEntity be = level.getBlockEntity(pos);
-        if(be instanceof TeleporterBlockEntity teleporterBlockEntity){
-            teleporterBlockEntity.consumeFluid();
-        }
+        TeleporterBehavior link = BlockEntityBehaviour.get(level, pos, TeleporterBehavior.TYPE);
+        if(link != null)
+            link.consumeResources();
     }
-    public static boolean matchAddress(TeleporterBlockEntity teleporterBlockEntity, String address){
-        return matchAddress(teleporterBlockEntity.teleporterBehavior, address);
-    }
+
     public static boolean matchAddress(TeleporterBehavior teleporterBehavior, String address){
         return matchAddress(teleporterBehavior.signBasedAddress, address);
     }

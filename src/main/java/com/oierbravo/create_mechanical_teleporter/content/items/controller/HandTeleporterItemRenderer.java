@@ -91,7 +91,7 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 		ItemDisplayContext offHand =
 				rightHanded ? ItemDisplayContext.FIRST_PERSON_LEFT_HAND : ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
 
-		TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromItemStack(stack);
+		TeleporterFrequency teleporterFrequency = TeleporterFrequency.from(stack);
 
 		active = teleporterFrequency.isPresent();
 		boolean noControllerInMain = !ModItems.HAND_TELEPORTER.isIn(mc.player.getMainHandItem());

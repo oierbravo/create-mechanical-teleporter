@@ -17,13 +17,14 @@ public record TeleporterFrequency(UUID freqId, String address){
                 ByteBufCodecs.STRING_UTF8, TeleporterFrequency::address,
                 TeleporterFrequency::new
         );
-    public static TeleporterFrequency fromTeleporter(TeleporterBlockEntity teleporterBlockEntity){
-        return fromBehavior(teleporterBlockEntity.teleporterBehavior);
-    }
-        public static TeleporterFrequency fromBehavior(TeleporterBehavior teleporterBehavior){
+
+        public static TeleporterFrequency from(TeleporterBlockEntity teleporterBlockEntity){
+            return from(teleporterBlockEntity.teleporterBehavior);
+        }
+        public static TeleporterFrequency from(TeleporterBehavior teleporterBehavior){
             return new TeleporterFrequency(teleporterBehavior.freqId, teleporterBehavior.signBasedAddress);
         }
-        public static TeleporterFrequency fromItemStack(ItemStack itemStack){
+        public static TeleporterFrequency from(ItemStack itemStack){
             return new TeleporterFrequency(HandTeleporterItem.getFrequency(itemStack), HandTeleporterItem.getAddress(itemStack));
         }
 

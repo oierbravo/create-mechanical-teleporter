@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 public class TeleporterBehavior extends BlockEntityBehaviour {
 
     public static final BehaviourType<TeleporterBehavior> TYPE = new BehaviourType<>();
+    private TeleporterBehaviourSpecifics specifics;
 
     public static final AtomicInteger LINK_ID_GENERATOR = new AtomicInteger();
     public int linkId;
@@ -49,8 +50,9 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
     private static final Cache<UUID, Cache<Integer, WeakReference<TeleporterBehavior>>> CLIENT_LINKS =
             new TickBasedCache<>(20, true, true);
 
-    public TeleporterBehavior(SmartBlockEntity be, boolean global) {
+    public <T extends SmartBlockEntity & TeleporterBehaviourSpecifics> TeleporterBehavior(T be, boolean global) {
         super(be);
+        this.specifics = be;
         this.global = global;
         linkId = LINK_ID_GENERATOR.getAndIncrement();
         freqId = UUID.randomUUID();
@@ -251,5 +253,19 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         return TYPE;
     }
 
+    public boolean checkRequerimentsForTeleport() {
+        return specifics.checkRequerimentsForTeleport();
+    }
+
+    public void consumeResources() {
+        specifics.consumeResources();
+    }
+
+    public interface TeleporterBehaviourSpecifics {
+        default boolean checkRequerimentsForTeleport(){
+            return true;
+        };
+        default void consumeResources(){};
+    }
 
 }

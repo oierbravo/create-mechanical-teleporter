@@ -62,7 +62,7 @@ public class HandTeleporterItem extends Item {
         }
 
         if (!player.isShiftKeyDown()) {
-            TeleporterFrequency teleporterFrequency = TeleporterFrequency.fromItemStack(heldItem);
+            TeleporterFrequency teleporterFrequency = TeleporterFrequency.from(heldItem);
             if (world.isClientSide)
                 if(teleporterFrequency.freqId() != null) {
                     ModMessages.sendToServer(new RequestTeleportToFrequencyPayload(teleporterFrequency));

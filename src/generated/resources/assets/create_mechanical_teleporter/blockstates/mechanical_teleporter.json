@@ -5,21 +5,21 @@
       "y": 90
     },
     "facing=east,powered=true": {
-      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block",
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered",
       "y": 90
     },
     "facing=north,powered=false": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block"
     },
     "facing=north,powered=true": {
-      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block"
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered"
     },
     "facing=south,powered=false": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block",
       "y": 180
     },
     "facing=south,powered=true": {
-      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block",
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered",
       "y": 180
     },
     "facing=west,powered=false": {
@@ -27,7 +27,7 @@
       "y": 270
     },
     "facing=west,powered=true": {
-      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block",
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered",
       "y": 270
     }
   }

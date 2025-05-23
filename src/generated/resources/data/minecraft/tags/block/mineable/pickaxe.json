@@ -1,5 +1,6 @@
 {
   "values": [
-    "create_mechanical_teleporter:mechanical_teleporter"
+    "create_mechanical_teleporter:mechanical_teleporter",
+    "create_mechanical_teleporter:creative_teleporter"
   ]
 }

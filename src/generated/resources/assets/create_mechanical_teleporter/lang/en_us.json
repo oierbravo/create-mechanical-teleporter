@@ -1,4 +1,5 @@
 {
+  "block.create_mechanical_teleporter.creative_teleporter": "Creative Teleporter",
   "block.create_mechanical_teleporter.mechanical_teleporter": "Mechanical Teleporter",
   "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour0": "Generates a new frequency or uses the tuned one",
   "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour1": "Tunes to the teleporter network",
