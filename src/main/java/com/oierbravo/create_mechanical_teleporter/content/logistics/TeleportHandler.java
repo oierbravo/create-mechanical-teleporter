@@ -7,8 +7,12 @@ import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
-import com.simibubi.create.content.equipment.armor.BacktankUtil;
+import com.simibubi.create.content.trains.entity.Carriage;
+import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.createmod.catnip.data.Glob;
 import net.minecraft.core.BlockPos;
@@ -21,7 +25,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -35,9 +38,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.simibubi.create.content.contraptions.actors.seat.SeatBlock.sitDown;
 
@@ -61,20 +62,6 @@ public class TeleportHandler {
     public static boolean  canBlockTeleport(Player player) {
         TeleporterBehavior link = BlockEntityBehaviour.get(player.level(), player.getOnPos(), TeleporterBehavior.TYPE);
         return link != null;
-    }
-
-    public static boolean hasResources(Player player, int amountRequired) {
-        List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
-        if(backtanks.isEmpty())
-            return false;
-        if(!BacktankUtil.hasAirRemaining(backtanks.getFirst()))
-            return false;
-        return BacktankUtil.getAir(backtanks.getFirst()) >= amountRequired;
-    }
-
-    public static void consumeResources(Player player, int amount) {
-        List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
-        BacktankUtil.consumeAir(player, backtanks.getFirst(), amount);
     }
 
     //From EnderIO:
@@ -104,7 +91,7 @@ public class TeleportHandler {
             return false;
         }
     }
-    public static void teleportToFrequency(TeleporterFrequency frequency, ServerPlayer player){
+    public static boolean teleportToFrequency(TeleporterFrequency frequency, ServerPlayer player){
 
         UUID freqId = frequency.freqId();
         String address = frequency.address();
@@ -113,6 +100,8 @@ public class TeleportHandler {
             TeleportersNetwork network = MechanicalTeleporter.TELEPORTERS.teleportersNetworks.get(freqId);
             boolean foundCurrent = false;
             GlobalPos destinationGlobalPos = null;
+
+            Set<TeleportersNetwork.TrainLink> trainLinks = network.trainLinks;
 
             for(GlobalPos globalPos : network.loadedLinks) {
                 if(!globalPos.equals(new GlobalPos(player.level().dimension(),player.getOnPos()))) {
@@ -142,14 +131,33 @@ public class TeleportHandler {
                 if(succes && player.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock){
                     sitDown(player.level(),destinationGlobalPos.pos().above(), player);
                 }
-                if(succes)
+                if(succes){
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    return true;
+                }
 
             } else {
                 player.displayClientMessage(ModLang.translate("ui.no_valid_teleporter").component(),true);
                 player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
             }
+
+            for(TeleportersNetwork.TrainLink trainLink : network.trainLinks){
+                Train train = Create.RAILWAYS.trains.get(trainLink.trainId());
+                int carriageIndex = trainLink.carriageId();
+                Carriage carriage = train.carriages.get(carriageIndex);
+                CarriageContraptionEntity carriageContraptionEntity = carriage.anyAvailableEntity();
+                Contraption contraption = carriageContraptionEntity.getContraption();
+                List<BlockPos> seats = contraption.getSeats();
+                for(BlockPos seatPos :  contraption.getSeats()){
+                    int seatIndex = contraption.getSeats().indexOf(seatPos);
+                    if(!contraption.getSeatMapping().containsValue(seatIndex)){
+                        carriageContraptionEntity.addSittingPassenger(player,seatIndex);
+                        return true;
+                    }
+                }
+            }
         }
+        return false;
     }
 
     public static boolean teleportToTeleporter(Level level, Player pPlayer, BlockPos teleporterBlockPos){

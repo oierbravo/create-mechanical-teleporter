@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ public class TeleportersNetwork {
     public Set<GlobalPos> totalLinks;
     public Set<GlobalPos> loadedLinks;
 
+    public Set<TrainLink> trainLinks;
+
     public UUID owner;
     public boolean locked;
 
@@ -25,6 +28,7 @@ public class TeleportersNetwork {
         id = networkId;
         totalLinks = new HashSet<>();
         loadedLinks = new HashSet<>();
+        trainLinks = new HashSet<>();
         owner = null;
         locked = false;
     }
@@ -38,6 +42,13 @@ public class TeleportersNetwork {
             nbt.put("Pos", NbtUtils.writeBlockPos(p.pos()));
             if (p.dimension() != Level.OVERWORLD)
                 NBTHelper.writeResourceLocation(nbt, "Dim", p.dimension().location());
+            return nbt;
+        }));
+
+        tag.put("TrainLinks", NBTHelper.writeCompoundList(trainLinks, p -> {
+            CompoundTag nbt = new CompoundTag();
+            nbt.putUUID("TrainId", p.trainId);
+            nbt.putInt("CarriageIndex", p.carriageId);
             return nbt;
         }));
 
@@ -57,9 +68,20 @@ public class TeleportersNetwork {
                     : Level.OVERWORLD, NBTHelper.readBlockPos(nbt, "Pos")));
         });
 
+        NBTHelper.iterateCompoundList(tag.getList("TrainLinks", Tag.TAG_COMPOUND), nbt -> {
+            network.trainLinks.add(new TrainLink(nbt.getUUID("TrainId"), nbt.getInt("CarriageIndex")));
+        });
+
         network.owner = tag.contains("Owner") ? tag.getUUID("Owner") : null;
         network.locked = tag.getBoolean("Locked");
 
         return network;
+    }
+    public record TrainLink(UUID trainId, int carriageId){
+        @Override
+        public int hashCode() {
+            return Objects.hash(trainId, carriageId);
+        }
+
     }
 }

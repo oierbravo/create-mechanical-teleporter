@@ -1,10 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
-import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyHandler;
-import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
-import com.oierbravo.create_mechanical_teleporter.infrastructure.network.SetAddressToItemHandler;
-import com.oierbravo.create_mechanical_teleporter.infrastructure.network.SetAddressToItemPayload;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.network.*;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -18,6 +15,7 @@ public class ModMessages {
         //registrar.playToClient(ItemSyncPayload.TYPE, ItemSyncPayload.STREAM_CODEC, ItemSyncPacket.get()::handle);
         //Going to server
         registrar.playToServer(RequestTeleportToFrequencyPayload.TYPE, RequestTeleportToFrequencyPayload.STREAM_CODEC, RequestTeleportToFrequencyHandler.get()::handle);
+        registrar.playToServer(RequestTeleportToFrequencyWithItemPayload.TYPE, RequestTeleportToFrequencyWithItemPayload.STREAM_CODEC, RequestTeleportToFrequencyWithItemHandler.get()::handle);
         registrar.playToServer(SetAddressToItemPayload.TYPE, SetAddressToItemPayload.STREAM_CODEC, SetAddressToItemHandler.get()::handle);
 
     }

@@ -1,12 +1,14 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.wand;
 
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportingResourceUtils;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -107,10 +110,10 @@ public class TeleportWandItem extends Item {
 
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
         boolean isCreative = player.isCreative();
-        if (TeleportHandler.hasResources(player, MConfigs.server().wand.airAmount.get()) || isCreative) {
+        if (TeleportingResourceUtils.hasEnoughAir(player, MConfigs.server().wand.airAmount.get()) || isCreative) {
             if (performAction(this, level, player)) {
                 if (!level.isClientSide() && !isCreative) {
-                    TeleportHandler.consumeResources(player, MConfigs.server().wand.airAmount.get());
+                    TeleportingResourceUtils.consumeAir(player, MConfigs.server().wand.airAmount.get());
                 }
 
                 return true;
@@ -120,6 +123,11 @@ public class TeleportWandItem extends Item {
         }
 
         return false;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
     public boolean performAction(Item item, Level level, Player player) {

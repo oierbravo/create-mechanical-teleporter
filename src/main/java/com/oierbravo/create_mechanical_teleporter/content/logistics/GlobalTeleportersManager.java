@@ -46,6 +46,14 @@ public class GlobalTeleportersManager {
         return network != null && network.locked;
     }
 
+    public void trainLinkAdded(UUID networkId, UUID trainId, int carriageIndex, UUID ownedBy) {
+        TeleportersNetwork network = teleportersNetworks.computeIfAbsent(networkId, $ -> new TeleportersNetwork(networkId));
+        network.trainLinks.add(new TeleportersNetwork.TrainLink(trainId, carriageIndex));
+        if (ownedBy != null && network.owner == null)
+            network.owner = ownedBy;
+        markDirty();
+    }
+
     public void linkAdded(UUID networkId, GlobalPos pos, UUID ownedBy) {
         TeleportersNetwork network = teleportersNetworks.computeIfAbsent(networkId, $ -> new TeleportersNetwork(networkId));
         network.totalLinks.add(pos);
@@ -66,6 +74,14 @@ public class GlobalTeleportersManager {
         teleportersNetwork.loadedLinks.remove(pos);
         if (teleportersNetwork.totalLinks.size() <= 0)
             teleportersNetworks.remove(networkId);
+        markDirty();
+    }
+
+    public void trainLinkRemoved(UUID networkId, UUID trainId, int carriageIndex) {
+        TeleportersNetwork teleportersNetwork = teleportersNetworks.get(networkId);
+        if (teleportersNetwork == null)
+            return;
+        teleportersNetwork.trainLinks.remove(new TeleportersNetwork.TrainLink(trainId, carriageIndex));
         markDirty();
     }
 
@@ -100,4 +116,8 @@ public class GlobalTeleportersManager {
             savedData.setDirty();
     }
 
+    public boolean hasTrainLink(UUID networkId, UUID trainId, int carriageIndex) {
+        TeleportersNetwork network = teleportersNetworks.get(networkId);
+        return teleportersNetworks.get(networkId).trainLinks.contains(new TeleportersNetwork.TrainLink(trainId, carriageIndex));
+    }
 }

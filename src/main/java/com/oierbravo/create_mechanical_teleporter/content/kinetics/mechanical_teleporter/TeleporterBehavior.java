@@ -75,6 +75,7 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
                 .map(WeakReference::get)
                 .filter(TeleporterBehavior::isValidLink);
 
+
         if (sortByPriority)
             stream = stream.sorted((e1, e2) -> Integer.compare(e1.redstonePower, e2.redstonePower));
 
@@ -85,6 +86,7 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         boolean onClient = behaviour.blockEntity.getLevel().isClientSide;
         if (behaviour.redstonePower == 15)
             return;
+
         try {
             Cache<Integer, WeakReference<TeleporterBehavior>> cache =
                     (onClient ? CLIENT_LINKS : LINKS).get(behaviour.freqId, () -> new TickBasedCache<>(400, false));
@@ -117,12 +119,20 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         remove(this);
     }
 
+    public void unloadFromTrain(){
+
+    }
+
     @Override
     public void lazyTick() {
         keepAlive(this);
         if (blockEntity.getLevel().isClientSide())
             return;
         updateSignAddress();
+    }
+
+    public void trainTick(){
+
     }
 
     @Override

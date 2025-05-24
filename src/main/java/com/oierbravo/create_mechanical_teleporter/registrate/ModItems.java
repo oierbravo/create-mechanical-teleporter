@@ -23,7 +23,7 @@ public class ModItems {
     public static final ItemEntry<HandTeleporterItem> HAND_TELEPORTER =
             REGISTRATE.item("hand_teleporter", HandTeleporterItem::new)
                     .lang("Hand teleporter")
-                    .properties(p -> p.stacksTo(1))
+                    .properties(p -> p.stacksTo(1).durability(200))
                     .model(AssetLookup.itemModelWithPartials())
                     .register();
 

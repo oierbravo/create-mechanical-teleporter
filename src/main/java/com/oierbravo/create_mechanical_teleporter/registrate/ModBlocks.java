@@ -3,6 +3,7 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockItem;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterMovementBehaviour;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.ModStress;
 import com.simibubi.create.foundation.data.AssetLookup;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 
+import static com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour.interactionBehaviour;
+import static com.simibubi.create.api.behaviour.movement.MovementBehaviour.movementBehaviour;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
@@ -53,6 +56,7 @@ public class ModBlocks {
             .properties(p -> p.mapColor(MapColor.METAL))
             .properties(p -> p.lightLevel($ -> 5))
             .properties(BlockBehaviour.Properties::noOcclusion)
+            .onRegister(movementBehaviour(new TeleporterMovementBehaviour()))
             .transform(pickaxeOnly())
             .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
             .item(TeleporterBlockItem::new)
