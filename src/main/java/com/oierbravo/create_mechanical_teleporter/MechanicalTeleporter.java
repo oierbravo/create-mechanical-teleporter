@@ -17,6 +17,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import org.slf4j.Logger;
 
@@ -48,6 +49,7 @@ public class MechanicalTeleporter
         ModBlocks.register();
         ModBlockEntities.register();
         ModItems.register();
+        ModFluids.register();
         ModMenuTypes.register();
         MConfigs.register(modLoadingContext,modContainer);
 
@@ -57,12 +59,19 @@ public class MechanicalTeleporter
         modEventBus.addListener(ModMessages::registerNetworking);
         ModPackets.register();
         ModDataComponents.register(modEventBus);
+        modEventBus.addListener(this::common);
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(this::registerChunkLoaders);
         modEventBus.addListener(ModDataGen::gatherData);
 
         generateLangEntries();
     }
+    public void common(final FMLCommonSetupEvent event) {
+        ModFluids.registerFluidInteractions();
+    }
+
+
+
 
     private void generateLangEntries(){
         new RegistrateLangBuilder(MODID, registrate())

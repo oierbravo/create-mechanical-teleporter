@@ -1,0 +1,5 @@
+{
+  "textures": {
+    "particle": "create_mechanical_teleporter:fluid/ender_fluid_still"
+  }
+}

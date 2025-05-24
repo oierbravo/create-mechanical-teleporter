@@ -1,5 +1,6 @@
 {
   "block.create_mechanical_teleporter.creative_teleporter": "Creative Teleporter",
+  "block.create_mechanical_teleporter.ender_fluid": "Ender Fluid",
   "block.create_mechanical_teleporter.mechanical_teleporter": "Mechanical Teleporter",
   "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour0": "Generates a new frequency or uses the tuned one",
   "block.create_mechanical_teleporter.mechanical_teleporter.tooltip.behaviour1": "Tunes to the teleporter network",
@@ -13,6 +14,9 @@
   "create_mechanical_teleporter.simple_teleport_controller.frequency_slot_1": "Freq. #1",
   "create_mechanical_teleporter.ui.no_valid_teleporter": "No valid teleporter found",
   "create_mechanical_teleporter.ui.not_tuned": "Not tuned to a network",
+  "fluid.create_mechanical_teleporter.ender_fluid": "Ender fluid",
+  "item.create_mechanical_teleporter.ender_fluid_bucket": "Ender Fluid Bucket",
+  "item.create_mechanical_teleporter.ender_quartz": "Ender quartz",
   "item.create_mechanical_teleporter.hand_teleporter": "Hand teleporter",
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour1": "Teleports to the __configured frequency__",
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour2": "Tunes to the __teleporter__ network",
@@ -21,5 +25,6 @@
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition2": "R-Click on Teleporter",
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.condition3": "R-Click while Sneaking",
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.summary": "Holds one frequency",
+  "item.create_mechanical_teleporter.polished_ender_quartz": "Polished ender quartz",
   "item.create_mechanical_teleporter.teleport_wand": "Teleport Wand"
 }
