@@ -4,19 +4,20 @@ import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.foundation.ChunkManager;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModFluids;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -37,7 +38,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
     }
     public static int FLUID_CAPACITY = 4000;
 
-    public static Fluid REQUIRED_FLUID = Fluids.LAVA;
+    public static Fluid REQUIRED_FLUID = ModFluids.ENDER_FLUID.get();
 
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
@@ -70,7 +71,15 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.MECHANICAL_TELEPORTER.get(),
-                (be, context) -> be.inputTank.getCapability());
+                (be, context) -> {
+                    Direction localDir = be.getBlockState().getValue(TeleporterBlock.HORIZONTAL_FACING);
+                    if(context != null && localDir == context)
+                        return be.inputTank.getPrimaryHandler();
+                    if(context == null)
+                        return be.inputTank.getPrimaryHandler();
+                    return null;
+                }
+        );
     }
 
     @Override
