@@ -6,7 +6,7 @@ public class TeleportWandConfigs extends ConfigBase {
     public final int version = 1;
     public final ConfigInt range = i(10, 1, "range", Comments.range);
     public final ConfigInt airAmount = i(30, 1, "airAmount", Comments.airAmount);
-    public final ConfigInt cooldown = i(20, 1, "cooldown", Comments.cooldown);
+    public final ConfigInt cooldown = i(10, 1, "cooldown", Comments.cooldown);
 
 
     private static class Comments {

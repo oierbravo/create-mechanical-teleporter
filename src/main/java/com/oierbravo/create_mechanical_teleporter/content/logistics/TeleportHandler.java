@@ -23,6 +23,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -38,7 +40,10 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.simibubi.create.content.contraptions.actors.seat.SeatBlock.sitDown;
 
@@ -91,6 +96,32 @@ public class TeleportHandler {
             return false;
         }
     }
+    public static boolean shortRandomTeleport(Level level, Entity entity, int range) {
+        Optional<Vec3> pos = teleportRandomPosition(level, entity);
+        if (pos.isPresent()) {
+            if (entity instanceof LivingEntity livingEntity) {
+                Optional<Vec3> eventPos = teleportEvent(entity, pos.get());
+                if (eventPos.isPresent()) {
+                    livingEntity.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
+                    if(entity instanceof ServerPlayer serverPlayer)
+                        serverPlayer.connection.resetPosition();
+                    livingEntity.fallDistance = 0;
+
+                    if (livingEntity.isInWall()) {
+                        // without this line the player takes 1 tick of damage before their pose changes
+                        livingEntity.setPose(Pose.SWIMMING);
+                    }
+                    livingEntity.playSound(SoundEvents.ENDERMAN_TELEPORT,  1F, 1F);
+                } else {
+                    entity.playSound(SoundEvents.DISPENSER_FAIL, 1F, 1F);
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static boolean teleportToFrequency(TeleporterFrequency frequency, ServerPlayer player){
 
         UUID freqId = frequency.freqId();
@@ -266,6 +297,88 @@ public class TeleportHandler {
         return Optional.of(Vec3.atBottomCenterOf(target).add(0, floorHeight, 0));
     }
 
+    public static Optional<Vec3> teleportRandomPosition(Level level, Entity entity) {
+        @Nullable
+        BlockPos target = null;
+        double floorHeight = 0;
+
+        // inspired by Entity#pick
+        Vec3 playerPos = entity.getEyePosition();
+        Vec3 lookVec = entity.getLookAngle().normalize();
+        int range = 5;
+        Vec3 toPos = playerPos.add(lookVec.scale(range));
+
+        ClipContext clipCtx = new ClipContext(playerPos, toPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE,
+                CollisionContext.empty());
+        BlockHitResult bhr = level.clip(clipCtx);
+
+        // process the result
+        if (bhr.getType() == HitResult.Type.MISS) {
+            target = bhr.getBlockPos();
+        } else if (bhr.getType() == HitResult.Type.BLOCK) {
+            Direction dir = bhr.getDirection();
+            if (dir == Direction.UP) {
+                // teleport the player *inside* the target block, then later push them up by the
+                // block's height
+                // warning: relies on the fact that isTeleportClear works with heights >= 1
+                target = bhr.getBlockPos();
+            } else if (dir == Direction.DOWN) {
+                target = bhr.getBlockPos().below((int) Math.ceil(entity.getBbHeight()));
+            } else {
+                target = bhr.getBlockPos().offset(dir.getStepX(), 0, dir.getStepZ());
+                if (level.getBlockState(target).getCollisionShape(level, target).isEmpty()) {
+                    target = target.below();
+                }
+            }
+        }
+
+        // if target block is close, also try to teleport through
+        // eventually this distance should become configurable client-side
+        if (playerPos.distanceToSqr(bhr.getLocation()) < 9) {
+            // add small amount to make sure it starts at the correct block
+            Vec3 traverseFrom = bhr.getLocation().add(lookVec.scale(0.01));
+
+            // since we can't return null from the fail condition, instead use an invalid
+            // position
+            BlockPos failPosition = new BlockPos(0, Integer.MAX_VALUE, 0);
+
+            boolean aimingUp = lookVec.y > 0.5;
+
+            // can reuse same toPos and clipCtx because this traversal should be along the
+            // same line
+            BlockPos newTarget = BlockGetter.traverseBlocks(traverseFrom, toPos, clipCtx,
+                    (traverseCtx, traversePos) -> {
+                        if (!aimingUp) {
+                            // check underneath first, since that's more likely to be where the player wants
+                            // to teleport
+                            BlockPos checkBelow = traversalCheck(level, traversePos.below());
+                            if (checkBelow != null) {
+                                return checkBelow;
+                            }
+                        }
+
+                        return traversalCheck(level, traversePos);
+                    }, (failCtx) -> failPosition);
+            if (newTarget != failPosition) {
+                target = newTarget.immutable();
+            }
+        }
+
+        if (target != null) {
+            Optional<Double> ground = isTeleportPositionClear(level, target.below());
+            if (ground.isPresent()) { // to use the same check as the anchors use the position below
+                floorHeight = ground.get();
+            } else {
+                target = null;
+            }
+        }
+
+        if (target == null || entity.blockPosition().distManhattan(target) < 2) {
+            return Optional.empty();
+        }
+        return Optional.of(Vec3.atBottomCenterOf(target).add(0, floorHeight, 0));
+    }
+
     @Nullable
     private static BlockPos traversalCheck(Level level, BlockPos traversePos) {
         BlockState blockState = level.getBlockState(traversePos);
@@ -301,8 +414,8 @@ public class TeleportHandler {
         return Optional.empty();
     }
 
-    private static Optional<Vec3> teleportEvent(Player player, Vec3 target) {
-        EntityTeleportEvent event = new EntityTeleportEvent(player, target.x(), target.y(), target.z());
+    private static Optional<Vec3> teleportEvent(Entity entity, Vec3 target) {
+        EntityTeleportEvent event = new EntityTeleportEvent(entity, target.x(), target.y(), target.z());
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
             return Optional.empty();
         }

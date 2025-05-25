@@ -1,9 +1,9 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.content.fluid.EnderLiquidBlock;
 import com.oierbravo.mechanicals.register.fluid.MechanicalSolidRenderedPlaceableFluidType;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.tterrag.registrate.util.entry.FluidEntry;
@@ -29,6 +29,8 @@ public class ModFluids {
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
             .source(BaseFlowingFluid.Source::new)
+            .block(EnderLiquidBlock::new)
+            .build()
             .bucket()
             .tag(AllTags.commonItemTag("buckets/ender_fluid"))
             .build()
