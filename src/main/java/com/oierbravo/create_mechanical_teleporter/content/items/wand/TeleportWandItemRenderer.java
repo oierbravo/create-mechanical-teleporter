@@ -33,10 +33,10 @@ public class TeleportWandItemRenderer extends CustomRenderedItemModelRenderer {
 
         renderer.render(model.getOriginalModel(), light);
 
-		if(playerHasAir)
+		/*if(playerHasAir)
 			renderer.renderGlowing(CORE_GLOW.get(), maxLight);
 		else
-			renderer.renderSolidGlowing(CORE.get(), maxLight);
+			renderer.renderSolidGlowing(CORE.get(), maxLight);*/
 
 		float floating = Mth.sin(worldTime) * .05f;
 		float angle = worldTime * -10 % 360;

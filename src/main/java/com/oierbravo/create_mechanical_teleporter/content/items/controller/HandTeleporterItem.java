@@ -224,7 +224,7 @@ public class HandTeleporterItem extends Item {
             return true;
         if(MConfigs.server().handTeleporter.useXp.get())
             return TeleportingResourceUtils.hasEnoughXp(player, MConfigs.server().handTeleporter.xpAmount.get());
-        return false;
+        return true;
     }
     public static void consumeResources(ItemStack stack, Player player, EquipmentSlot slot){
         if(!ModItems.HAND_TELEPORTER.isIn(stack))

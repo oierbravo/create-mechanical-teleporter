@@ -2,6 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
+import com.oierbravo.create_mechanical_teleporter.foundation.ItemStackUtils;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.SetAddressToItemPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModGuiTextures;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.theme.Color;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -47,20 +49,16 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
         int x = guiLeft/2;
         int y = guiTop/2;
 
-
-           addressBox = new EditBox(new NoShadowFontWrapper(font), bgWidth / 2 + 23, y + bgHeight - 50, 110, 10,
-                   Component.empty());
-           addressBox.setBordered(false);
-           addressBox.setMaxLength(25);
-           addressBox.setTextColor(0x3D3C48);
-           addressBox.setValue(address);
-           addressBox.setFocused(false);
-           addressBox.mouseClicked(0, 0, 0);
-           //addressBox.setX(bgWidth / 2 + 23);
+        addressBox = new EditBox(new NoShadowFontWrapper(font), bgWidth / 2 + 23, y + bgHeight - 50, 110, 10,
+               Component.empty());
+        addressBox.setBordered(false);
+        addressBox.setMaxLength(25);
+        addressBox.setTextColor(0x3D3C48);
+        addressBox.setValue(address);
+        addressBox.setFocused(false);
+        addressBox.mouseClicked(0, 0, 0);
         addressBox.setResponder(this::onAddressEdited);
 
-        addRenderableWidget(addressBox);
-       // }
         addRenderableWidget(addressBox);
 
         confirmButton = new IconButton(x + bgWidth - 33, y + bgHeight - 23, AllIcons.I_CONFIRM);
@@ -86,14 +84,16 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
     protected void renderWindowBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.renderWindowBackground(graphics, mouseX, mouseY, partialTicks);
 
-        GuiGameElement.of(icon).<GuiGameElement
-                        .GuiRenderBuilder>at(guiLeft + bgWidth + 6, guiTop + bgHeight - 56, -200)
-                .scale(4)
+        String itemName = ItemStackUtils.getName(item);
+        graphics.drawString(font, itemName, guiLeft - bgWidth/2 + 6, guiTop - bgHeight + 21, Color.BLACK.brighter().getRGB());
+
+        GuiGameElement.of(icon).scale(4).at(guiLeft + (float) bgWidth /2, guiTop - (float) bgHeight /2, -200)
                 .render(graphics);
+
     }
 
     private void sendClearPacket() {
-
+        addressBox.setValue("");
     }
 
     @Override
@@ -118,7 +118,6 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
     protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         int x = guiLeft/2;
         int y = guiTop/2;
-
 
         ModGuiTextures.HAND_TELEPORTER.render(graphics, x, y);
     }
