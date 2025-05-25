@@ -1,13 +1,14 @@
-// 1.21.1	2025-05-24T22:05:41.848644888	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-05-25T16:45:15.310157935	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 17fd0cd7dafdf9b77fc3a6062b1e8a201297cf6e assets/create_mechanical_teleporter/blockstates/creative_teleporter.json
 299d9c1e21f9ca1af3fe95970b19e3bd98f5a677 assets/create_mechanical_teleporter/blockstates/ender_fluid.json
 2884241d0b9fd4cb5eaea465b79c693232d4978d assets/create_mechanical_teleporter/blockstates/mechanical_teleporter.json
-95861d1f0a98c9eaf11e0d2a51199e534c1adc09 assets/create_mechanical_teleporter/lang/en_ud.json
-107ac7dcebac8da5bfcaccd88228b51edc7087fb assets/create_mechanical_teleporter/lang/en_us.json
+043a00506b37dd12e19e95acb63f0b5192a001e8 assets/create_mechanical_teleporter/lang/en_ud.json
+47c5cb38d9f02a968be2cc127673e706aa8f6c6d assets/create_mechanical_teleporter/lang/en_us.json
 8f1294d02eb25565956a500011861808cfc8a320 assets/create_mechanical_teleporter/models/block/ender_fluid.json
 575665b4973ee5716eaf9d816f6a4ef954bd76e0 assets/create_mechanical_teleporter/models/item/creative_teleporter.json
 bc09c2375c619eec4c2d87e5b0e8b35ea9ceb504 assets/create_mechanical_teleporter/models/item/ender_fluid_bucket.json
 129504764aad73073d3f4a07e2d58651e83870cf assets/create_mechanical_teleporter/models/item/ender_quartz.json
+a97a9a39e3db845abd6becfc65babc03c7796242 assets/create_mechanical_teleporter/models/item/ender_soup.json
 391777f5d4478f6fde6098d9cd367e1706fbe4c7 assets/create_mechanical_teleporter/models/item/hand_teleporter.json
 918061d4471e321ef0c3318db948c7522939b469 assets/create_mechanical_teleporter/models/item/mechanical_teleporter.json
 3d157450118f4e32aae3a7230cb91623e1432c87 assets/create_mechanical_teleporter/models/item/polished_ender_quartz.json

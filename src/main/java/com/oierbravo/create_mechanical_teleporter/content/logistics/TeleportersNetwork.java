@@ -49,6 +49,7 @@ public class TeleportersNetwork {
             CompoundTag nbt = new CompoundTag();
             nbt.putUUID("TrainId", p.trainId);
             nbt.putInt("CarriageIndex", p.carriageId);
+            nbt.putString("Address", p.address);
             return nbt;
         }));
 
@@ -69,7 +70,7 @@ public class TeleportersNetwork {
         });
 
         NBTHelper.iterateCompoundList(tag.getList("TrainLinks", Tag.TAG_COMPOUND), nbt -> {
-            network.trainLinks.add(new TrainLink(nbt.getUUID("TrainId"), nbt.getInt("CarriageIndex")));
+            network.trainLinks.add(new TrainLink(nbt.getUUID("TrainId"), nbt.getInt("CarriageIndex"), nbt.getString("Address")));
         });
 
         network.owner = tag.contains("Owner") ? tag.getUUID("Owner") : null;
@@ -77,10 +78,10 @@ public class TeleportersNetwork {
 
         return network;
     }
-    public record TrainLink(UUID trainId, int carriageId){
+    public record TrainLink(UUID trainId, int carriageId, String address){
         @Override
         public int hashCode() {
-            return Objects.hash(trainId, carriageId);
+            return Objects.hash(trainId, carriageId, address);
         }
 
     }

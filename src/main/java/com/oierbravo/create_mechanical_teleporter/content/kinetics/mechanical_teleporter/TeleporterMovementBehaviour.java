@@ -5,9 +5,14 @@ import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.slf4j.Logger;
 
 
@@ -33,7 +38,7 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
         CompoundTag teleporterData = context.blockEntityData;
         AbstractContraptionEntity ce = context.contraption.entity;
         if(ce instanceof CarriageContraptionEntity carriageContraptionEntity){
-            MechanicalTeleporter.TELEPORTERS.trainLinkAdded(teleporterData.getUUID("Freq"),carriageContraptionEntity.trainId, carriageContraptionEntity.carriageIndex, teleporterData.getUUID("PlacedBy"));
+            MechanicalTeleporter.TELEPORTERS.trainLinkAdded(teleporterData.getUUID("Freq"),carriageContraptionEntity.trainId, carriageContraptionEntity.carriageIndex, teleporterData.getString("SignAddress"), teleporterData.getUUID("PlacedBy"));
         }
     }
 
@@ -48,7 +53,7 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
 
         if(context.contraption.entity instanceof CarriageContraptionEntity carriageContraptionEntity){
             if(!context.firstMovement)
-                MechanicalTeleporter.TELEPORTERS.trainLinkRemoved(teleporterData.getUUID("Freq"),carriageContraptionEntity.trainId,carriageContraptionEntity.carriageIndex);
+                MechanicalTeleporter.TELEPORTERS.trainLinkRemoved(teleporterData.getUUID("Freq"),carriageContraptionEntity.trainId,carriageContraptionEntity.carriageIndex, teleporterData.getString("SignAddress"));
         }
         context.temporaryData = null;
     }
@@ -56,5 +61,13 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
     @Override
     public boolean disableBlockEntityRendering() {
         return true;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
+                                    ContraptionMatrices matrices, MultiBufferSource buffer) {
+
+        TeleporterRendererHelper.renderCoreInContraption(context, renderWorld, matrices, buffer);
     }
 }

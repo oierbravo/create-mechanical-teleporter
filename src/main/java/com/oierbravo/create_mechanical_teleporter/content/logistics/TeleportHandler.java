@@ -2,14 +2,17 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.ModLang;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.Train;
@@ -31,6 +34,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -38,9 +42,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -127,6 +131,8 @@ public class TeleportHandler {
         UUID freqId = frequency.freqId();
         String address = frequency.address();
 
+        boolean teleported = false;
+
         if(MechanicalTeleporter.TELEPORTERS.teleportersNetworks.containsKey(freqId)){
             TeleportersNetwork network = MechanicalTeleporter.TELEPORTERS.teleportersNetworks.get(freqId);
             boolean foundCurrent = false;
@@ -166,36 +172,46 @@ public class TeleportHandler {
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                     return true;
                 }
-
-            } else {
-                player.displayClientMessage(ModLang.translate("ui.no_valid_teleporter").component(),true);
-                player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
             }
 
             for(TeleportersNetwork.TrainLink trainLink : network.trainLinks){
                 Train train = Create.RAILWAYS.trains.get(trainLink.trainId());
+                if(train == null)
+                    continue;
+
                 int carriageIndex = trainLink.carriageId();
                 Carriage carriage = train.carriages.get(carriageIndex);
                 CarriageContraptionEntity carriageContraptionEntity = carriage.anyAvailableEntity();
                 Contraption contraption = carriageContraptionEntity.getContraption();
-                List<BlockPos> seats = contraption.getSeats();
-                for(BlockPos seatPos :  contraption.getSeats()){
-                    int seatIndex = contraption.getSeats().indexOf(seatPos);
-                    if(!contraption.getSeatMapping().containsValue(seatIndex)){
-                        carriageContraptionEntity.addSittingPassenger(player,seatIndex);
-                        return true;
+
+                MountedFluidStorageWrapper fluids = contraption.getStorage().getFluids();
+
+                for(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor : contraption.getActors()){
+                    if(actor.getLeft().state().getBlock() instanceof ITeleporterBlock iTeleporter){
+                        if(actor.getRight().blockEntityData.getString("SignAddress").equals(address)){
+                            boolean success = teleportToContraption(contraption, player);
+                            if(success) {
+                                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                                return true;
+                            }
+                        }
                     }
                 }
             }
         }
+        player.displayClientMessage(ModLang.translate("ui.no_valid_teleporter").component(),true);
+        player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
         return false;
     }
 
-    public static boolean teleportToTeleporter(Level level, Player pPlayer, BlockPos teleporterBlockPos){
-        BlockPos destination = teleporterBlockPos.above();
-        if(isTeleportPositionClear(level, teleporterBlockPos.above()).isPresent()){
-            pPlayer.teleportTo(destination.getX() + 0.5,destination.getY()+ 0.5,destination.getZ()+ 0.5);
-            return true;
+
+    private static boolean teleportToContraption(Contraption contraption, Player player){
+        for(BlockPos seatPos :  contraption.getSeats()){
+            int seatIndex = contraption.getSeats().indexOf(seatPos);
+            if(!contraption.getSeatMapping().containsValue(seatIndex)){
+                contraption.entity.addSittingPassenger(player,seatIndex);
+                return true;
+            }
         }
         return false;
     }
@@ -422,7 +438,31 @@ public class TeleportHandler {
 
         return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
     }
+    public static void teleportToSpawn(ServerPlayer serverPlayer) {
+        if (serverPlayer.getRespawnPosition() == null)
+            return;
+        GlobalPos spawnPos = new GlobalPos(serverPlayer.getRespawnDimension(), serverPlayer.getRespawnPosition());
+        teleportToGlobalPosSimple(spawnPos, serverPlayer);
 
+    }
+    public static void teleportToGlobalPosSimple(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer){
+        BlockPos teleportDestination = destinationGlobalPos.pos().above();
+        ServerLevel targetDimension = (ServerLevel) serverPlayer.level();
+        boolean sameDimension = serverPlayer.level().dimension() == destinationGlobalPos.dimension();
+        if(!sameDimension) {
+            targetDimension = serverPlayer.level().getServer().getLevel(destinationGlobalPos.dimension());
+        }
+        if(targetDimension == null)
+            return;
+
+        if(!sameDimension) {
+            DimensionTransition transition = new DimensionTransition(targetDimension, new Vec3(teleportDestination.getX() + (double) 0.5F, teleportDestination.getY(), teleportDestination.getZ() + (double) 0.5F), Vec3.ZERO, serverPlayer.getYRot(), serverPlayer.getXRot(), false, DimensionTransition.DO_NOTHING);
+            serverPlayer.changeDimension(transition);
+            return;
+        }
+        serverPlayer.teleportTo(teleportDestination.getX() + 0.5,teleportDestination.getY()+ 0.5,teleportDestination.getZ()+ 0.5);
+
+    }
     public static boolean tryTeleportToGlobalPos(GlobalPos destinationGlobalPos,String address, ServerPlayer serverPlayer, boolean simulate) {
         BlockPos teleportDestination = destinationGlobalPos.pos().above();
         ServerLevel targetDimension = (ServerLevel) serverPlayer.level();

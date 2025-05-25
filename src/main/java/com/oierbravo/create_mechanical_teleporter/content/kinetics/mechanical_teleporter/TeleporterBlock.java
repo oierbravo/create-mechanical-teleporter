@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
-public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity>, IWrenchable {
+public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 

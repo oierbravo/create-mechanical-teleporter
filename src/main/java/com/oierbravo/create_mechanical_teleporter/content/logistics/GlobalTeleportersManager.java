@@ -46,9 +46,9 @@ public class GlobalTeleportersManager {
         return network != null && network.locked;
     }
 
-    public void trainLinkAdded(UUID networkId, UUID trainId, int carriageIndex, UUID ownedBy) {
+    public void trainLinkAdded(UUID networkId, UUID trainId, int carriageIndex, String address,  UUID ownedBy) {
         TeleportersNetwork network = teleportersNetworks.computeIfAbsent(networkId, $ -> new TeleportersNetwork(networkId));
-        network.trainLinks.add(new TeleportersNetwork.TrainLink(trainId, carriageIndex));
+        network.trainLinks.add(new TeleportersNetwork.TrainLink(trainId, carriageIndex, address));
         if (ownedBy != null && network.owner == null)
             network.owner = ownedBy;
         markDirty();
@@ -77,11 +77,11 @@ public class GlobalTeleportersManager {
         markDirty();
     }
 
-    public void trainLinkRemoved(UUID networkId, UUID trainId, int carriageIndex) {
+    public void trainLinkRemoved(UUID networkId, UUID trainId, int carriageIndex, String address) {
         TeleportersNetwork teleportersNetwork = teleportersNetworks.get(networkId);
         if (teleportersNetwork == null)
             return;
-        teleportersNetwork.trainLinks.remove(new TeleportersNetwork.TrainLink(trainId, carriageIndex));
+        teleportersNetwork.trainLinks.remove(new TeleportersNetwork.TrainLink(trainId, carriageIndex,address));
         markDirty();
     }
 
@@ -116,8 +116,8 @@ public class GlobalTeleportersManager {
             savedData.setDirty();
     }
 
-    public boolean hasTrainLink(UUID networkId, UUID trainId, int carriageIndex) {
+    public boolean hasTrainLink(UUID networkId, UUID trainId, int carriageIndex, String address) {
         TeleportersNetwork network = teleportersNetworks.get(networkId);
-        return teleportersNetworks.get(networkId).trainLinks.contains(new TeleportersNetwork.TrainLink(trainId, carriageIndex));
+        return teleportersNetworks.get(networkId).trainLinks.contains(new TeleportersNetwork.TrainLink(trainId, carriageIndex, address));
     }
 }

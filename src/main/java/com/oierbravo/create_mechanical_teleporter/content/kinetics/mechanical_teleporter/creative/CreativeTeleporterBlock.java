@@ -1,6 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative;
 
 import com.mojang.serialization.MapCodec;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
-public class CreativeTeleporterBlock extends Block implements IBE<CreativeTeleporterBlockEntity>, IWrenchable {
+public class CreativeTeleporterBlock extends Block implements IBE<CreativeTeleporterBlockEntityBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final MapCodec<CreativeTeleporterBlock> CODEC = simpleCodec(CreativeTeleporterBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -82,12 +83,12 @@ public class CreativeTeleporterBlock extends Block implements IBE<CreativeTelepo
     }
 
     @Override
-    public Class<CreativeTeleporterBlockEntity> getBlockEntityClass() {
-        return CreativeTeleporterBlockEntity.class;
+    public Class<CreativeTeleporterBlockEntityBlockEntity> getBlockEntityClass() {
+        return CreativeTeleporterBlockEntityBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends CreativeTeleporterBlockEntity> getBlockEntityType() {
+    public BlockEntityType<? extends CreativeTeleporterBlockEntityBlockEntity> getBlockEntityType() {
         return ModBlockEntities.CREATIVE_TELEPORTER.get();
     }
 }

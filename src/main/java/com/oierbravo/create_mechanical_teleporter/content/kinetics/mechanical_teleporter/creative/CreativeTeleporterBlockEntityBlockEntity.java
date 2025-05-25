@@ -1,6 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative;
 
 import com.oierbravo.create_mechanical_teleporter.ModLang;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.foundation.ChunkManager;
@@ -20,14 +21,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 import java.util.UUID;
 
-public class CreativeTeleporterBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, TeleporterBehavior.TeleporterBehaviourSpecifics  {
+public class CreativeTeleporterBlockEntityBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity {
 
     public TeleporterBehavior teleporterBehavior;
 
     public UUID placedBy;
 
 
-    public CreativeTeleporterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public CreativeTeleporterBlockEntityBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -81,5 +82,10 @@ public class CreativeTeleporterBlockEntity extends SmartBlockEntity implements I
     }
     protected boolean isPowered(){
         return this.getBlockState().getProperties().contains(TeleporterBlock.POWERED) && this.getBlockState().getValue(TeleporterBlock.POWERED);
+    }
+
+    @Override
+    public TeleporterBehavior getTeleporter() {
+        return teleporterBehavior;
     }
 }

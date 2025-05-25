@@ -2,6 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
+import com.oierbravo.create_mechanical_teleporter.content.items.EnderSoupItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandItem;
 import com.simibubi.create.foundation.data.AssetLookup;
@@ -10,6 +11,7 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -48,6 +50,12 @@ public class ModItems {
     public static final ItemEntry<Item> POLISHED_ENDER_QUARTZ =
             REGISTRATE.item("polished_ender_quartz", Item::new)
                     .lang("Polished ender quartz")
+                    .register();
+
+    public static final ItemEntry<EnderSoupItem> ENDER_SOUP =
+            REGISTRATE.item("ender_soup", EnderSoupItem::new)
+                    .properties(properties -> properties.food(Foods.BEETROOT_SOUP))
+                    .lang("Ender soup")
                     .register();
 
     public static void register() {}

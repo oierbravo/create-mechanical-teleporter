@@ -25,7 +25,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.UUID;
 
-public class TeleporterBlockEntity extends KineticBlockEntity implements TeleporterBehavior.TeleporterBehaviourSpecifics {
+public class TeleporterBlockEntity extends KineticBlockEntity implements TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity {
     public UUID placedBy;
 
     public TeleporterBehavior teleporterBehavior;
@@ -137,6 +137,9 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
     public void consumeResources() {
         this.inputTank.getPrimaryHandler().drain(MConfigs.server().teleporter.requiredFluidAmount.get(), IFluidHandler.FluidAction.EXECUTE);
     }
-
+    @Override
+    public TeleporterBehavior getTeleporter() {
+        return teleporterBehavior;
+    }
 }
 
