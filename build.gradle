@@ -165,6 +165,8 @@ dependencies {
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     jarJar(implementation("com.tterrag.registrate:Registrate:${registrate_version}"))
 
+    implementation("mezz.jei:jei-${jei_minecraft_version}-neoforge:${jei_version}")
+
     compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
     runtimeOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
 

@@ -1,0 +1,25 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create_mechanical_teleporter:block/mechanical_teleporter/core_glow",
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"4": "create_mechanical_teleporter:item/core_solid",
+		"9": "create_mechanical_teleporter:item/core_solid"
+	},
+	"elements": [
+		{
+			"name": "core",
+			"from": [5, 5, 5],
+			"to": [11, 11, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 7, 6]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 6], "texture": "#4"},
+				"east": {"uv": [0, 0, 6, 6], "texture": "#4"},
+				"south": {"uv": [0, 0, 6, 6], "texture": "#4"},
+				"west": {"uv": [0, 0, 6, 6], "texture": "#4"},
+				"up": {"uv": [0, 0, 6, 6], "texture": "#4"},
+				"down": {"uv": [0, 0, 6, 6], "texture": "#4"}
+			}
+		}
+	]
+}

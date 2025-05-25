@@ -1,4 +1,4 @@
-// 1.21.1	2025-05-24T02:31:23.751979349	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-05-24T22:05:41.848644888	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 17fd0cd7dafdf9b77fc3a6062b1e8a201297cf6e assets/create_mechanical_teleporter/blockstates/creative_teleporter.json
 299d9c1e21f9ca1af3fe95970b19e3bd98f5a677 assets/create_mechanical_teleporter/blockstates/ender_fluid.json
 2884241d0b9fd4cb5eaea465b79c693232d4978d assets/create_mechanical_teleporter/blockstates/mechanical_teleporter.json
@@ -9,10 +9,12 @@
 bc09c2375c619eec4c2d87e5b0e8b35ea9ceb504 assets/create_mechanical_teleporter/models/item/ender_fluid_bucket.json
 129504764aad73073d3f4a07e2d58651e83870cf assets/create_mechanical_teleporter/models/item/ender_quartz.json
 391777f5d4478f6fde6098d9cd367e1706fbe4c7 assets/create_mechanical_teleporter/models/item/hand_teleporter.json
-995e4613d035da55316b8c5f13f8f3791e76e748 assets/create_mechanical_teleporter/models/item/mechanical_teleporter.json
+918061d4471e321ef0c3318db948c7522939b469 assets/create_mechanical_teleporter/models/item/mechanical_teleporter.json
 3d157450118f4e32aae3a7230cb91623e1432c87 assets/create_mechanical_teleporter/models/item/polished_ender_quartz.json
 274516a1c40463f418123533fab156fe4779d25b assets/create_mechanical_teleporter/models/item/teleport_wand.json
 c2e7743c7f9dfd6a39f43b9a432f9a48c7c89bfb data/c/tags/item/buckets/ender_fluid.json
+a0e8599b4d08f1c952bfb7352275a7f45a2f67ba data/create_mechanical_teleporter/advancement/recipes/misc/crafting/ender_quartz.json
 2f721fe491827f0481424e00b8c68074f3ec72f5 data/create_mechanical_teleporter/loot_table/blocks/creative_teleporter.json
 07bead470b3671888b8f6a295e466a3bc1cd2828 data/create_mechanical_teleporter/loot_table/blocks/mechanical_teleporter.json
+3b3508e5b844c63e239b15a8dda26b4bc63c9072 data/create_mechanical_teleporter/recipe/crafting/ender_quartz.json
 92a54ce586d6578ad25215e88a93ce6a4b0d6daf data/minecraft/tags/block/mineable/pickaxe.json

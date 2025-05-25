@@ -36,6 +36,12 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
         return 0;
     }
 
+    /*@Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return 1000;
+        //return super.getLightEmission(state, level, pos);
+    }*/
+
     @Override
     public Direction.Axis getRotationAxis(BlockState state) {
         return Direction.Axis.Y;

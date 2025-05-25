@@ -3,7 +3,8 @@
 	"parent": "create_mechanical_teleporter:item/teleport_wand/item",
 	"ambientocclusion": false,
 	"textures": {
-		"5": "create_mechanical_teleporter:item/core_solid"
+		"5": "create_mechanical_teleporter:item/core_solid",
+		"core": "create_mechanical_teleporter:item/core_solid"
 	},
 	"elements": [
 		{

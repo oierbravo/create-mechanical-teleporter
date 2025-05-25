@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -20,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 
 public class TeleportWandItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel BITS = PartialModel.of(Create.asResource("item/wand_of_symmetry/bits"));
 	protected static final PartialModel CORE = PartialModel.of(ModConstants.asResource("item/teleport_wand/core"));
 	protected static final PartialModel CORE_GLOW = PartialModel.of(ModConstants.asResource("item/teleport_wand/core_glow"));
 

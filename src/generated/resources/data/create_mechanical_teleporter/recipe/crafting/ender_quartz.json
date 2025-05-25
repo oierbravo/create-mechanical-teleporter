@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "minecraft:ender_pearl"
+    },
+    "Q": {
+      "item": "minecraft:quartz"
+    }
+  },
+  "pattern": [
+    "PQQ",
+    "QQQ",
+    "QQQ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_mechanical_teleporter:ender_quartz"
+  }
+}

@@ -17,6 +17,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import org.slf4j.Logger;
@@ -64,6 +65,9 @@ public class MechanicalTeleporter
         modEventBus.addListener(this::registerChunkLoaders);
         modEventBus.addListener(ModDataGen::gatherData);
 
+        modEventBus.addListener(this::doClientStuff);
+
+
         generateLangEntries();
     }
     public void common(final FMLCommonSetupEvent event) {
@@ -109,4 +113,8 @@ public class MechanicalTeleporter
         return REGISTRATE;
     }
 
+    private void doClientStuff(final FMLClientSetupEvent event) {
+        ModPartials.init();
+        //PonderIndex.addPlugin(new ModPonderPlugin());
+    }
 }

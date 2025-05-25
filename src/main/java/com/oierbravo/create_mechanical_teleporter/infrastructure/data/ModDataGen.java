@@ -1,6 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.infrastructure.data;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.data.recipe.PolishingRecipeGen;
 import com.tterrag.registrate.providers.RegistrateDataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -20,6 +21,7 @@ public class ModDataGen {
 
 
         if (event.includeServer()) {
+            generator.addProvider(true, new PolishingRecipeGen(output, lookupProvider));
 
         }
         event.getGenerator().addProvider(true, MechanicalTeleporter.registrate().setDataProvider(new RegistrateDataProvider(MechanicalTeleporter.registrate(), MODID, event)));
