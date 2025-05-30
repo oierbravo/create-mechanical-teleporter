@@ -115,9 +115,8 @@ public class TeleportHandler {
                         // without this line the player takes 1 tick of damage before their pose changes
                         livingEntity.setPose(Pose.SWIMMING);
                     }
-                    livingEntity.playSound(SoundEvents.ENDERMAN_TELEPORT,  1F, 1F);
-                } else {
-                    entity.playSound(SoundEvents.DISPENSER_FAIL, 1F, 1F);
+                    if(livingEntity instanceof Player player)
+                            player.playSound(SoundEvents.ENDERMAN_TELEPORT,  1F, 1F);
                 }
             }
             return true;

@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ModShapes {
-    public static final VoxelShape TELEPORTERS = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 13, 15)
+    public static final VoxelShape TELEPORTERS = shape(0, 0, 0, 16, 2, 16).add(2, 0, 2, 14, 16, 14)
             .build();
 
     private static AllShapes.Builder shape(VoxelShape shape) {
