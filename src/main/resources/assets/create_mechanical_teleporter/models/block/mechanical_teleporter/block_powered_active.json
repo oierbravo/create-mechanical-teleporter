@@ -1,0 +1,11 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create_mechanical_teleporter:block/mechanical_teleporter/block",
+	"textures": {
+		"1": "create_mechanical_teleporter:block/mechanical_teleporter",
+		"2": "create_mechanical_teleporter:block/ender_gearbox",
+		"3": "create_mechanical_teleporter:block/signal_active",
+		"4": "create_mechanical_teleporter:block/redstone_powered",
+		"particle": "create_mechanical_teleporter:item/core_solid"
+	}
+}

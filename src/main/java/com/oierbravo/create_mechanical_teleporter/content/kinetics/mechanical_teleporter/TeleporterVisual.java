@@ -8,13 +8,23 @@ import net.minecraft.core.Direction;
 
 public class TeleporterVisual extends QuarterShaftVisual<TeleporterBlockEntity> implements SimpleDynamicVisual {
     //private final RotatingInstance core;
-    //private final TeleporterBlockEntity teleporterBlockEntity;
+    private final TeleporterBlockEntity teleporterBlockEntity;
     //private final OrientedInstance core;
+    //private final SmartRecycler<TextureAtlasSprite, FluidInstance> fluidInstance;
+    //private int light;
 
     public TeleporterVisual(VisualizationContext visualizationContext, TeleporterBlockEntity teleporterBlockEntity, float partialTick) {
         super(visualizationContext, teleporterBlockEntity, partialTick, Direction.DOWN);
+
+        this.teleporterBlockEntity = teleporterBlockEntity;
+
+        /*fluidInstance = new SmartRecycler<>(sprite -> visualizationContext.instancerProvider().instancer(AllInstanceTypes.FLUID, FluidMesh.stream(sprite))
+                .createInstance());*/
+
+
+
         //ToDo: Figure out how to handle transparency
-        /*this.teleporterBlockEntity = teleporterBlockEntity;
+        /*
 
         boolean canWork = this.teleporterBlockEntity.checkRequerimentsForTeleport();
         PartialModel coreModel = (canWork) ? ModPartials.BLOCK_CORE_GLOW : ModPartials.BLOCK_CORE;
@@ -31,8 +41,20 @@ public class TeleporterVisual extends QuarterShaftVisual<TeleporterBlockEntity> 
     @Override
     public void beginFrame(DynamicVisual.Context ctx) {
         //transformModels(ctx.partialTick());
-    }
 
+
+    }
+    /*@Override
+    public void updateLight(float partialTick) {
+        super.updateLight(partialTick);
+        light = computePackedLight();
+    }*/
+    /*@Override
+    protected void _delete() {
+        super._delete();
+        fluidInstance.delete();
+
+    }*/
     /*private void transformModels(float pt) {
         float worldTime = AnimationTickHolder.getRenderTime() / 20;
 

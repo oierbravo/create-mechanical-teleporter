@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create_mechanical_teleporter:polished_ender_quartz"
+    },
+    {
+      "type": "fluid_stack",
+      "amount": 500,
+      "fluid": "minecraft:lava"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "id": "create_mechanical_teleporter:ender_fluid"
+    },
+    {
+      "id": "create_mechanical_teleporter:polished_ender_quartz"
+    }
+  ]
+}

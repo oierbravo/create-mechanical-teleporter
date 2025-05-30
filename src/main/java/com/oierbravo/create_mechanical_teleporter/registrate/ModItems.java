@@ -5,15 +5,21 @@ import com.oierbravo.create_mechanical_teleporter.ModConstants;
 import com.oierbravo.create_mechanical_teleporter.content.items.EnderSoupItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandItem;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeBuilder;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class ModItems {
 
@@ -25,6 +31,17 @@ public class ModItems {
                     .lang("Teleport Wand")
                     .properties(p -> p.stacksTo(1))
                     .model(AssetLookup.itemModelWithPartials())
+                    .recipe((ctx, p) ->
+                            MechanicalCraftingRecipeBuilder.shapedRecipe(ctx.get())
+                                    .key('W', Ingredient.of(ItemTags.PLANKS))
+                                    .key('C', Ingredient.of(ModItems.POLISHED_ENDER_QUARTZ))
+                                    .key('B', Ingredient.of(AllTags.commonItemTag("ingots/brass")))
+                                    .key('S', Ingredient.of(AllTags.commonItemTag("plates/brass")))
+                                    .patternLine(  " C S")
+                                    .patternLine( "  C ")
+                                    .patternLine( " W C")
+                                    .patternLine( "B   ")
+                                    .build(p))
                     .register();
 
     public static final ItemEntry<HandTeleporterItem> HAND_TELEPORTER =
@@ -32,6 +49,14 @@ public class ModItems {
                     .lang("Hand teleporter")
                     .properties(p -> p.stacksTo(1).durability(200))
                     .model(AssetLookup.itemModelWithPartials())
+                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get())
+                            .define('T', AllItems.TRANSMITTER)
+                            .define('C', AllBlocks.BRASS_CASING)
+                            .define('B', ItemTags.BUTTONS)
+                            .pattern("T ")
+                            .pattern("CB")
+                            .unlockedBy("has_transmitter", RegistrateRecipeProvider.has(AllBlocks.BRASS_CASING))
+                            .save(p, ModConstants.asResource("crafting/" + c.getName())))
                     .register();
 
     public static final ItemEntry<Item> ENDER_QUARTZ =

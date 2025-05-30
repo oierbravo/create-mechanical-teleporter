@@ -1,0 +1,29 @@
+{
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": true,
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:ingots/brass"
+    },
+    "C": {
+      "item": "create_mechanical_teleporter:polished_ender_quartz"
+    },
+    "S": {
+      "tag": "c:plates/brass"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    " C S",
+    "  C ",
+    " W C",
+    "B   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_mechanical_teleporter:teleport_wand"
+  }
+}

@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -22,11 +23,11 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
     public TeleporterBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(POWERED, false));
+        registerDefaultState(defaultBlockState().setValue(POWERED, false).setValue(ACTIVE, false));
     }
 
     public static int getPower(BlockState blockState, Level level, BlockPos worldPosition) {
@@ -53,6 +54,16 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
     }
 
     @Override
+    public boolean hasDynamicLightEmission(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getValue(TeleporterBlock.ACTIVE) ? 15 : 0;
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction prefferedSide = getPreferredHorizontalFacing(context);
         BlockPos pos = context.getClickedPos();
@@ -61,7 +72,7 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
         if (prefferedSide == null)
             prefferedSide = context.getHorizontalDirection();
         return defaultBlockState().setValue(POWERED, getPower(placed, context.getLevel(), pos) > 0).setValue(HORIZONTAL_FACING, context.getPlayer() != null && context.getPlayer()
-                .isShiftKeyDown() ? prefferedSide : prefferedSide.getOpposite());
+                .isShiftKeyDown() ? prefferedSide : prefferedSide.getOpposite()).setValue(ACTIVE,false);
     }
 
     @Override
@@ -97,7 +108,7 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder.add(POWERED));
+        super.createBlockStateDefinition(builder.add(POWERED).add(ACTIVE));
     }
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {

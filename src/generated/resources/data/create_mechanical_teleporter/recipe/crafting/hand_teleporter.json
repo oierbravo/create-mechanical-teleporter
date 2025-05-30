@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "minecraft:buttons"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "T": {
+      "item": "create:transmitter"
+    }
+  },
+  "pattern": [
+    "T ",
+    "CB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_mechanical_teleporter:hand_teleporter"
+  }
+}

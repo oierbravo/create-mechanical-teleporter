@@ -1,33 +1,63 @@
 {
   "variants": {
-    "facing=east,powered=false": {
+    "active=false,facing=east,powered=false": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block",
       "y": 90
     },
-    "facing=east,powered=true": {
+    "active=false,facing=east,powered=true": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered",
       "y": 90
     },
-    "facing=north,powered=false": {
+    "active=false,facing=north,powered=false": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block"
     },
-    "facing=north,powered=true": {
+    "active=false,facing=north,powered=true": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered"
     },
-    "facing=south,powered=false": {
+    "active=false,facing=south,powered=false": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block",
       "y": 180
     },
-    "facing=south,powered=true": {
+    "active=false,facing=south,powered=true": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered",
       "y": 180
     },
-    "facing=west,powered=false": {
+    "active=false,facing=west,powered=false": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block",
       "y": 270
     },
-    "facing=west,powered=true": {
+    "active=false,facing=west,powered=true": {
       "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered",
+      "y": 270
+    },
+    "active=true,facing=east,powered=false": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_active",
+      "y": 90
+    },
+    "active=true,facing=east,powered=true": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered_active",
+      "y": 90
+    },
+    "active=true,facing=north,powered=false": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_active"
+    },
+    "active=true,facing=north,powered=true": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered_active"
+    },
+    "active=true,facing=south,powered=false": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_active",
+      "y": 180
+    },
+    "active=true,facing=south,powered=true": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered_active",
+      "y": 180
+    },
+    "active=true,facing=west,powered=false": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_active",
+      "y": 270
+    },
+    "active=true,facing=west,powered=true": {
+      "model": "create_mechanical_teleporter:block/mechanical_teleporter/block_powered_active",
       "y": 270
     }
   }

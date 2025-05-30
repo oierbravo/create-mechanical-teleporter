@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "type": "fluid_stack",
+      "amount": 500,
+      "fluid": "create_mechanical_teleporter:ender_fluid"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_mechanical_teleporter:ender_soup"
+    }
+  ]
+}

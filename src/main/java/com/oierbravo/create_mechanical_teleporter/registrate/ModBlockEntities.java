@@ -6,6 +6,7 @@ import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_te
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterVisual;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterBlockEntityBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterRenderer;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.manager.TeleporterManagerBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
 public class ModBlockEntities {
@@ -20,6 +21,11 @@ public class ModBlockEntities {
             .blockEntity("creative_mechanical", CreativeTeleporterBlockEntityBlockEntity::new)
             .validBlocks(ModBlocks.CREATIVE_TELEPORTER)
             .renderer(() -> CreativeTeleporterRenderer::new)
+            .register();
+
+    public static final BlockEntityEntry<TeleporterManagerBlockEntity> TELEPORTER_MANAGER = MechanicalTeleporter.registrate()
+            .blockEntity("teleporter_manager", TeleporterManagerBlockEntity::new)
+            .validBlocks(ModBlocks.TELEPORTER_MANAGER)
             .register();
 
     public static void register() {}

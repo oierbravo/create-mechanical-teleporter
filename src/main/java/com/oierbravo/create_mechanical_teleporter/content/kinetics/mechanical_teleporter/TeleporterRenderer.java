@@ -21,31 +21,10 @@ public class TeleporterRenderer extends KineticBlockEntityRenderer<TeleporterBlo
     protected void renderSafe(TeleporterBlockEntity blockEntity, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
                               int overlay) {
 
-        //BlockState blockState = blockEntity.getBlockState();
-
-        //VertexConsumer vb = buffer.getBuffer(RenderType.translucent());
-        boolean canWork = blockEntity.checkRequerimentsForTeleport();
-        /*PartialModel coreModel = (canWork) ? ModPartials.BLOCK_CORE_GLOW : ModPartials.BLOCK_CORE;
-
-        SuperByteBuffer coreRenderer = CachedBuffers.partialFacing(coreModel, blockState,
-            blockState.getValue(HORIZONTAL_FACING).getOpposite());
-
-        float worldTime = AnimationTickHolder.getRenderTime() / 20;
-
-
-
-        float floating = Mth.sin(worldTime) * .05f;
-        float angle = direction * worldTime * -10 % 360;
-
-        if(canWork)
-            coreRenderer.translate(0, floating, 0);
-
-        coreRenderer.rotateCentered((canWork) ? angle : 0, Direction.UP)
-                .light(LightTexture.FULL_BRIGHT)
-                .renderInto(ms, vb);*/
+        boolean isActive = blockEntity.checkRequerimentsForTeleport();
 
         int direction = (blockEntity.getSpeed() >=0) ? 1 : -1;
-        TeleporterRendererHelper.renderCoreShared(ms,null,buffer, blockEntity.getLevel(),blockEntity.getBlockState(),canWork, direction);
+        TeleporterRendererHelper.renderCoreShared(ms,null,buffer, blockEntity.getLevel(),blockEntity.getBlockState(),isActive, direction);
 
         if (VisualizationManager.supportsVisualization(blockEntity.getLevel()))
             return;

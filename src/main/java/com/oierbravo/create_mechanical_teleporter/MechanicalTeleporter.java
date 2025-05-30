@@ -1,7 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter;
 
 import com.mojang.logging.LogUtils;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.GlobalTeleportersManager;
 import com.oierbravo.create_mechanical_teleporter.foundation.ChunkManager;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
@@ -104,7 +103,7 @@ public class MechanicalTeleporter
 
     @net.neoforged.bus.api.SubscribeEvent
     public void registerCapabilities(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent event) {
-        TeleporterBlockEntity.registerCapabilities(event);
+
     }
     private void registerChunkLoaders(RegisterTicketControllersEvent event) {
         event.register(ChunkManager.TICKET_CONTROLLER);

@@ -1,6 +1,10 @@
 {
   "values": [
     "create_mechanical_teleporter:mechanical_teleporter",
-    "create_mechanical_teleporter:creative_teleporter"
+    "create_mechanical_teleporter:creative_teleporter",
+    "create_mechanical_teleporter:teleporter_manager",
+    "create_mechanical_teleporter:ender_quartz_lamp",
+    "create_mechanical_teleporter:ender_casing",
+    "create_mechanical_teleporter:ender_creative_casing"
   ]
 }

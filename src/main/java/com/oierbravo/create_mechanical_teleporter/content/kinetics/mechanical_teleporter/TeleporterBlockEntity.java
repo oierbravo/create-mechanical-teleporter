@@ -29,16 +29,24 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
     public UUID placedBy;
 
     public TeleporterBehavior teleporterBehavior;
-    public SmartFluidTankBehaviour inputTank;
+
+    protected boolean isActive = false;
+
+    @Override
+    public void lazyTick() {
+        assert level != null;
+        if(level.isClientSide)
+            return;
+        boolean isCurrentlyActive = checkRequerimentsForTeleport();
+        if(isActive != isCurrentlyActive)
+            setActive(isCurrentlyActive);
+    }
 
     public TeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         setLazyTickRate(10);
         placedBy = null;
     }
-    public static int FLUID_CAPACITY = 4000;
-
-    public static Fluid REQUIRED_FLUID = ModFluids.ENDER_FLUID.get();
 
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
@@ -51,37 +59,18 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
         placedBy = tag.contains("PlacedBy") ? tag.getUUID("PlacedBy") : null;
-
     }
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        inputTank = SmartFluidTankBehaviour.single(this, FLUID_CAPACITY);
-        inputTank.getPrimaryHandler().setValidator(FluidIngredient.fromFluid(REQUIRED_FLUID,1000));
-
-        behaviours.add(inputTank);
         behaviours.add(teleporterBehavior = new TeleporterBehavior(this, true));
     }
+
     @Override
     public void invalidate() {
         super.invalidate();
         invalidateCapabilities();
     }
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(
-                Capabilities.FluidHandler.BLOCK,
-                ModBlockEntities.MECHANICAL_TELEPORTER.get(),
-                (be, context) -> {
-                    Direction localDir = be.getBlockState().getValue(TeleporterBlock.HORIZONTAL_FACING);
-                    if(context != null && localDir == context)
-                        return be.inputTank.getPrimaryHandler();
-                    if(context == null)
-                        return be.inputTank.getPrimaryHandler();
-                    return null;
-                }
-        );
-    }
-
     @Override
     public void remove() {
         if(MConfigs.server().teleporter.autoChunkLoad.get())
@@ -98,10 +87,6 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
         if(!this.isSpeedRequirementFulfilled()){
             return false;
         }
-        if(this.inputTank.getPrimaryHandler().getFluidAmount() < MConfigs.server().teleporter.requiredFluidAmount.get()){
-            return false;
-        }
-
         return true;
     }
 
@@ -134,12 +119,16 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
     }
 
     @Override
-    public void consumeResources() {
-        this.inputTank.getPrimaryHandler().drain(MConfigs.server().teleporter.requiredFluidAmount.get(), IFluidHandler.FluidAction.EXECUTE);
-    }
-    @Override
     public TeleporterBehavior getTeleporter() {
         return teleporterBehavior;
+    }
+
+    public void setActive(boolean value){
+        isActive = value;
+        BlockState pState = getBlockState().setValue(TeleporterBlock.ACTIVE, value);
+
+        getLevel().setBlock(getBlockPos(), pState, 2);
+        setChanged(getLevel(), getBlockPos(), pState);
     }
 }
 
