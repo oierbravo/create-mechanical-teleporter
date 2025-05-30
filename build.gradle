@@ -200,10 +200,10 @@ jar {
     }
 
 }
-/*publishMods {
+publishMods {
     file = jar.archiveFile
     changelog = rootProject.file("changes/${minecraft_version}-${mod_version}.md").text
-    type = STABLE
+    type = BETA
     version = "$minecraft_version-$mod_version"
     displayName = "$mod_name $mod_version for mc$minecraft_version"
     modLoaders.add("neoforge")
@@ -216,7 +216,9 @@ jar {
             minecraftVersions.add(minecraft_version)
             clientRequired = true
             serverRequired = true
-            optional("kubejs")
+            requires("create")
+            requires("mechanicals-lib")
+            optional("jei")
 
         }
     }
@@ -226,10 +228,12 @@ jar {
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
             projectId = "${modrinth_id}"
             minecraftVersions.add(minecraft_version)
-            optional("kubejs")
+            requires("create")
+            requires("mechanicals-lib")
+            optional("jei")
         }
     }
-}*/
+}
 /*
 publishing {
     repositories {
