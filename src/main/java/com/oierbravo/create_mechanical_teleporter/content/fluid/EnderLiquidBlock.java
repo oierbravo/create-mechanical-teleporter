@@ -19,6 +19,7 @@ public class EnderLiquidBlock extends LiquidBlock {
         if (!level.isClientSide) {
             //random teleport
             TeleportHandler.shortRandomTeleport(level, entity, MConfigs.server().misc.enderFluidTeleportRange.get());
+
         }
     }
 }

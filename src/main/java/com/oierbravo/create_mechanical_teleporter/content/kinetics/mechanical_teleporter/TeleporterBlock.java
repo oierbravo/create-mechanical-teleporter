@@ -1,6 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -36,12 +39,6 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
        }
         return 0;
     }
-
-    /*@Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return 1000;
-        //return super.getLightEmission(state, level, pos);
-    }*/
 
     @Override
     public Direction.Axis getRotationAxis(BlockState state) {
@@ -126,5 +123,11 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
     @Override
     public BlockEntityType<? extends TeleporterBlockEntity> getBlockEntityType() {
         return ModBlockEntities.MECHANICAL_TELEPORTER.get();
+    }
+
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return ModShapes.TELEPORTERS;
     }
 }

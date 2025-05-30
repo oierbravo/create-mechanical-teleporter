@@ -3,6 +3,7 @@ package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_t
 import com.mojang.serialization.MapCodec;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -19,6 +20,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CreativeTeleporterBlock extends Block implements IBE<CreativeTeleporterBlockEntityBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final MapCodec<CreativeTeleporterBlock> CODEC = simpleCodec(CreativeTeleporterBlock::new);
@@ -100,5 +103,10 @@ public class CreativeTeleporterBlock extends Block implements IBE<CreativeTelepo
     @Override
     public BlockEntityType<? extends CreativeTeleporterBlockEntityBlockEntity> getBlockEntityType() {
         return ModBlockEntities.CREATIVE_TELEPORTER.get();
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return ModShapes.TELEPORTERS;
     }
 }

@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class TeleporterManagerBlock extends Block implements IBE<TeleporterManagerBlockEntity>, IWrenchable {
-
     public TeleporterManagerBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
