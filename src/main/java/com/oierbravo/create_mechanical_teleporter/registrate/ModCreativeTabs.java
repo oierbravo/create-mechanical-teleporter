@@ -1,7 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.ModLang;
-import com.oierbravo.mechanicals.utility.MechanicalLangIdGenerator;
 import com.simibubi.create.AllCreativeModeTabs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
@@ -19,7 +18,7 @@ public class ModCreativeTabs {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = TAB_REGISTER.register("main",
             () -> CreativeModeTab.builder()
-                    .title(ModLang.translate(MechanicalLangIdGenerator.creativeTabId("main")).component())
+                    .title(ModLang.creativeTab.t().component())
                     .withTabsBefore(AllCreativeModeTabs.PALETTES_CREATIVE_TAB.getId())
                     .icon(ModBlocks.MECHANICAL_TELEPORTER::asStack)
                     .build());

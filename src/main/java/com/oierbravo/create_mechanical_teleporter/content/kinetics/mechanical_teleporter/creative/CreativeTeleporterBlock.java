@@ -23,7 +23,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CreativeTeleporterBlock extends Block implements IBE<CreativeTeleporterBlockEntityBlockEntity>, IWrenchable, ITeleporterBlock {
+public class CreativeTeleporterBlock extends Block implements IBE<CreativeTeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final MapCodec<CreativeTeleporterBlock> CODEC = simpleCodec(CreativeTeleporterBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -96,12 +96,12 @@ public class CreativeTeleporterBlock extends Block implements IBE<CreativeTelepo
     }
 
     @Override
-    public Class<CreativeTeleporterBlockEntityBlockEntity> getBlockEntityClass() {
-        return CreativeTeleporterBlockEntityBlockEntity.class;
+    public Class<CreativeTeleporterBlockEntity> getBlockEntityClass() {
+        return CreativeTeleporterBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends CreativeTeleporterBlockEntityBlockEntity> getBlockEntityType() {
+    public BlockEntityType<? extends CreativeTeleporterBlockEntity> getBlockEntityType() {
         return ModBlockEntities.CREATIVE_TELEPORTER.get();
     }
 

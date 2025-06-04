@@ -1,11 +1,10 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
+import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.Create;
@@ -68,9 +67,9 @@ public class TeleportHandler {
         return player.getItemInHand(hand).is(ModItems.TELEPORT_WAND.asItem());
     }
 
-    public static boolean  canBlockTeleport(Player player) {
+    public static boolean canBlockTeleport(Player player) {
         TeleporterBehavior link = BlockEntityBehaviour.get(player.level(), player.getOnPos(), TeleporterBehavior.TYPE);
-        return link != null;
+        return link != null && link.isTeleportable();
     }
 
     //From EnderIO:
@@ -198,7 +197,7 @@ public class TeleportHandler {
                 }
             }
         }
-        player.displayClientMessage(ModLang.translate("ui.no_valid_teleporter").component(),true);
+        player.displayClientMessage(ModLang.ui_no_valide_teleporter.t().component(),true);
         player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
         return false;
     }
@@ -461,6 +460,18 @@ public class TeleportHandler {
         }
         serverPlayer.teleportTo(teleportDestination.getX() + 0.5,teleportDestination.getY()+ 0.5,teleportDestination.getZ()+ 0.5);
 
+    }
+    public static boolean tryTeleportToGlobalPosAndSit(GlobalPos destinationGlobalPos,String address, ServerPlayer serverPlayer) {
+        boolean succes = TeleportHandler.tryTeleportToGlobalPos(destinationGlobalPos, address, serverPlayer, false);
+
+        if (succes && serverPlayer.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock) {
+            sitDown(serverPlayer.level(), destinationGlobalPos.pos().above(), serverPlayer);
+        }
+        if (succes) {
+            serverPlayer.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+            return true;
+        }
+        return succes;
     }
     public static boolean tryTeleportToGlobalPos(GlobalPos destinationGlobalPos,String address, ServerPlayer serverPlayer, boolean simulate) {
         BlockPos teleportDestination = destinationGlobalPos.pos().above();

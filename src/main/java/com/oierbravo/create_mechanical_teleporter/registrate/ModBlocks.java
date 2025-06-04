@@ -79,7 +79,7 @@ public class ModBlocks {
             .transform(pickaxeOnly())
             .addLayer(() -> RenderType::translucent)
             .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-            .item()
+            .item(TeleporterBlockItem::new)
             .transform(customItemModel("teleporter_manager", "item"))
             .register();
 

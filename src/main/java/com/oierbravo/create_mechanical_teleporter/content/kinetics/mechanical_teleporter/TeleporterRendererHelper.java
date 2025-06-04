@@ -45,4 +45,8 @@ public class TeleporterRendererHelper {
                                   ContraptionMatrices matrices, MultiBufferSource bufferSource){
         renderCoreShared(matrices.getViewProjection(),matrices.getModel(),bufferSource, context.world, context.state, true, 1);
     }
+
+    public static void renderBlockEntityOutline(){
+
+    }
 }

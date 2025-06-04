@@ -2,8 +2,10 @@ package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_t
 
 import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlockEntity;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.IHaveTeleportFrequency;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
 import com.oierbravo.create_mechanical_teleporter.foundation.ChunkManager;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
@@ -21,14 +23,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 import java.util.UUID;
 
-public class CreativeTeleporterBlockEntityBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity {
+public class CreativeTeleporterBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity, IHaveTeleportFrequency {
 
     public TeleporterBehavior teleporterBehavior;
 
     public UUID placedBy;
 
 
-    public CreativeTeleporterBlockEntityBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public CreativeTeleporterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -62,7 +64,6 @@ public class CreativeTeleporterBlockEntityBlockEntity extends SmartBlockEntity i
             return false;
         return true;
     }
-    public void consumeFluid(){}
 
     @Override
     public void initialize() {
@@ -77,7 +78,7 @@ public class CreativeTeleporterBlockEntityBlockEntity extends SmartBlockEntity i
         if(!MConfigs.server().teleporter.autoChunkLoad.get())
             return false;
 
-        ModLang.translate("chunk_loader.loaded").style(ChatFormatting.GREEN).forGoggles(tooltip);
+        ModLang.chunkLoader_loaded.t().style(ChatFormatting.GREEN).forGoggles(tooltip);
         return true;
     }
     protected boolean isPowered(){
@@ -87,5 +88,19 @@ public class CreativeTeleporterBlockEntityBlockEntity extends SmartBlockEntity i
     @Override
     public TeleporterBehavior getTeleporter() {
         return teleporterBehavior;
+    }
+
+    @Override
+    public TeleporterFrequency getFrequency() {
+        return TeleporterFrequency.from(teleporterBehavior);
+    }
+
+    @Override
+    public UUID getPlacedBy() {
+        return placedBy;
+    }
+    @Override
+    public TeleporterBehavior.TELEPORTER_TYPES getTeleporterType() {
+        return TeleporterBehavior.TELEPORTER_TYPES.CREATIVE;
     }
 }

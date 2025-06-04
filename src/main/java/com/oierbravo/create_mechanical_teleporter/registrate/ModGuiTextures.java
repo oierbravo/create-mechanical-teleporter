@@ -11,7 +11,16 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 public enum ModGuiTextures implements ScreenElement, TextureSheetSegment {
-    HAND_TELEPORTER("hand_teleporter", 213, 78);
+    HAND_TELEPORTER("hand_teleporter", 213, 78),
+    TELEPORTER_MANAGER("teleporter_manager", 214, 117),
+
+    TELEPORTER_MANAGER_ENTRY("teleporter_manager", 32,129,161,10),
+    TELEPORTER_MANAGER_SELECTED("teleporter_manager", 32, 144, 161, 10),
+    TELEPORTER_MANAGER_HOVER("teleporter_manager", 32,160,161,10),
+
+    TELEPORTER_MANAGER_LOCKED("teleporter_manager", 0,129,16,16),
+    TELEPORTER_MANAGER_UNLOCKED("teleporter_manager", 17,0,16,16);
+
 
     public static final int FONT_COLOR = 0x575F7A;
 

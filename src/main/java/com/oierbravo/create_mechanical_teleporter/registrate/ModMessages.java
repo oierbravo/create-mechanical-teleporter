@@ -15,6 +15,7 @@ public class ModMessages {
         //registrar.playToClient(ItemSyncPayload.TYPE, ItemSyncPayload.STREAM_CODEC, ItemSyncPacket.get()::handle);
         //Going to server
         registrar.playToServer(RequestTeleportToFrequencyPayload.TYPE, RequestTeleportToFrequencyPayload.STREAM_CODEC, RequestTeleportToFrequencyHandler.get()::handle);
+        registrar.playToServer(RequestTeleportToGlobalPosPayload.TYPE, RequestTeleportToGlobalPosPayload.STREAM_CODEC, RequestTeleportToGlobalPosHandler.get()::handle);
         registrar.playToServer(RequestTeleportToFrequencyWithItemPayload.TYPE, RequestTeleportToFrequencyWithItemPayload.STREAM_CODEC, RequestTeleportToFrequencyWithItemHandler.get()::handle);
         registrar.playToServer(SetAddressToItemPayload.TYPE, SetAddressToItemPayload.STREAM_CODEC, SetAddressToItemHandler.get()::handle);
 

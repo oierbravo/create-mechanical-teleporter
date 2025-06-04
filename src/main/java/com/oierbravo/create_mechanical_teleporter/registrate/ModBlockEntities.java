@@ -4,7 +4,7 @@ import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterRenderer;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterVisual;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterBlockEntityBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterRenderer;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.manager.TeleporterManagerBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
@@ -17,8 +17,8 @@ public class ModBlockEntities {
             .renderer(() -> TeleporterRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<CreativeTeleporterBlockEntityBlockEntity> CREATIVE_TELEPORTER = MechanicalTeleporter.registrate()
-            .blockEntity("creative_mechanical", CreativeTeleporterBlockEntityBlockEntity::new)
+    public static final BlockEntityEntry<CreativeTeleporterBlockEntity> CREATIVE_TELEPORTER = MechanicalTeleporter.registrate()
+            .blockEntity("creative_mechanical", CreativeTeleporterBlockEntity::new)
             .validBlocks(ModBlocks.CREATIVE_TELEPORTER)
             .renderer(() -> CreativeTeleporterRenderer::new)
             .register();

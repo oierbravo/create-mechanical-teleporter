@@ -1,31 +1,26 @@
 package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
 import com.oierbravo.create_mechanical_teleporter.ModLang;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.IHaveTeleportFrequency;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
 import com.oierbravo.create_mechanical_teleporter.foundation.ChunkManager;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
-import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
-import com.oierbravo.create_mechanical_teleporter.registrate.ModFluids;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 import java.util.UUID;
 
-public class TeleporterBlockEntity extends KineticBlockEntity implements TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity {
+public class TeleporterBlockEntity extends KineticBlockEntity implements TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity, IHaveTeleportFrequency {
     public UUID placedBy;
 
     public TeleporterBehavior teleporterBehavior;
@@ -111,7 +106,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
         containedFluidTooltip(tooltip, isPlayerSneaking,
                 level.getCapability(Capabilities.FluidHandler.BLOCK, this.getBlockPos(), null));
 
-        ModLang.translate("chunk_loader.loaded").style(ChatFormatting.GREEN).forGoggles(tooltip);
+        ModLang.chunkLoader_loaded.t().style(ChatFormatting.GREEN).forGoggles(tooltip);
         return true;
     }
     protected boolean isPowered(){
@@ -129,6 +124,20 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
 
         getLevel().setBlock(getBlockPos(), pState, 2);
         setChanged(getLevel(), getBlockPos(), pState);
+    }
+
+    @Override
+    public TeleporterFrequency getFrequency() {
+        return TeleporterFrequency.from(teleporterBehavior);
+    }
+    @Override
+    public UUID getPlacedBy() {
+        return placedBy;
+    }
+
+    @Override
+    public TeleporterBehavior.TELEPORTER_TYPES getTeleporterType() {
+        return TeleporterBehavior.TELEPORTER_TYPES.MECHANICAL;
     }
 }
 

@@ -18,7 +18,6 @@ public class TeleportersNetwork {
     public UUID id;
     public Set<GlobalPos> totalLinks;
     public Set<GlobalPos> loadedLinks;
-
     public Set<TrainLink> trainLinks;
 
     public UUID owner;

@@ -6,12 +6,12 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
-public class CreativeTeleporterRenderer extends SafeBlockEntityRenderer<CreativeTeleporterBlockEntityBlockEntity> {
+public class CreativeTeleporterRenderer extends SafeBlockEntityRenderer<CreativeTeleporterBlockEntity> {
     public CreativeTeleporterRenderer(BlockEntityRendererProvider.Context context) {}
 
 
     @Override
-    protected void renderSafe(CreativeTeleporterBlockEntityBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+    protected void renderSafe(CreativeTeleporterBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         TeleporterRendererHelper.renderCoreShared(ms,null,buffer, be.getLevel(),be.getBlockState(), true, 1);
     }
 }

@@ -1,7 +1,8 @@
 package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
+import com.oierbravo.create_mechanical_teleporter.content.logistics.IHaveTeleportFrequency;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
 import com.simibubi.create.foundation.block.IBE;
-import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class TeleporterBlockItem extends BlockItem {
+public class TeleporterBlockItem extends BlockItem implements IHaveTeleportFrequency {
 
 	public TeleporterBlockItem(Block pBlock, Properties pProperties) {
 		super(pBlock, pProperties);
@@ -89,16 +90,17 @@ public class TeleporterBlockItem extends BlockItem {
 		if (player.isShiftKeyDown())
 			return super.useOn(pContext);
 
-		TeleporterBehavior link = BlockEntityBehaviour.get(level, pos, TeleporterBehavior.TYPE);
+		TeleporterFrequency teleporterFrequency = TeleporterFrequency.from(level.getBlockEntity(pos));
+
 		boolean tuned = isTuned(stack);
 
-		if (link != null) {
+		if (teleporterFrequency != null) {
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
-			if (!link.mayInteractMessage(player))
+			if (!teleporterFrequency.mayInteractMessage(player))
 				return InteractionResult.SUCCESS;
 
-			assignFrequency(stack, player, link.freqId);
+			assignFrequency(stack, player, teleporterFrequency.freqId());
 			return InteractionResult.SUCCESS;
 		}
 
@@ -131,4 +133,8 @@ public class TeleporterBlockItem extends BlockItem {
 		stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
 	}
 
+	@Override
+	public TeleporterFrequency getFrequency() {
+		return null;
+	}
 }

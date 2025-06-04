@@ -1,7 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBehavior;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;

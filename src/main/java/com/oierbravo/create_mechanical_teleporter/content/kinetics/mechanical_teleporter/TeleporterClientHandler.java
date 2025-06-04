@@ -1,5 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
 
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.outliner.Outliner;

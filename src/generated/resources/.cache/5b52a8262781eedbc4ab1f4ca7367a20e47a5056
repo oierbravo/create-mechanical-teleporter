@@ -1,4 +1,4 @@
-// 1.21.1	2025-05-30T02:06:45.047201292	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-06-04T13:49:31.859989107	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 17fd0cd7dafdf9b77fc3a6062b1e8a201297cf6e assets/create_mechanical_teleporter/blockstates/creative_teleporter.json
 c6f60a119791445d31bbab4c0f69e35c06a91f77 assets/create_mechanical_teleporter/blockstates/ender_casing.json
 6c4a6423507de19edda393c591aa1bb26bc7bba8 assets/create_mechanical_teleporter/blockstates/ender_creative_casing.json
@@ -6,8 +6,8 @@ c6f60a119791445d31bbab4c0f69e35c06a91f77 assets/create_mechanical_teleporter/blo
 f6a996ac36fee0979d8414c95a7cd18f09fc2fe7 assets/create_mechanical_teleporter/blockstates/ender_quartz_lamp.json
 2433109e0ad817d30e7c5abda5bec85811ff6d98 assets/create_mechanical_teleporter/blockstates/mechanical_teleporter.json
 7012f8143521332e9bf8512ffd1dee6ce7fc3ed4 assets/create_mechanical_teleporter/blockstates/teleporter_manager.json
-53897100ad695462628d8aab068ec1b14f3ae54b assets/create_mechanical_teleporter/lang/en_ud.json
-998fa73d514649c995ccb2512656917659474c0a assets/create_mechanical_teleporter/lang/en_us.json
+6e9bffe35c14ec108a951842f485996bfa1040de assets/create_mechanical_teleporter/lang/en_ud.json
+a13d52dccfae393bafb4f4f292351098b2f3b720 assets/create_mechanical_teleporter/lang/en_us.json
 8b898c91701cd509a87513c144523d6fa17160f1 assets/create_mechanical_teleporter/models/block/ender_casing.json
 98e0e172c13268abec0239ae77c083afbf035c43 assets/create_mechanical_teleporter/models/block/ender_creative_casing.json
 8f1294d02eb25565956a500011861808cfc8a320 assets/create_mechanical_teleporter/models/block/ender_fluid.json
