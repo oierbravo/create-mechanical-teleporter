@@ -461,7 +461,17 @@ public class TeleportHandler {
         serverPlayer.teleportTo(teleportDestination.getX() + 0.5,teleportDestination.getY()+ 0.5,teleportDestination.getZ()+ 0.5);
 
     }
+
     public static boolean tryTeleportToGlobalPosAndSit(GlobalPos destinationGlobalPos,String address, ServerPlayer serverPlayer) {
+        return tryTeleportToGlobalPosAndSit(destinationGlobalPos, address, serverPlayer);
+    }
+    public static boolean tryTeleportToGlobalPosAndSit(GlobalPos destinationGlobalPos,String address, ServerPlayer serverPlayer, boolean checkPlayerOnTeleporter) {
+        if(checkPlayerOnTeleporter){
+            TeleporterBehavior teleporterBehavior = BlockEntityBehaviour.get(serverPlayer.level(), serverPlayer.getOnPos(), TeleporterBehavior.TYPE);
+            if(teleporterBehavior == null & !teleporterBehavior.checkRequerimentsForTeleport())
+                return false;
+        }
+
         boolean succes = TeleportHandler.tryTeleportToGlobalPos(destinationGlobalPos, address, serverPlayer, false);
 
         if (succes && serverPlayer.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock) {
@@ -469,11 +479,11 @@ public class TeleportHandler {
         }
         if (succes) {
             serverPlayer.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
-            return true;
         }
         return succes;
     }
     public static boolean tryTeleportToGlobalPos(GlobalPos destinationGlobalPos,String address, ServerPlayer serverPlayer, boolean simulate) {
+
         BlockPos teleportDestination = destinationGlobalPos.pos().above();
         ServerLevel targetDimension = (ServerLevel) serverPlayer.level();
         boolean sameDimension = serverPlayer.level().dimension() == destinationGlobalPos.dimension();

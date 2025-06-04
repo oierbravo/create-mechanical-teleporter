@@ -15,7 +15,7 @@ public class RequestTeleportToGlobalPosHandler {
         context.enqueueWork(() -> {
 
             if(context.player() instanceof ServerPlayer player) {
-                return TeleportHandler.tryTeleportToGlobalPosAndSit(payload.globalPos(), "*",  player);
+                return TeleportHandler.tryTeleportToGlobalPosAndSit(payload.globalPos(), "*",  player, true);
             }
             return false;
         });

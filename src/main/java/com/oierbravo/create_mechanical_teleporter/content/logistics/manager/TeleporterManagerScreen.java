@@ -209,7 +209,8 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
             AllGuiTextures.STOCK_KEEPER_REQUEST_SCROLL_BOT.render(guiGraphics, barX, barY + barSize - 5);
             ms.popPose();
         }
-
+        if(teleporter == null)
+            return;
         TeleporterBehavior teleporterBehavior = teleporter.get();
         if (teleporterBehavior != null && teleporterBehavior.blockEntity != null && !teleporterBehavior.blockEntity.isRemoved()) {
             ms.pushPose();
@@ -290,6 +291,11 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
             TeleporterBehavior entry = allLinks.get(currentHoveredIndex);
             List<FormattedCharSequence> lines = entry.getTooltips().stream().map(Component::getVisualOrderText).toList();
             graphics.renderTooltip(font,lines, mouseX, mouseY);
+        }
+        if(currentSelectedIndex != noneHovered){
+            goButton.active = true;
+        } else {
+            goButton.active = false;
         }
 
         // Render tooltip of lock option
