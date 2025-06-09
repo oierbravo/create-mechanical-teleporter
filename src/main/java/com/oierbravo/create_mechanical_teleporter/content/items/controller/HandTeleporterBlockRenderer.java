@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -52,5 +53,9 @@ public class HandTeleporterBlockRenderer extends SmartBlockEntityRenderer<HandTe
                 .rotateZDegrees(0)
                 .uncenter();
         antennaRenderer.light(light).renderInto(ms, vb);
+
+        if (blockEntity.getFrequency().address() != null && !blockEntity.getFrequency().address().isEmpty()) {
+            renderNameplateOnHover(blockEntity, Component.literal(blockEntity.getFrequency().address()), 1, ms, buffer, light);
+        }
     }
 }
