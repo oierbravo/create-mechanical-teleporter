@@ -14,6 +14,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CreativeTeleporterBlock extends Block implements IBE<CreativeTeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
+public class CreativeTeleporterBlock extends HorizontalDirectionalBlock implements IBE<CreativeTeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final MapCodec<CreativeTeleporterBlock> CODEC = simpleCodec(CreativeTeleporterBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -32,6 +33,11 @@ public class CreativeTeleporterBlock extends Block implements IBE<CreativeTelepo
     public CreativeTeleporterBlock(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(POWERED, false));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
     }
 
     public static int getPower(BlockState blockState, Level level, BlockPos worldPosition) {
@@ -54,8 +60,9 @@ public class CreativeTeleporterBlock extends Block implements IBE<CreativeTelepo
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         BlockState placed = super.getStateForPlacement(context);
-        return defaultBlockState().setValue(POWERED, getPower(placed, context.getLevel(), pos) > 0);
+        return defaultBlockState().setValue(POWERED, getPower(placed, context.getLevel(), pos) > 0).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
+
     @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
                                 boolean isMoving) {
@@ -84,8 +91,9 @@ public class CreativeTeleporterBlock extends Block implements IBE<CreativeTelepo
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder.add(POWERED));
+        super.createBlockStateDefinition(builder.add(FACING).add(POWERED));
     }
+
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;

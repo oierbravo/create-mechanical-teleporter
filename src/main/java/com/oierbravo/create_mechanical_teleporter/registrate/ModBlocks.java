@@ -79,7 +79,12 @@ public class ModBlocks {
             .onRegister(interactionBehaviour(new TeleporterInteractionBehaviour()))
             .transform(pickaxeOnly())
             .addLayer(() -> RenderType::translucent)
-            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+            .blockstate((c, p) -> p.horizontalBlock(c.get(), state -> {
+
+                Boolean powered = state.getValue(CreativeTeleporterBlock.POWERED);
+                return powered ? AssetLookup.partialBaseModel(c, p, "powered")
+                        : AssetLookup.partialBaseModel(c, p);
+            }))
             .item(TeleporterBlockItem::new)
             .transform(customItemModel("_", "block"))
             .register();

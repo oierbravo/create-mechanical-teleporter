@@ -8,7 +8,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import static net.minecraft.core.Direction.SOUTH;
 
 public class ModShapes {
-    public static final VoxelShape TELEPORTERS = shape(0, 0, 0, 16, 2, 16).add(2, 0, 2, 14, 16, 14)
+    public static final VoxelShape TELEPORTERS = shape(0, 0, 0, 16, 2, 16)
+            .add(2, 0, 2, 14, 14, 14)
+            .add(0,14,0,16,16,16)
             .build();
 
 
