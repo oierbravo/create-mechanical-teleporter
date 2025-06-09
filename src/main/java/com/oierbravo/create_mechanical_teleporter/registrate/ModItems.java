@@ -3,10 +3,7 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
 import com.oierbravo.create_mechanical_teleporter.content.items.EnderSoupItem;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandItem;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -44,8 +41,8 @@ public class ModItems {
                                     .build(p))
                     .register();
 
-    public static final ItemEntry<HandTeleporterItem> HAND_TELEPORTER =
-            REGISTRATE.item("hand_teleporter", HandTeleporterItem::new)
+    /*public static final ItemEntry<HandTeleporterBlockItem> HAND_TELEPORTER =
+            REGISTRATE.item("hand_teleporter", HandTeleporterBlockItem::new)
                     .lang("Hand teleporter")
                     .properties(p -> p.stacksTo(1).durability(200))
                     .model(AssetLookup.itemModelWithPartials())
@@ -57,7 +54,7 @@ public class ModItems {
                             .pattern("CB")
                             .unlockedBy("has_transmitter", RegistrateRecipeProvider.has(AllBlocks.BRASS_CASING))
                             .save(p, ModConstants.asResource("crafting/" + c.getName())))
-                    .register();
+                    .register();*/
 
     public static final ItemEntry<Item> ENDER_QUARTZ =
             REGISTRATE.item("ender_quartz", Item::new)

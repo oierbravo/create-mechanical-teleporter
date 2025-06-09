@@ -1,6 +1,8 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockItem;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterInteractionBehaviour;
@@ -10,14 +12,25 @@ import com.oierbravo.create_mechanical_teleporter.content.logistics.manager.Tele
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.ModStress;
 import com.simibubi.create.content.decoration.encasing.CasingBlock;
 import com.simibubi.create.content.redstone.RoseQuartzLampBlock;
+import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.data.*;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 
 import static com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour.interactionBehaviour;
@@ -110,6 +123,45 @@ public class ModBlocks {
             .transform(BuilderTransformers.casing(() -> ModSpriteShifts.ENDER_CREATIVE_CASING))
             .lang("Ender Creative Casing")
             .register();
+
+    public static final DyedBlockList<HandTeleporterBlock> HAND_TELEPORTERS = new DyedBlockList<>(colour -> {
+        String colourName = colour.getSerializedName();
+        return REGISTRATE.block(colourName + "_hand_teleporter", p -> new HandTeleporterBlock(p, colour))
+                .initialProperties(SharedProperties::wooden)
+                .properties(p -> p.sound(SoundType.WOOD)
+                        .mapColor(colour)
+                        .forceSolidOn())
+                .addLayer(() -> RenderType::cutoutMipped)
+                .loot((lt, block) -> {
+                    lt.add(block, LootTable.lootTable().withPool(LootPool.lootPool()
+                            .when(ExplosionCondition.survivesExplosion())
+                            .setRolls(ConstantValue.exactly(1))
+                            .add(LootItem.lootTableItem(block)
+                                    .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+                                    .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                            .include(ModDataComponents.TELEPORTER_FREQUENCY)
+                                    )
+                                    .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                            .include(ModDataComponents.TELEPORTER_ADDRESS)
+                                    )
+                            )
+                    ));
+                })
+                .blockstate((c, p) -> {
+                    p.directionalBlock(c.get(), p.models()
+                            .withExistingParent(colourName + "_hand_teleporter", p.modLoc("block/hand_teleporter/block"))
+                            .texture("hand_teleporter", p.modLoc("block/hand_teleporter/" + colourName)));
+                })
+                .onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "block.create_mechanical_teleporter.hand_teleporter"))
+                //.transform(mountedItemStorage(AllMountedStorageTypes.TOOLBOX))
+                //.tag(AllTags.AllBlockTags.TOOLBOXES.tag)
+                .item(HandTeleporterBlockItem::new)
+                .model((c, p) -> p.withExistingParent(colourName + "_hand_teleporter", p.modLoc("block/hand_teleporter/item"))
+                        .texture("hand_teleporter", p.modLoc("block/hand_teleporter/" + colourName)))
+                //.tag(AllTags.AllItemTags.TOOLBOXES.tag)
+                .build()
+                .register();
+    });
 
     public static void register() {}
 }

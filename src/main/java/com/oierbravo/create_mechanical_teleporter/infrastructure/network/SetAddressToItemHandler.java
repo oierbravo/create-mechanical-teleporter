@@ -1,7 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.infrastructure.network;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterItem;
-import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -17,9 +16,9 @@ public class SetAddressToItemHandler {
         context.enqueueWork(() -> {
             if(context.player() instanceof ServerPlayer serverPlayer){
                 ItemStack itemStack = serverPlayer.getInventory().getItem(payload.slot());
-                if(!ModItems.HAND_TELEPORTER.isIn(itemStack))
+                if(!HandTeleporterBlockItem.isHandTeleporterItem(itemStack))
                     return;
-                HandTeleporterItem.setAddress(itemStack, payload.address());
+                HandTeleporterBlockItem.setAddress(itemStack, payload.address());
             }
 
         });

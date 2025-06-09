@@ -85,20 +85,6 @@
 			}
 		},
 		{
-			"name": "core",
-			"from": [6, 11, 6],
-			"to": [10, 15, 10],
-			"rotation": {"angle": 0, "axis": "y", "origin": [6, 13, 6]},
-			"faces": {
-				"north": {"uv": [13.5, 10, 16, 12.5], "texture": "#1"},
-				"east": {"uv": [13.5, 10, 16, 12.5], "texture": "#1"},
-				"south": {"uv": [13.5, 10, 16, 12.5], "texture": "#1"},
-				"west": {"uv": [13.5, 10, 16, 12.5], "texture": "#1"},
-				"up": {"uv": [13.5, 10, 16, 12.5], "texture": "#1"},
-				"down": {"uv": [0, 0, 3, 3], "texture": "#particle"}
-			}
-		},
-		{
 			"from": [5, 10, 5],
 			"to": [11, 11, 11],
 			"rotation": {"angle": 0, "axis": "y", "origin": [5, 10, 9]},
@@ -109,6 +95,45 @@
 				"west": {"uv": [8, 2.5, 11, 3], "texture": "#1"},
 				"up": {"uv": [8, 0, 11, 3], "texture": "#1"},
 				"down": {"uv": [0, 0, 3, 3], "texture": "#missing"}
+			}
+		},
+		{
+			"from": [7, 11, 7],
+			"to": [9, 18, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 14.5, 8]},
+			"faces": {
+				"north": {"uv": [6, 12.5, 7, 16], "texture": "#1"},
+				"east": {"uv": [6, 12.5, 7, 16], "texture": "#1"},
+				"south": {"uv": [6, 12.5, 7, 16], "texture": "#1"},
+				"west": {"uv": [6, 12.5, 7, 16], "texture": "#1"},
+				"up": {"uv": [9, 0, 10, 1], "texture": "#1"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#1"}
+			}
+		},
+		{
+			"from": [9, 16, 11],
+			"to": [10, 17, 12],
+			"rotation": {"angle": -45, "axis": "x", "origin": [9, 16, 10]},
+			"faces": {
+				"north": {"uv": [0, 0, 0.5, 0.5], "texture": "#1"},
+				"east": {"uv": [4, 7.5, 4.5, 8], "texture": "#1"},
+				"south": {"uv": [4, 7.5, 4.5, 8], "texture": "#1"},
+				"west": {"uv": [4, 7.5, 4.5, 8], "texture": "#1"},
+				"up": {"uv": [4, 7.5, 4.5, 8], "texture": "#1"},
+				"down": {"uv": [4, 7.5, 4.5, 8], "texture": "#1"}
+			}
+		},
+		{
+			"from": [4, 15.18198, 8.43934],
+			"to": [11, 21.18198, 9.43934],
+			"rotation": {"angle": -45, "axis": "x", "origin": [7.5, 18.18198, 8.93934]},
+			"faces": {
+				"north": {"uv": [2.5, 2.5, 6, 5.5], "texture": "#1"},
+				"east": {"uv": [3, 2.5, 3.5, 5.5], "texture": "#1"},
+				"south": {"uv": [2.5, 2.5, 6, 5.5], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.5, 5.5], "texture": "#1"},
+				"up": {"uv": [2.5, 3, 6, 3.5], "texture": "#1"},
+				"down": {"uv": [2, 5, 5.5, 5.5], "texture": "#1"}
 			}
 		}
 	],
@@ -149,6 +174,12 @@
 			"children": [3, 4, 5]
 		},
 		6,
-		7
+		7,
+		{
+			"name": "screen",
+			"origin": [7, 11, 7],
+			"color": 0,
+			"children": [8, 9]
+		}
 	]
 }

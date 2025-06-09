@@ -2,6 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModDataComponents;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -10,11 +11,8 @@ import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
@@ -40,19 +38,16 @@ public class HandTeleporterClientHandler {
         if (player == null)
             return;
         ItemStack mainHandItem = player.getMainHandItem();
-        if (!(mainHandItem.getItem() instanceof HandTeleporterItem)
-                || !HandTeleporterItem.isTuned(mainHandItem))
+        if (!(mainHandItem.getItem() instanceof HandTeleporterBlockItem)
+                || !HandTeleporterBlockItem.isTuned(mainHandItem))
             return;
 
-        CompoundTag tag = mainHandItem.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-        if (!tag.hasUUID("Freq"))
+        UUID freqId = mainHandItem.get(ModDataComponents.TELEPORTER_FREQUENCY);
+        if(freqId == null)
             return;
 
-        UUID uuid = tag.getUUID("Freq");
-
-        for (TeleporterBehavior behaviour : TeleporterBehavior.getAllPresent(uuid, false, true)) {
+        for (TeleporterBehavior behaviour : TeleporterBehavior.getAllPresent(freqId, false, true)) {
             SmartBlockEntity be = behaviour.blockEntity;
-            //outlineBlock(be.getBlockState(),be.getBlockPos(),player);
             VoxelShape shape = be.getBlockState()
                     .getShape(player.level(), be.getBlockPos());
             if (shape.isEmpty())

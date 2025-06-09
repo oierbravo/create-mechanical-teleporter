@@ -1,0 +1,6 @@
+{
+  "parent": "create_mechanical_teleporter:block/hand_teleporter/block",
+  "textures": {
+    "hand_teleporter": "create_mechanical_teleporter:block/hand_teleporter/gray"
+  }
+}

@@ -1,7 +1,9 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterItem;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.UUIDUtil;
@@ -12,9 +14,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public record TeleporterFrequency(UUID freqId, String address){
+    public static final TeleporterFrequency EMPTY = new TeleporterFrequency(UUID.randomUUID(),"");
+    public static final Codec<TeleporterFrequency> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(
+                    UUIDUtil.CODEC.fieldOf("freqId").forGetter(TeleporterFrequency::freqId),
+                    Codec.STRING.fieldOf("address").forGetter(TeleporterFrequency::address)
+            )
+            .apply(instance, TeleporterFrequency::new));
+
     public static final StreamCodec<RegistryFriendlyByteBuf, TeleporterFrequency> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC, TeleporterFrequency::freqId,
             ByteBufCodecs.STRING_UTF8, TeleporterFrequency::address,
@@ -30,9 +41,11 @@ public record TeleporterFrequency(UUID freqId, String address){
         return new TeleporterFrequency(teleporterBehavior.freqId, teleporterBehavior.signBasedAddress);
     }
     public static TeleporterFrequency from(ItemStack itemStack){
-        return new TeleporterFrequency(HandTeleporterItem.getFrequency(itemStack), HandTeleporterItem.getAddress(itemStack));
+        return new TeleporterFrequency(HandTeleporterBlockItem.getFrequency(itemStack), HandTeleporterBlockItem.getAddress(itemStack));
     }
     public static TeleporterFrequency from(UUID freqId, String address){
+        if(freqId == null)
+            return null;
         return new TeleporterFrequency(freqId, address);
     }
 
@@ -58,5 +71,10 @@ public record TeleporterFrequency(UUID freqId, String address){
 
     public boolean mayAdministrate(Player player) {
         return MechanicalTeleporter.TELEPORTERS.mayAdministrate(freqId, player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(freqId, address);
     }
 }

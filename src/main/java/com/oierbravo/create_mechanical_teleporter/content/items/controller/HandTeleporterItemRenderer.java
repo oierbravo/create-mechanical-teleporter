@@ -3,7 +3,6 @@ package com.oierbravo.create_mechanical_teleporter.content.items.controller;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
-import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -22,8 +21,10 @@ import java.util.Vector;
 
 public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel POWERED = PartialModel.of(ModConstants.asResource("item/hand_teleporter/powered"));
-	protected static final PartialModel BUTTON = PartialModel.of(ModConstants.asResource("item/hand_teleporter/button"));
+	protected static final PartialModel BUTTON = PartialModel.of(ModConstants.asResource("block/hand_teleporter/button"));
+	protected static final PartialModel BUTTON_ACTIVE = PartialModel.of(ModConstants.asResource("block/hand_teleporter/button_active"));
+	protected static final PartialModel ANTENNA = PartialModel.of(ModConstants.asResource("block/hand_teleporter/antenna"));
+	protected static final PartialModel ANTENNA_ACTIVE = PartialModel.of(ModConstants.asResource("block/hand_teleporter/antenna_active"));
 
 	static LerpedFloat equipProgress;
 	static Vector<LerpedFloat> buttons;
@@ -94,7 +95,7 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 		TeleporterFrequency teleporterFrequency = TeleporterFrequency.from(stack);
 
 		active = teleporterFrequency.isPresent();
-		boolean noControllerInMain = !ModItems.HAND_TELEPORTER.isIn(mc.player.getMainHandItem());
+		boolean noControllerInMain = !(mc.player.getMainHandItem().getItem() instanceof HandTeleporterBlockItem);
 
 		if (transformType == mainHand || (transformType == offHand && noControllerInMain)) {
 			float equip = equipProgress.getValue(pt);
@@ -104,42 +105,16 @@ public class HandTeleporterItemRenderer extends CustomRenderedItemModelRenderer 
 			msr.rotateZDegrees(equip * -30);
 		}
 
+		renderer.render(model.getOriginalModel(), light);
 
-		renderDepression = true;
-
-		//renderer.render( model.getOriginalModel(), light);
-		renderer.render(active ? POWERED.get() : model.getOriginalModel(), light);
-
-		if (!active) {
-			ms.popPose();
-			return;
-		}
-
-		BakedModel button = BUTTON.get();
-		float s = 1 / 16f;
-		float b = s * -.75f;
-		int index = 0;
-
-
-		/*ms.pushPose();
-		msr.translate(3.5 * s, 0, 5 * s);
-		renderButton(renderer, ms, light, pt, button, b, index++, renderDepression);
-		ms.popPose();*/
-
-		ms.popPose();
-
-
-	}
-
-	protected static void renderButton(PartialItemModelRenderer renderer, PoseStack ms, int light, float pt, BakedModel button,
-		float b, int index, boolean renderDepression) {
-		ms.pushPose();
-		if (renderDepression) {
-			float depression = b * buttons.get(index).getValue(pt);
-			ms.translate(0, depression, 0);
-		}
+		BakedModel button = (active) ? BUTTON_ACTIVE.get() : BUTTON.get();
 		renderer.renderSolid(button, light);
+
+		BakedModel antenna = (active) ? ANTENNA_ACTIVE.get() : ANTENNA.get();
+		renderer.render(antenna, light);
+
 		ms.popPose();
 	}
+
 
 }

@@ -1,6 +1,8 @@
 package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockRenderer;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterRenderer;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterVisual;
@@ -26,6 +28,12 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<TeleporterManagerBlockEntity> TELEPORTER_MANAGER = MechanicalTeleporter.registrate()
             .blockEntity("teleporter_manager", TeleporterManagerBlockEntity::new)
             .validBlocks(ModBlocks.TELEPORTER_MANAGER)
+            .register();
+
+    public static final BlockEntityEntry<HandTeleporterBlockEntity> HAND_TELEPORTER = MechanicalTeleporter.registrate()
+            .blockEntity("hand_teleporter", HandTeleporterBlockEntity::new)
+            .validBlocks(ModBlocks.HAND_TELEPORTERS.toArray())
+            .renderer(() -> HandTeleporterBlockRenderer::new)
             .register();
 
     public static void register() {}

@@ -1,8 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.infrastructure.network;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterItem;
+import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler;
-import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -19,14 +18,14 @@ public class RequestTeleportToFrequencyWithItemHandler {
             if(context.player() instanceof ServerPlayer serverPlayer){
                 ItemStack itemStack = serverPlayer.getItemBySlot(payload.slot());
 
-                if(!HandTeleporterItem.hasEnoughResources(serverPlayer))
+                if(!HandTeleporterBlockItem.hasEnoughResources(serverPlayer))
                     return;
 
                 boolean success = TeleportHandler.teleportToFrequency(payload.frequency(), serverPlayer);
                 if(success){
-                    if(!ModItems.HAND_TELEPORTER.isIn(itemStack))
+                    if(!HandTeleporterBlockItem.isHandTeleporterItem(itemStack))
                         return;
-                    HandTeleporterItem.consumeResources(itemStack, serverPlayer, payload.slot());
+                    HandTeleporterBlockItem.consumeResources(itemStack, serverPlayer, payload.slot());
                 }
             }
 

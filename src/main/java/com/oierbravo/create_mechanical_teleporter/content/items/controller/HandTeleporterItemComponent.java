@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public record HandTeleporterItemComponent(UUID freqId, String address) {
+
     public static final Codec<HandTeleporterItemComponent> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(
                     UUIDUtil.CODEC.fieldOf("freqId").forGetter(HandTeleporterItemComponent::freqId),

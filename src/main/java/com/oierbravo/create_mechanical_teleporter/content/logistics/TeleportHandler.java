@@ -129,10 +129,13 @@ public class TeleportHandler {
         UUID freqId = frequency.freqId();
         String address = frequency.address();
 
-        boolean teleported = false;
 
         if(MechanicalTeleporter.TELEPORTERS.teleportersNetworks.containsKey(freqId)){
             TeleportersNetwork network = MechanicalTeleporter.TELEPORTERS.teleportersNetworks.get(freqId);
+
+            if(!MechanicalTeleporter.TELEPORTERS.mayInteract(freqId,player))
+                return false;
+
             boolean foundCurrent = false;
             GlobalPos destinationGlobalPos = null;
 
