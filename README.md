@@ -11,15 +11,23 @@
 
 ## Features
 - Kinetic teleporter block.
-- Creative teleporter block.
+  - Works on trains, teleports between seats.
+  - Creative teleporter variant, no RPM required.
 - Hand teleporter.
   - Editable address
+  - Dyeable
+  - Placeable
   - Configurable resource usage: air, durability, experience or none.
 - Common network
-  - Sign based destination address available
+  - Sign based destination address available.
 - Teleporting wand
   - Uses air
-- Work on trains
+
+- Ender fluid, teleports entities.
+- Ender soup, teleports to spawn.
+- Ender casing.
+- Ender quartz lamp.
+- Ender Potato projectile.
 
 **Thanks to the Creators of Create.**
 
