@@ -21,6 +21,7 @@ public class ModMessages {
         registrar.playToServer(RequestTeleportToTrainPayload.TYPE, RequestTeleportToTrainPayload.STREAM_CODEC, RequestTeleportToTrainHandler.get()::handle);
         registrar.playToServer(SetAddressToItemPayload.TYPE, SetAddressToItemPayload.STREAM_CODEC, SetAddressToItemHandler.get()::handle);
         registrar.playToServer(SetAddressToBlockEntityPayload.TYPE, SetAddressToBlockEntityPayload.STREAM_CODEC, SetAddressToBlockEntityHandler.get()::handle);
+        registrar.playToServer(LockNetworkPayload.TYPE, LockNetworkPayload.STREAM_CODEC, LockNetworkHandler.get()::handle);
 
     }
     public static void sendToAllClients(CustomPacketPayload message) {

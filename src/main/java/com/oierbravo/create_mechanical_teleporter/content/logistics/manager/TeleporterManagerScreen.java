@@ -7,6 +7,7 @@ import com.mojang.math.Axis;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterRendererHelper;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportersNetwork;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.network.LockNetworkPayload;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToGlobalPosPayload;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToTrainPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModGuiTextures;
@@ -351,6 +352,7 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
                 && pMouseY > lockY && pMouseY <= lockY + 15) {
             isLocked = !isLocked;
             //CatnipServices.NETWORK.sendToServer(new StockKeeperLockPacket(blockEntity.getBlockPos(), isLocked));
+            ModMessages.sendToServer(new LockNetworkPayload(this.network.id, isLocked));
             playUiSound(SoundEvents.UI_BUTTON_CLICK.value(), 1, 1);
             return true;
         }
