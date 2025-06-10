@@ -2,6 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.ModConstants;
+import com.oierbravo.create_mechanical_teleporter.content.items.EnderPotatoItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.EnderSoupItem;
 import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandItem;
 import com.simibubi.create.AllTags;
@@ -79,6 +80,13 @@ public class ModItems {
                     .properties(properties -> properties.food(Foods.BEETROOT_SOUP))
                     .lang("Ender soup")
                     .register();
+
+    public static final ItemEntry<EnderPotatoItem> ENDER_POTATO =
+            REGISTRATE.item("ender_potato", EnderPotatoItem::new)
+                    .properties(properties -> properties.food(Foods.POTATO))
+                    .lang("Ender potato")
+                    .register();
+
 
     public static void register() {}
 

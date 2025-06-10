@@ -1,10 +1,10 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
-import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.Create;
@@ -71,7 +71,27 @@ public class TeleportHandler {
         TeleporterBehavior link = BlockEntityBehaviour.get(player.level(), player.getOnPos(), TeleporterBehavior.TYPE);
         return link != null && link.isTeleportable();
     }
+    public static boolean blockPosTeleport(Level level, Player player, BlockPos blockPos) {
 
+            if (player instanceof ServerPlayer serverPlayer) {
+                Optional<Vec3> eventPos = teleportEvent(player, blockPos.getCenter());
+                if (eventPos.isPresent()) {
+                    player.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
+                    serverPlayer.connection.resetPosition();
+                    player.fallDistance = 0;
+
+                    if (player.isInWall()) {
+                        // without this line the player takes 1 tick of damage before their pose changes
+                        player.setPose(Pose.SWIMMING);
+                    }
+
+                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                } else {
+                    player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
+                }
+            }
+            return true;
+    }
     //From EnderIO:
     //License CCO
     public static boolean shortTeleport(Level level, Player player) {
@@ -230,7 +250,7 @@ public class TeleportHandler {
         return false;
     }
 
-    //From EnderIO:
+        //From EnderIO:
     //License CCO
     public static Optional<Vec3> teleportPosition(Level level, Player player) {
         @Nullable
@@ -446,7 +466,12 @@ public class TeleportHandler {
         teleportToGlobalPosSimple(spawnPos, serverPlayer);
 
     }
-    public static void teleportToGlobalPosSimple(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer){
+    public static void teleportToGlobalPosSimple(BlockPos destinationBlockPos, ServerPlayer serverPlayer){
+        GlobalPos destinationGlobalPos = new GlobalPos(serverPlayer.getRespawnDimension(), destinationBlockPos);
+        teleportToGlobalPosSimple(destinationGlobalPos, serverPlayer);
+    }
+
+        public static void teleportToGlobalPosSimple(GlobalPos destinationGlobalPos, ServerPlayer serverPlayer){
         BlockPos teleportDestination = destinationGlobalPos.pos().above();
         ServerLevel targetDimension = (ServerLevel) serverPlayer.level();
         boolean sameDimension = serverPlayer.level().dimension() == destinationGlobalPos.dimension();

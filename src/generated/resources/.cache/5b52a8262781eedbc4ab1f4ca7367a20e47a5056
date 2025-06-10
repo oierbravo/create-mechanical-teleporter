@@ -1,4 +1,4 @@
-// 1.21.1	2025-06-09T15:17:53.341146708	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-06-09T15:52:47.43954247	Registrate Provider for create_mechanical_teleporter [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 cdd6847593074014fbc47635e7a2a0366428d273 assets/create_mechanical_teleporter/blockstates/black_hand_teleporter.json
 29de7721ec4a9d25aa04aab5d9f9687ffe30e09c assets/create_mechanical_teleporter/blockstates/blue_hand_teleporter.json
 c1f0bb2d6cd90a6f59726348c6c6884631f68a47 assets/create_mechanical_teleporter/blockstates/brown_hand_teleporter.json
@@ -22,8 +22,8 @@ ac1709bfd6c398275d08edebdcb8c415606be7ef assets/create_mechanical_teleporter/blo
 7012f8143521332e9bf8512ffd1dee6ce7fc3ed4 assets/create_mechanical_teleporter/blockstates/teleporter_manager.json
 2ad0a46ed549e0bc7c976f0e7123b8080dc27c70 assets/create_mechanical_teleporter/blockstates/white_hand_teleporter.json
 307a9ba57cfb2a59e262ae7f13bc9a61391ca5a9 assets/create_mechanical_teleporter/blockstates/yellow_hand_teleporter.json
-643a1c337f42b9cdcf2bc164c0904a350eedf4ad assets/create_mechanical_teleporter/lang/en_ud.json
-72cba254823ebe454c1661519c14fd1c81f28dae assets/create_mechanical_teleporter/lang/en_us.json
+c07b26544aa907eeff52c65de1a4337caef30ab7 assets/create_mechanical_teleporter/lang/en_ud.json
+d7f3593606ebecfeee122759a911e8d812659fc7 assets/create_mechanical_teleporter/lang/en_us.json
 4827c6aa530ee072a9f9ed0b304ad084cc954164 assets/create_mechanical_teleporter/models/block/black_hand_teleporter.json
 b0b61b70d172c220239f890b0ace14482175349b assets/create_mechanical_teleporter/models/block/blue_hand_teleporter.json
 c0d965d15ae08edcfdd88a4382984793620d55b1 assets/create_mechanical_teleporter/models/block/brown_hand_teleporter.json
@@ -53,6 +53,7 @@ bcdcab8f2141590fe58fc5be8a98aee7bc9ec2f6 assets/create_mechanical_teleporter/mod
 a23b76287923c072e58fe187699975ed25c07703 assets/create_mechanical_teleporter/models/item/ender_casing.json
 92e9dff1b977aae2b94a8233e1bfc7892108d0b4 assets/create_mechanical_teleporter/models/item/ender_creative_casing.json
 bc09c2375c619eec4c2d87e5b0e8b35ea9ceb504 assets/create_mechanical_teleporter/models/item/ender_fluid_bucket.json
+22b0e0562cb77cf9c68aaad0ec0a4f993cde6e31 assets/create_mechanical_teleporter/models/item/ender_potato.json
 129504764aad73073d3f4a07e2d58651e83870cf assets/create_mechanical_teleporter/models/item/ender_quartz.json
 6b53859e2a69358611f71362212fea3c1743520d assets/create_mechanical_teleporter/models/item/ender_quartz_lamp.json
 a97a9a39e3db845abd6becfc65babc03c7796242 assets/create_mechanical_teleporter/models/item/ender_soup.json

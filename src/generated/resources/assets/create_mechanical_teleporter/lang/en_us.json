@@ -38,6 +38,7 @@
   "create_mechanical_teleporter.ui.not_tuned": "Not tuned to a network",
   "fluid.create_mechanical_teleporter.ender_fluid": "Ender fluid",
   "item.create_mechanical_teleporter.ender_fluid_bucket": "Ender Fluid Bucket",
+  "item.create_mechanical_teleporter.ender_potato": "Ender potato",
   "item.create_mechanical_teleporter.ender_quartz": "Ender quartz",
   "item.create_mechanical_teleporter.ender_soup": "Ender soup",
   "item.create_mechanical_teleporter.hand_teleporter.tooltip.behaviour1": "Teleports to the __configured frequency__",

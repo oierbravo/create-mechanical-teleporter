@@ -19,6 +19,9 @@ public class ModDataGen {
         PackOutput output = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
+        CreateRegistriesEntriesProvider generatedEntriesProvider = new CreateRegistriesEntriesProvider(output, lookupProvider);
+        lookupProvider = generatedEntriesProvider.getRegistryProvider();
+        generator.addProvider(event.includeServer(), generatedEntriesProvider);
 
         if (event.includeServer()) {
             generator.addProvider(true, new CreateRecipeGen(output, lookupProvider));
