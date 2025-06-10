@@ -18,6 +18,7 @@ public class ModMessages {
         registrar.playToServer(RequestTeleportToBlockPosPayload.TYPE, RequestTeleportToBlockPosPayload.STREAM_CODEC, RequestTeleportToBlockPosHandler.get()::handle);
         registrar.playToServer(RequestTeleportToGlobalPosPayload.TYPE, RequestTeleportToGlobalPosPayload.STREAM_CODEC, RequestTeleportToGlobalPosHandler.get()::handle);
         registrar.playToServer(RequestTeleportToFrequencyWithItemPayload.TYPE, RequestTeleportToFrequencyWithItemPayload.STREAM_CODEC, RequestTeleportToFrequencyWithItemHandler.get()::handle);
+        registrar.playToServer(RequestTeleportToTrainPayload.TYPE, RequestTeleportToTrainPayload.STREAM_CODEC, RequestTeleportToTrainHandler.get()::handle);
         registrar.playToServer(SetAddressToItemPayload.TYPE, SetAddressToItemPayload.STREAM_CODEC, SetAddressToItemHandler.get()::handle);
         registrar.playToServer(SetAddressToBlockEntityPayload.TYPE, SetAddressToBlockEntityPayload.STREAM_CODEC, SetAddressToBlockEntityHandler.get()::handle);
 

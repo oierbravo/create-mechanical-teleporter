@@ -8,6 +8,7 @@ import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_te
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportersNetwork;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToGlobalPosPayload;
+import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToTrainPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModGuiTextures;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.AllPartialModels;
@@ -41,10 +42,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.lwjgl.glfw.GLFW;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
 
@@ -73,8 +71,9 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
     int currentSelectedIndex;
     final int noneHovered = -1;
 
-    List<TeleporterBehavior> allLinks;
+    List<ITeleporterManagerEntry> allLinks;
     List<TeleporterBehavior> displayedLinks;
+    List<TeleporterBehavior> trainLinks;
 
     GlobalPos globalPos;
 
@@ -92,10 +91,11 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
         network = container.network;
         allLinks = new ArrayList<>();
         displayedLinks = new ArrayList<>();
+        trainLinks = new ArrayList<>();
         globalPos = new GlobalPos(blockEntity.getLevel().dimension(),blockEntity.getBlockPos());
 
 
-        // Find the keeper for rendering
+        // Find the teleporter for rendering
         for (int yOffset : Iterate.zeroAndOne) {
             for (Direction side : Iterate.horizontalDirections) {
                 BlockPos teleporterPos = blockEntity.getBlockPos()
@@ -152,8 +152,9 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
         minecraft.player.closeContainer();
         if(teleporter == null)
             return;
-        GlobalPos globalPos = this.allLinks.get(currentSelectedIndex).getGlobalPos();
-        ModMessages.sendToServer(new RequestTeleportToGlobalPosPayload(globalPos));
+        this.allLinks.get(currentSelectedIndex).teleportTo();
+        //GlobalPos globalPos = this.allLinks.get(currentSelectedIndex).getGlobalPos();
+        //ModMessages.sendToServer(new RequestTeleportToGlobalPosPayload(globalPos));
     }
 
     @Override
@@ -175,13 +176,17 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
         int startIndex = (int) entryScroll.getValue();
         int lastDisplayedIndex = Math.min(startIndex + maxRows, allLinks.size() -1);
 
-        allLinks =  TeleporterBehavior.getAllPresent(network.id,false,false).stream().toList();
+        //allLinks =  TeleporterBehavior.getAllPresent(network.id,false,false).stream().toList();
+        allLinks = gatherEntries();
 
-        for (int index = startIndex; index >= 0 && index < lastDisplayedIndex && index < allLinks.size(); index++) {
-            TeleporterBehavior link = allLinks.get(index);
+        for (int index = startIndex; index >= 0 && index <= lastDisplayedIndex; index++) {
+            ITeleporterManagerEntry entry = allLinks.get(index);
             //guiGraphics.drawString(font, link.getPos().toShortString() + " " + address, teleportersX, teleportersY + 10 * index, Color.WHITE.getRGB());
             int localIndex = index - startIndex;
-            drawTeleporter(guiGraphics, entriesX, entriesY + 10 * localIndex, link, localIndex == hoveredEntry, index == currentSelectedIndex);
+            if(entry instanceof TrainEntry){
+                int a = 0;
+            }
+            drawEntry(guiGraphics, entriesX, entriesY + 10 * localIndex, entry, localIndex == hoveredEntry, index == currentSelectedIndex);
         }
 
         // Render lock option
@@ -243,10 +248,10 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
 
     private int getMaxScroll() {
         int totalRows = allLinks.size();
-        int maxScroll = Math.max(totalRows - maxRows - 1, 0);
+        int maxScroll = Math.max(totalRows - maxRows, 0);
         return maxScroll;
     }
-    private void drawTeleporter(GuiGraphics guiGraphics, int x, int y, TeleporterBehavior teleporterBehavior,boolean isHovered, boolean isSelected){
+    private void drawEntry(GuiGraphics guiGraphics, int x, int y, ITeleporterManagerEntry entry, boolean isHovered, boolean isSelected){
         Font font = Minecraft.getInstance().font;
 
         int entryBgX = x - 1;
@@ -257,13 +262,16 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
             ModGuiTextures.TELEPORTER_MANAGER_SELECTED.render(guiGraphics,entryBgX ,entryBgY);
         else
             ModGuiTextures.TELEPORTER_MANAGER_ENTRY.render(guiGraphics,entryBgX ,entryBgY);
+        Component label = entry.getLabel();
+        guiGraphics.drawString(font, entry.getLabel(), x, y, Color.WHITE.getRGB());
 
-        if(teleporterBehavior.blockEntity instanceof TeleporterManagerBlockEntity){
+
+        /*if(entry.type instanceof TeleporterManagerBlockEntity){
             guiGraphics.drawString(font, "Manager", x, y, Color.WHITE.getRGB());
             return;
         }
         String address = (Objects.equals(teleporterBehavior.signBasedAddress, "")) ? "Empty address": teleporterBehavior.signBasedAddress;
-        guiGraphics.drawString(font, "Teleporter: " +  address, x, y, Color.WHITE.getRGB());
+        guiGraphics.drawString(font, "Teleporter: " +  address, x, y, Color.WHITE.getRGB());*/
 
 
 
@@ -288,7 +296,7 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
         int currentHoveredIndex = (hoveredEntry != noneHovered) ? hoveredEntry + (int) entryScroll.getValue() : noneHovered;
 
         if (hoveredEntry != noneHovered && currentHoveredIndex != noneHovered) {
-            TeleporterBehavior entry = allLinks.get(currentHoveredIndex);
+            ITeleporterManagerEntry entry = allLinks.get(currentHoveredIndex);
             List<FormattedCharSequence> lines = entry.getTooltips().stream().map(Component::getVisualOrderText).toList();
             graphics.renderTooltip(font,lines, mouseX, mouseY);
         }
@@ -416,5 +424,87 @@ public class TeleporterManagerScreen extends AbstractSimiContainerScreen<Telepor
             return false;
         return true;
     }
+    private List<ITeleporterManagerEntry> gatherEntries(){
+        List<ITeleporterManagerEntry> entryList = new ArrayList<>();
 
+
+        List<TeleporterBehavior> links =  TeleporterBehavior.getAllPresent(network.id,false,false).stream().toList();
+
+
+
+        for( TeleporterBehavior teleporterBehavior : links){
+            entryList.add(TeleporterEntry.from(teleporterBehavior));
+        }
+        for( TeleportersNetwork.TrainLink trainLink : this.network.trainLinks){
+            entryList.add(TrainEntry.from(trainLink));
+        }
+
+
+        return entryList;
+    }
+
+    private enum EntryType {
+        TELEPORTER, MANAGER, TRAIN
+    }
+    private interface ITeleporterManagerEntry {
+        public Component getLabel();
+        public List<Component> getTooltips();
+        public void teleportTo();
+    }
+    private static class TeleporterEntry implements ITeleporterManagerEntry{
+        private TeleporterBehavior teleporterBehavior;
+        private TeleporterEntry(TeleporterBehavior teleporterBehavior){
+            this.teleporterBehavior = teleporterBehavior;
+        }
+        public static TeleporterEntry from(TeleporterBehavior teleporterBehavior){
+            return new TeleporterEntry(teleporterBehavior);
+        }
+
+        @Override
+        public Component getLabel() {
+            if(!teleporterBehavior.isTeleportable()){
+                return Component.literal("Manager");
+            }
+            String address = (Objects.equals(teleporterBehavior.signBasedAddress, "")) ? "Empty address": teleporterBehavior.signBasedAddress;
+            return Component.literal("Teleporter: " +  address);
+        }
+
+        @Override
+        public List<Component> getTooltips(){
+            return teleporterBehavior.getTooltips();
+        }
+
+        @Override
+        public void teleportTo(){
+            ModMessages.sendToServer(new RequestTeleportToGlobalPosPayload(teleporterBehavior.getGlobalPos()));
+        }
+    }
+    private static class TrainEntry implements ITeleporterManagerEntry{
+        private UUID trainId;
+        private int carriageId;
+        private String address;
+        private TrainEntry(UUID trainId, int carriageId, String address){
+            this.trainId = trainId;
+            this.carriageId = carriageId;
+            this.address = address;
+        }
+        public static TrainEntry from(TeleportersNetwork.TrainLink trainLink){
+            return new TrainEntry(trainLink.trainId(), trainLink.carriageId(), trainLink.address());
+        }
+
+        @Override
+        public List<Component> getTooltips() {
+            return List.of(Component.literal("Carriage Id: " + carriageId));
+        }
+
+        @Override
+        public Component getLabel() {
+            return Component.literal("Train: " + address);
+        }
+
+        @Override
+        public void teleportTo(){
+            ModMessages.sendToServer(new RequestTeleportToTrainPayload(trainId, carriageId, address));
+        }
+    }
 }

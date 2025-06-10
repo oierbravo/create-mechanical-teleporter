@@ -10,7 +10,7 @@ public class TeleportersSummary {
     public static enum TeleporterType {
         GLOBALPOS, TRAIN
     }
-    public static class TeleporterEntry{
+    public static class TeleporterEntry {
         public TeleporterType type;
         public String address;
 
@@ -30,7 +30,7 @@ public class TeleportersSummary {
     public static class TeleporterEntryTrain extends TeleporterEntry{
         public UUID trainId;
         public TeleporterEntryTrain(String address, UUID trainId){
-            super(TeleporterType.GLOBALPOS, address);
+            super(TeleporterType.TRAIN, address);
             this.trainId = trainId;
 
         }

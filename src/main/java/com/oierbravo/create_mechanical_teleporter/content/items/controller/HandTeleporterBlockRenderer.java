@@ -54,7 +54,7 @@ public class HandTeleporterBlockRenderer extends SmartBlockEntityRenderer<HandTe
                 .uncenter();
         antennaRenderer.light(light).renderInto(ms, vb);
 
-        if (blockEntity.getFrequency().address() != null && !blockEntity.getFrequency().address().isEmpty()) {
+        if (blockEntity.getFrequency() != null && blockEntity.getFrequency().address() != null && !blockEntity.getFrequency().address().isEmpty()) {
             renderNameplateOnHover(blockEntity, Component.literal(blockEntity.getFrequency().address()), 1, ms, buffer, light);
         }
     }

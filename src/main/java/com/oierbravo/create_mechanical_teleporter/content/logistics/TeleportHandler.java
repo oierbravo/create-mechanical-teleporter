@@ -8,7 +8,6 @@ import com.oierbravo.create_mechanical_teleporter.infrastructure.network.Request
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -196,32 +195,34 @@ public class TeleportHandler {
             }
 
             for(TeleportersNetwork.TrainLink trainLink : network.trainLinks){
-                Train train = Create.RAILWAYS.trains.get(trainLink.trainId());
-                if(train == null)
-                    continue;
-
-                int carriageIndex = trainLink.carriageId();
-                Carriage carriage = train.carriages.get(carriageIndex);
-                CarriageContraptionEntity carriageContraptionEntity = carriage.anyAvailableEntity();
-                Contraption contraption = carriageContraptionEntity.getContraption();
-
-                MountedFluidStorageWrapper fluids = contraption.getStorage().getFluids();
-
-                for(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor : contraption.getActors()){
-                    if(actor.getLeft().state().getBlock() instanceof ITeleporterBlock iTeleporter){
-                        if(actor.getRight().blockEntityData.getString("SignAddress").equals(address)){
-                            boolean success = teleportToContraption(contraption, player);
-                            if(success) {
-                                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
-                                return true;
-                            }
-                        }
-                    }
+                boolean success = teleportToTrain(trainLink.trainId(), trainLink.carriageId(), trainLink.address(), player);
+                if(success) {
+                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    return true;
                 }
             }
         }
         player.displayClientMessage(ModLang.ui_no_valide_teleporter.t().component(),true);
         player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
+        return false;
+    }
+    public static boolean teleportToTrain(UUID trainId, int carriageId, String address, Player player){
+        Train train = Create.RAILWAYS.trains.get(trainId);
+        if(train == null)
+            return false;
+
+        int carriageIndex = carriageId;
+        Carriage carriage = train.carriages.get(carriageIndex);
+        CarriageContraptionEntity carriageContraptionEntity = carriage.anyAvailableEntity();
+        Contraption contraption = carriageContraptionEntity.getContraption();
+
+        for(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor : contraption.getActors()){
+            if(actor.getLeft().state().getBlock() instanceof ITeleporterBlock iTeleporter){
+                if(actor.getRight().blockEntityData.getString("SignAddress").equals(address)){
+                    return teleportToContraption(contraption, player);
+                }
+            }
+        }
         return false;
     }
 
