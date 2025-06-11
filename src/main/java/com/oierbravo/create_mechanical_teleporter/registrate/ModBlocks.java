@@ -161,6 +161,7 @@ public class ModBlocks {
                 //.transform(mountedItemStorage(AllMountedStorageTypes.TOOLBOX))
                 //.tag(AllTags.AllBlockTags.TOOLBOXES.tag)
                 .item(HandTeleporterBlockItem::new)
+                .properties(p -> p.stacksTo(1))
                 .model((c, p) -> p.withExistingParent(colourName + "_hand_teleporter", p.modLoc("block/hand_teleporter/item"))
                         .texture("hand_teleporter", p.modLoc("block/hand_teleporter/" + colourName)))
                 //.tag(AllTags.AllItemTags.TOOLBOXES.tag)

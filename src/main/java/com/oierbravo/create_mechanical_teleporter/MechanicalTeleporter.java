@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
@@ -28,7 +30,8 @@ public class MechanicalTeleporter
 {
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MODID).defaultCreativeTab(ModCreativeTabs.MAIN_TAB.getKey());
+    public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MODID).defaultCreativeTab((ResourceKey<CreativeModeTab>) null);
+
     static {
         REGISTRATE.setTooltipModifierFactory(item ->
                 new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)
@@ -51,8 +54,6 @@ public class MechanicalTeleporter
         ModFluids.register();
         ModMenuTypes.register();
         MConfigs.register(modLoadingContext,modContainer);
-
-
 
         ModCreativeTabs.register(modEventBus);
         modEventBus.addListener(ModMessages::registerNetworking);
