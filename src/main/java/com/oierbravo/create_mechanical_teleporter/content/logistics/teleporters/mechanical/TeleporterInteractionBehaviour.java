@@ -1,6 +1,8 @@
-package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical;
 
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.ITeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterItemUtils;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -16,11 +18,11 @@ public class TeleporterInteractionBehaviour extends MovingInteractionBehaviour {
     @Override
     public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos, AbstractContraptionEntity contraptionEntity) {
         ItemStack stack = player.getItemInHand(activeHand);
-        if(HandTeleporterBlockItem.isHandTeleporterItem(stack)){
+        if(TeleporterItemUtils.isHandTeleporterItem(stack)){
             Contraption contraption = contraptionEntity.getContraption();
             BlockEntity blockEntity = contraption.presentBlockEntities.get(localPos);
             if(blockEntity instanceof ITeleporterBlockEntity iTeleporterBlockEntity){
-                HandTeleporterBlockItem.setFrequency(stack, player, iTeleporterBlockEntity.getTeleporter().freqId, iTeleporterBlockEntity.getTeleporter().signBasedAddress);
+                TeleporterItemUtils.setFrequency(stack, player, iTeleporterBlockEntity.getTeleporter().freqId, iTeleporterBlockEntity.getTeleporter().signBasedAddress);
             }
         }
         return super.handlePlayerInteraction(player, activeHand, localPos, contraptionEntity);

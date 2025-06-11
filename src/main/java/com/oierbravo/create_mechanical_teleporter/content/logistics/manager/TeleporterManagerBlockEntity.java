@@ -1,18 +1,17 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics.manager;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.IHaveTeleportFrequency;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
-import com.oierbravo.create_mechanical_teleporter.ModLang;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.ITeleporterBlockEntity;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +32,7 @@ public class TeleporterManagerBlockEntity extends SmartBlockEntity implements IH
     public UUID placedBy;
     public TeleporterBehavior teleporterBehavior;
 
-
+    private Component customName;
 
     public TeleporterManagerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -108,21 +107,14 @@ public class TeleporterManagerBlockEntity extends SmartBlockEntity implements IH
         return TeleporterBehavior.TELEPORTER_TYPES.MANAGER;
     }
 
-    protected String getSign(Direction side) {
-        /*BlockEntity sideBlockEntity = blockEntity.getLevel().getBlockEntity(blockEntity.getBlockPos().relative(side));
-        if (!(sideBlockEntity instanceof SignBlockEntity sign))
-            return null;
-        for (boolean front : Iterate.trueAndFalse) {
-            SignText text = sign.getText(front);
-            String address = "";
-            for (Component component : text.getMessages(false)) {
-                String string = component.getString();
-                if (!string.isBlank())
-                    address += string.trim() + " ";
-            }
-            if (!address.isBlank())
-                return address.trim();
-        }*/
-        return null;
+    @Override
+    public boolean isTeleportable() {
+        return false;
+    }
+    public void setCustomName(Component customName) {
+        this.customName = customName;
+    }
+    public Component getCustomName(){
+        return this.customName;
     }
 }

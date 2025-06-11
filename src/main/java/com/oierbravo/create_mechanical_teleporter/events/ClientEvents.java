@@ -1,8 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterClientHandler;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterClientHandler;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportHandler;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterItemClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.world.entity.player.Player;
@@ -22,9 +21,7 @@ public class ClientEvents {
 	public static void onTick(ClientTickEvent.Post event) {
 		if (!isGameActive())
 			return;
-		TeleporterClientHandler.tick();
-		HandTeleporterClientHandler.tick();
-
+		TeleporterItemClientHandler.tick();
 	}
 
 

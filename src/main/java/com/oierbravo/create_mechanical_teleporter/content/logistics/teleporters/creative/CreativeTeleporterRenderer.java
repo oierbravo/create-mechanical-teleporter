@@ -1,7 +1,7 @@
-package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.creative;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterRendererHelper;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterRendererHelper;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

@@ -2,7 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.google.common.cache.Cache;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.ITeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
@@ -65,7 +65,7 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         freqId = UUID.randomUUID();
         signBasedAddress = "";
         teleporterType = specifics.getTeleporterType();
-        isTeleportable = specifics.getTeleporterType() != TELEPORTER_TYPES.MANAGER;
+        isTeleportable = specifics.isTeleportable();
         globalPos = GlobalPos.of(getDimension(),getPos());
     }
 
@@ -91,23 +91,6 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         return stream.toList();
     }
 
-    public static Collection<TeleporterBehavior> getAll(UUID freq, boolean sortByPriority,
-                                                               boolean clientSide) {
-        Cache<Integer, WeakReference<TeleporterBehavior>> cache =
-                (clientSide ? CLIENT_LINKS : LINKS).getIfPresent(freq);
-        if (cache == null)
-            return Collections.emptyList();
-        Stream<TeleporterBehavior> stream = new LinkedList<>(cache.asMap()
-                .values()).stream()
-                .map(WeakReference::get)
-                .filter(TeleporterBehavior::isValidLoadedLink);
-
-
-        //if (sortByPriority)
-        //    stream = stream.sorted((e1, e2) -> Integer.compare(e1.redstonePower, e2.redstonePower));
-
-        return stream.toList();
-    }
 
     public static void keepAlive(TeleporterBehavior behaviour) {
         boolean onClient = behaviour.blockEntity.getLevel().isClientSide;
@@ -326,6 +309,9 @@ public class TeleporterBehavior extends BlockEntityBehaviour {
         };
         default void consumeResources(){};
         TELEPORTER_TYPES getTeleporterType();
+        default boolean isTeleportable(){
+            return true;
+        }
     }
     public enum TELEPORTER_TYPES {
         MECHANICAL,

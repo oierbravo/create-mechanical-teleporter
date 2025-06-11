@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterRendererHelper;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterRendererHelper;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportersNetwork;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.LockNetworkPayload;

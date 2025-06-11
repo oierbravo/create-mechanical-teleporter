@@ -1,7 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandServerHandler;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -15,8 +14,6 @@ public class CommonEvents {
 		//if (event.phase == Phase.START)
 		//	return;
 		Level world = event.getLevel();
-		TeleportWandServerHandler.tick(world);
-		MechanicalTeleporter.TELEPORTERS.tick(world);
 	}
 	@SubscribeEvent
 	public static void onLoadWorld(LevelEvent.Load event) {

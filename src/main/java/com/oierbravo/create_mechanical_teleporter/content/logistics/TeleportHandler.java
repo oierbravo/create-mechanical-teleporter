@@ -2,7 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.ModLang;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;

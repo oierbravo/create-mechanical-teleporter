@@ -3,7 +3,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterItemUtils;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.UUIDUtil;
@@ -41,7 +41,7 @@ public record TeleporterFrequency(UUID freqId, String address){
         return new TeleporterFrequency(teleporterBehavior.freqId, teleporterBehavior.signBasedAddress);
     }
     public static TeleporterFrequency from(ItemStack itemStack){
-        return new TeleporterFrequency(HandTeleporterBlockItem.getFrequency(itemStack), HandTeleporterBlockItem.getAddress(itemStack));
+        return new TeleporterFrequency(TeleporterItemUtils.getFrequency(itemStack), TeleporterItemUtils.getAddress(itemStack));
     }
     public static TeleporterFrequency from(UUID freqId, String address){
         if(freqId == null)

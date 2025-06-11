@@ -3,11 +3,11 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockRenderer;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterBlockEntity;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterRenderer;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterVisual;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterBlockEntity;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative.CreativeTeleporterRenderer;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterRenderer;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterVisual;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.creative.CreativeTeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.creative.CreativeTeleporterRenderer;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.manager.TeleporterManagerBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 

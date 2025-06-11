@@ -78,9 +78,6 @@ public class HandTeleporterBlock extends WrenchableDirectionalBlock implements I
         if (stack == null)
             return;
         withBlockEntityDo(worldIn, pos, be -> {
-            if (stack.has(ModDataComponents.TELEPORTER_FREQUENCY))
-                be.setFrequency(
-                        stack.get(ModDataComponents.TELEPORTER_FREQUENCY));
             if (stack.has(ModDataComponents.TELEPORTER_ADDRESS))
                 be.setAddress(
                         stack.get(ModDataComponents.TELEPORTER_ADDRESS));

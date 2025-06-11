@@ -3,7 +3,6 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
 import java.util.HashMap;
@@ -13,6 +12,10 @@ import java.util.UUID;
 public class GlobalTeleportersManager {
     public Map<UUID, TeleportersNetwork> teleportersNetworks;
     private TeleportersNetworkSavedData savedData;
+
+
+
+
     public GlobalTeleportersManager() {
         teleportersNetworks = new HashMap<>();
     }
@@ -104,11 +107,6 @@ public class GlobalTeleportersManager {
             return;
         savedData = TeleportersNetworkSavedData.load(server);
         teleportersNetworks = savedData.getTeleportersNetworks();
-    }
-
-    public void tick(Level level) {
-        if (level.dimension() != Level.OVERWORLD)
-            return;
     }
 
     public void markDirty() {

@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical;
 
 import net.createmod.catnip.config.ConfigBase;
 

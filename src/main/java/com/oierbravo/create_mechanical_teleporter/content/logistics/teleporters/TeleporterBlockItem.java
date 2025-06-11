@@ -1,33 +1,26 @@
-package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters;
 
-import com.oierbravo.create_mechanical_teleporter.content.logistics.IHaveTeleportFrequency;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
-import com.simibubi.create.foundation.block.IBE;
+import com.oierbravo.create_mechanical_teleporter.registrate.ModDataComponents;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 
-public class TeleporterBlockItem extends BlockItem implements IHaveTeleportFrequency {
+public class TeleporterBlockItem extends AbstractTeleporterBlockItem {
 
 	public TeleporterBlockItem(Block pBlock, Properties pProperties) {
 		super(pBlock, pProperties);
@@ -35,28 +28,17 @@ public class TeleporterBlockItem extends BlockItem implements IHaveTeleportFrequ
 
 	@Override
 	public boolean isFoil(@NotNull ItemStack pStack) {
-		return isTuned(pStack);
+		return TeleporterItemUtils.isTuned(pStack);
 	}
 
-	public static boolean isTuned(ItemStack pStack) {
-		return pStack.has(DataComponents.BLOCK_ENTITY_DATA);
-	}
-
-	@Nullable
-	public static UUID networkFromStack(ItemStack pStack) {
-		CompoundTag tag = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		if (!tag.hasUUID("Freq"))
-			return null;
-		return tag.getUUID("Freq");
-	}
 
 	@Override
 	public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext tooltipContext,
 								@NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
 		super.appendHoverText(stack, tooltipContext, tooltipComponents, tooltipFlag);
 
-		CompoundTag tag = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		if (!tag.hasUUID("Freq"))
+		UUID freqId = stack.get(ModDataComponents.TELEPORTER_FREQUENCY);
+		if(freqId == null)
 			return;
 
 		CreateLang.translate("logistically_linked.tooltip")
@@ -74,7 +56,7 @@ public class TeleporterBlockItem extends BlockItem implements IHaveTeleportFrequ
 			return super.use(level, player, usedHand);
 
 		ItemStack stack = player.getItemInHand(usedHand);
-		clearFrequency(stack, player);
+		TeleporterItemUtils.clearFrequency(stack, player);
 		return super.use(level, player, usedHand);
 	}
 
@@ -92,7 +74,7 @@ public class TeleporterBlockItem extends BlockItem implements IHaveTeleportFrequ
 
 		TeleporterFrequency teleporterFrequency = TeleporterFrequency.from(level.getBlockEntity(pos));
 
-		boolean tuned = isTuned(stack);
+		boolean tuned = TeleporterItemUtils.isTuned(stack);
 
 		if (teleporterFrequency != null) {
 			if (level.isClientSide)
@@ -100,7 +82,7 @@ public class TeleporterBlockItem extends BlockItem implements IHaveTeleportFrequ
 			if (!teleporterFrequency.mayInteractMessage(player))
 				return InteractionResult.SUCCESS;
 
-			assignFrequency(stack, player, teleporterFrequency.freqId());
+			TeleporterItemUtils.setFrequency(stack, player, teleporterFrequency.freqId(), "");
 			return InteractionResult.SUCCESS;
 		}
 
@@ -111,30 +93,5 @@ public class TeleporterBlockItem extends BlockItem implements IHaveTeleportFrequ
 		player.displayClientMessage(tuned ? CreateLang.translateDirect("logistically_linked.connected")
 			: CreateLang.translateDirect("logistically_linked.new_network_started"), true);
 		return useOn;
-	}
-
-	public static void assignFrequency(ItemStack stack, Player player, UUID frequency) {
-		CompoundTag tag = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		tag.putUUID("Freq", frequency);
-
-		player.displayClientMessage(CreateLang.translateDirect("logistically_linked.tuned"), true);
-
-		BlockEntity.addEntityType(tag, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType());
-		stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
-	}
-
-	public static void clearFrequency(ItemStack stack, Player player) {
-		CompoundTag tag = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		tag.remove("Freq");
-
-		player.displayClientMessage(CreateLang.translateDirect("logistically_linked.tuned"), true);
-
-		BlockEntity.addEntityType(tag, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType());
-		stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
-	}
-
-	@Override
-	public TeleporterFrequency getFrequency() {
-		return null;
 	}
 }

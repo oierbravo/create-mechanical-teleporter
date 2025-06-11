@@ -1,7 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter;
 
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterLang;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.MechanicalTeleporterLang;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.MechanicalTeleporterLang;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.manager.TeleporterManagerLang;
 import com.oierbravo.mechanicals.utility.lang.MechanicalLangBuilder;
 import com.oierbravo.mechanicals.utility.lang.MechanicalRegistrateLangBuilder;

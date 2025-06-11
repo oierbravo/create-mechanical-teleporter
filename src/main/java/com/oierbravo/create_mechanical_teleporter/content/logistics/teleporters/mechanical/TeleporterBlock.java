@@ -1,20 +1,21 @@
-package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.creative;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical;
 
-import com.mojang.serialization.MapCodec;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModBlockEntities;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -24,28 +25,32 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CreativeTeleporterBlock extends HorizontalDirectionalBlock implements IBE<CreativeTeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
-    public static final MapCodec<CreativeTeleporterBlock> CODEC = simpleCodec(CreativeTeleporterBlock::new);
-
+public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
-
-    public CreativeTeleporterBlock(Properties properties) {
+    public TeleporterBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(POWERED, false));
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
+        registerDefaultState(defaultBlockState().setValue(POWERED, false).setValue(ACTIVE, false));
     }
 
     public static int getPower(BlockState blockState, Level level, BlockPos worldPosition) {
-        if(level.hasNeighborSignal(worldPosition)){
+       if(level.hasNeighborSignal(worldPosition)){
             return level.getBestNeighborSignal(worldPosition);
-        }
+       }
         return 0;
     }
+
+    @Override
+    public Direction.Axis getRotationAxis(BlockState state) {
+        return Direction.Axis.Y;
+    }
+
+    @Override
+    public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+        return face == Direction.DOWN;
+    }
+
     @Override
     public boolean hasDynamicLightEmission(BlockState state) {
         return true;
@@ -53,14 +58,19 @@ public class CreativeTeleporterBlock extends HorizontalDirectionalBlock implemen
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return 15;
+        return state.getValue(TeleporterBlock.ACTIVE) ? 15 : 0;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction prefferedSide = getPreferredHorizontalFacing(context);
         BlockPos pos = context.getClickedPos();
         BlockState placed = super.getStateForPlacement(context);
-        return defaultBlockState().setValue(POWERED, getPower(placed, context.getLevel(), pos) > 0).setValue(FACING, context.getHorizontalDirection().getOpposite());
+
+        if (prefferedSide == null)
+            prefferedSide = context.getHorizontalDirection();
+        return defaultBlockState().setValue(POWERED, getPower(placed, context.getLevel(), pos) > 0).setValue(HORIZONTAL_FACING, context.getPlayer() != null && context.getPlayer()
+                .isShiftKeyDown() ? prefferedSide : prefferedSide.getOpposite()).setValue(ACTIVE,false);
     }
 
     @Override
@@ -74,9 +84,14 @@ public class CreativeTeleporterBlock extends HorizontalDirectionalBlock implemen
         boolean previouslyPowered = state.getValue(POWERED);
         if (previouslyPowered != powered)
             worldIn.setBlock(pos, state.cycle(POWERED), 2);
-        withBlockEntityDo(worldIn, pos, creativeTeleporterBlockEntity -> {
-            creativeTeleporterBlockEntity.teleporterBehavior.redstonePowerChanged(power);
+        withBlockEntityDo(worldIn, pos, teleporterBlockEntity -> {
+            teleporterBlockEntity.teleporterBehavior.redstonePowerChanged(power);
         });
+    }
+
+    @Override
+    public SpeedLevel getMinimumRequiredSpeedLevel() {
+        return SpeedLevel.FAST;
     }
 
     @Override
@@ -91,9 +106,8 @@ public class CreativeTeleporterBlock extends HorizontalDirectionalBlock implemen
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder.add(FACING).add(POWERED));
+        super.createBlockStateDefinition(builder.add(POWERED).add(ACTIVE));
     }
-
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
@@ -102,16 +116,16 @@ public class CreativeTeleporterBlock extends HorizontalDirectionalBlock implemen
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
         IBE.onRemove(pState, pLevel, pPos, pNewState);
     }
-
     @Override
-    public Class<CreativeTeleporterBlockEntity> getBlockEntityClass() {
-        return CreativeTeleporterBlockEntity.class;
+    public Class<TeleporterBlockEntity> getBlockEntityClass() {
+        return TeleporterBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends CreativeTeleporterBlockEntity> getBlockEntityType() {
-        return ModBlockEntities.CREATIVE_TELEPORTER.get();
+    public BlockEntityType<? extends TeleporterBlockEntity> getBlockEntityType() {
+        return ModBlockEntities.MECHANICAL_TELEPORTER.get();
     }
+
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {

@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical;
 
 import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.mechanicals.utility.lang.MechanicalLangBuilder;

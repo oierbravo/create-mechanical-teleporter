@@ -2,7 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.infrastructure.config;
 
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterConfigs;
 import com.oierbravo.create_mechanical_teleporter.content.items.wand.TeleportWandConfigs;
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterConfigs;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterConfigs;
 import net.createmod.catnip.config.ConfigBase;
 
 public class ModConfigServer extends ConfigBase {

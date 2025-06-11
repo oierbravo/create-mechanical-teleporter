@@ -1,6 +1,5 @@
-package com.oierbravo.create_mechanical_teleporter.content.items.controller;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters;
 
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.ITeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModDataComponents;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -23,23 +22,15 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.UUID;
 
-public class HandTeleporterClientHandler {
-    public static int PACKET_RATE = 5;
-    private static int packetCooldown;
-
-
+public class TeleporterItemClientHandler {
     public static void tick() {
-        /*HandTeleporterItemRenderer.tick();
-
-        if (packetCooldown > 0)
-            packetCooldown--;*/
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null)
             return;
         ItemStack mainHandItem = player.getMainHandItem();
-        if (!(mainHandItem.getItem() instanceof HandTeleporterBlockItem)
-                || !HandTeleporterBlockItem.isTuned(mainHandItem))
+        if (!(mainHandItem.getItem() instanceof AbstractTeleporterBlockItem)
+                || !TeleporterItemUtils.isTuned(mainHandItem))
             return;
 
         UUID freqId = mainHandItem.get(ModDataComponents.TELEPORTER_FREQUENCY);

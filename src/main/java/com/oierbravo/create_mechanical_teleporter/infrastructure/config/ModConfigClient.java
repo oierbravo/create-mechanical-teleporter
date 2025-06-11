@@ -1,6 +1,6 @@
 package com.oierbravo.create_mechanical_teleporter.infrastructure.config;
 
-import com.oierbravo.create_mechanical_teleporter.content.kinetics.mechanical_teleporter.TeleporterClientConfigs;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterClientConfigs;
 import net.createmod.catnip.config.ConfigBase;
 
 public class ModConfigClient extends ConfigBase {
