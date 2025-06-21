@@ -2,7 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters
 
 import net.createmod.catnip.config.ConfigBase;
 
-public class TeleporterClientConfigs extends ConfigBase {
+public class MechanicalTeleporterClientConfigs extends ConfigBase {
     public final ConfigBool disableAddressRender = b(false, "disableAddressRender", Comments.disableAddressRender);
     public final ConfigBool alwaysShowAddress = b(true, "alwaysShowName", Comments.alwaysShowAddress);
 

@@ -1,8 +1,5 @@
-package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters;
 
-import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.ITeleporterBlockEntity;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterItemUtils;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;

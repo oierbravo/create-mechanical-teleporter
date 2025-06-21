@@ -21,7 +21,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import java.util.List;
 import java.util.UUID;
 
-public class TeleporterBlockEntity extends KineticBlockEntity implements TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity, IHaveTeleportFrequency {
+public class MechanicalTeleporterBlockEntity extends KineticBlockEntity implements TeleporterBehavior.TeleporterBehaviourSpecifics, ITeleporterBlockEntity, IHaveTeleportFrequency {
     public UUID placedBy;
 
     public TeleporterBehavior teleporterBehavior;
@@ -38,7 +38,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
             setActive(isCurrentlyActive);
     }
 
-    public TeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+    public MechanicalTeleporterBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         setLazyTickRate(10);
         placedBy = null;
@@ -90,7 +90,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
     @Override
     public void initialize() {
         super.initialize();
-        teleporterBehavior.redstonePowerChanged(TeleporterBlock.getPower(getBlockState(), level, worldPosition));
+        teleporterBehavior.redstonePowerChanged(MechanicalTeleporterBlock.getPower(getBlockState(), level, worldPosition));
         if(MConfigs.server().teleporter.autoChunkLoad.get())
             ChunkManager.loadForcedChunks(this.level, this.getBlockPos());
     }
@@ -111,7 +111,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
         return true;
     }
     protected boolean isPowered(){
-        return this.getBlockState().getProperties().contains(TeleporterBlock.POWERED) && this.getBlockState().getValue(TeleporterBlock.POWERED);
+        return this.getBlockState().getProperties().contains(MechanicalTeleporterBlock.POWERED) && this.getBlockState().getValue(MechanicalTeleporterBlock.POWERED);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class TeleporterBlockEntity extends KineticBlockEntity implements Telepor
 
     public void setActive(boolean value){
         isActive = value;
-        BlockState pState = getBlockState().setValue(TeleporterBlock.ACTIVE, value);
+        BlockState pState = getBlockState().setValue(MechanicalTeleporterBlock.ACTIVE, value);
 
         getLevel().setBlock(getBlockPos(), pState, 2);
         setChanged(getLevel(), getBlockPos(), pState);

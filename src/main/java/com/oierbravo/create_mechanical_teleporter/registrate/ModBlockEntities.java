@@ -3,8 +3,8 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockRenderer;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterBlockEntity;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterRenderer;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.MechanicalTeleporterBlockEntity;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.MechanicalTeleporterRenderer;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterVisual;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.creative.CreativeTeleporterBlockEntity;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.creative.CreativeTeleporterRenderer;
@@ -12,11 +12,11 @@ import com.oierbravo.create_mechanical_teleporter.content.logistics.manager.Tele
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
 public class ModBlockEntities {
-    public static final BlockEntityEntry<TeleporterBlockEntity> MECHANICAL_TELEPORTER = MechanicalTeleporter.registrate()
-            .blockEntity("mechanical_teleporter", TeleporterBlockEntity::new)
+    public static final BlockEntityEntry<MechanicalTeleporterBlockEntity> MECHANICAL_TELEPORTER = MechanicalTeleporter.registrate()
+            .blockEntity("mechanical_teleporter", MechanicalTeleporterBlockEntity::new)
             .visual(() -> TeleporterVisual::new)
             .validBlocks(ModBlocks.MECHANICAL_TELEPORTER)
-            .renderer(() -> TeleporterRenderer::new)
+            .renderer(() -> MechanicalTeleporterRenderer::new)
             .register();
 
     public static final BlockEntityEntry<CreativeTeleporterBlockEntity> CREATIVE_TELEPORTER = MechanicalTeleporter.registrate()

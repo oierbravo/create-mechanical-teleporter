@@ -2,7 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters
 
 import com.oierbravo.create_mechanical_teleporter.ModLang;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.ITeleporterBlockEntity;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.MechanicalTeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.IHaveTeleportFrequency;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterBehavior;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleporterFrequency;
@@ -68,7 +68,7 @@ public class CreativeTeleporterBlockEntity extends SmartBlockEntity implements I
     @Override
     public void initialize() {
         super.initialize();
-        teleporterBehavior.redstonePowerChanged(TeleporterBlock.getPower(getBlockState(), level, worldPosition));
+        teleporterBehavior.redstonePowerChanged(MechanicalTeleporterBlock.getPower(getBlockState(), level, worldPosition));
         if(MConfigs.server().teleporter.autoChunkLoad.get())
             ChunkManager.loadForcedChunks(this.level, this.getBlockPos());
     }
@@ -82,7 +82,7 @@ public class CreativeTeleporterBlockEntity extends SmartBlockEntity implements I
         return true;
     }
     protected boolean isPowered(){
-        return this.getBlockState().getProperties().contains(TeleporterBlock.POWERED) && this.getBlockState().getValue(TeleporterBlock.POWERED);
+        return this.getBlockState().getProperties().contains(MechanicalTeleporterBlock.POWERED) && this.getBlockState().getValue(MechanicalTeleporterBlock.POWERED);
     }
 
     @Override

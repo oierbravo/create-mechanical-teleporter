@@ -27,7 +27,5 @@ public class ModDataGen {
             generator.addProvider(true, new CreateRecipeGen(output, lookupProvider));
 
         }
-        event.getGenerator().addProvider(true, MechanicalTeleporter.registrate().setDataProvider(new RegistrateDataProvider(MechanicalTeleporter.registrate(), MODID, event)));
-
     }
 }

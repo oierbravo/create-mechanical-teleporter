@@ -2,6 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterRendererHelper;
 import com.oierbravo.mechanicals.MechanicalPartials;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
@@ -12,13 +13,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
-public class TeleporterRenderer extends KineticBlockEntityRenderer<TeleporterBlockEntity> {
-    public TeleporterRenderer(BlockEntityRendererProvider.Context context) {
+public class MechanicalTeleporterRenderer extends KineticBlockEntityRenderer<MechanicalTeleporterBlockEntity> {
+    public MechanicalTeleporterRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    protected void renderSafe(TeleporterBlockEntity blockEntity, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
+    protected void renderSafe(MechanicalTeleporterBlockEntity blockEntity, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
                               int overlay) {
 
         boolean isActive = blockEntity.checkRequerimentsForTeleport();

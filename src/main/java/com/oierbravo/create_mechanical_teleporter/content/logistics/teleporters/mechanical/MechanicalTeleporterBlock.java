@@ -25,11 +25,11 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TeleporterBlock extends HorizontalKineticBlock implements IBE<TeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
+public class MechanicalTeleporterBlock extends HorizontalKineticBlock implements IBE<MechanicalTeleporterBlockEntity>, IWrenchable, ITeleporterBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
-    public TeleporterBlock(Properties properties) {
+    public MechanicalTeleporterBlock(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(POWERED, false).setValue(ACTIVE, false));
     }
@@ -58,7 +58,7 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(TeleporterBlock.ACTIVE) ? 15 : 0;
+        return state.getValue(MechanicalTeleporterBlock.ACTIVE) ? 15 : 0;
     }
 
     @Override
@@ -84,8 +84,8 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
         boolean previouslyPowered = state.getValue(POWERED);
         if (previouslyPowered != powered)
             worldIn.setBlock(pos, state.cycle(POWERED), 2);
-        withBlockEntityDo(worldIn, pos, teleporterBlockEntity -> {
-            teleporterBlockEntity.teleporterBehavior.redstonePowerChanged(power);
+        withBlockEntityDo(worldIn, pos, mechanicalTeleporterBlockEntity -> {
+            mechanicalTeleporterBlockEntity.teleporterBehavior.redstonePowerChanged(power);
         });
     }
 
@@ -117,12 +117,12 @@ public class TeleporterBlock extends HorizontalKineticBlock implements IBE<Telep
         IBE.onRemove(pState, pLevel, pPos, pNewState);
     }
     @Override
-    public Class<TeleporterBlockEntity> getBlockEntityClass() {
-        return TeleporterBlockEntity.class;
+    public Class<MechanicalTeleporterBlockEntity> getBlockEntityClass() {
+        return MechanicalTeleporterBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends TeleporterBlockEntity> getBlockEntityType() {
+    public BlockEntityType<? extends MechanicalTeleporterBlockEntity> getBlockEntityType() {
         return ModBlockEntities.MECHANICAL_TELEPORTER.get();
     }
 

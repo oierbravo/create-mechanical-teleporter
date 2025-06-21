@@ -6,17 +6,17 @@ import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import net.minecraft.core.Direction;
 
-public class TeleporterVisual extends QuarterShaftVisual<TeleporterBlockEntity> implements SimpleDynamicVisual {
+public class TeleporterVisual extends QuarterShaftVisual<MechanicalTeleporterBlockEntity> implements SimpleDynamicVisual {
     //private final RotatingInstance core;
-    private final TeleporterBlockEntity teleporterBlockEntity;
+    private final MechanicalTeleporterBlockEntity mechanicalTeleporterBlockEntity;
     //private final OrientedInstance core;
     //private final SmartRecycler<TextureAtlasSprite, FluidInstance> fluidInstance;
     //private int light;
 
-    public TeleporterVisual(VisualizationContext visualizationContext, TeleporterBlockEntity teleporterBlockEntity, float partialTick) {
-        super(visualizationContext, teleporterBlockEntity, partialTick, Direction.DOWN);
+    public TeleporterVisual(VisualizationContext visualizationContext, MechanicalTeleporterBlockEntity mechanicalTeleporterBlockEntity, float partialTick) {
+        super(visualizationContext, mechanicalTeleporterBlockEntity, partialTick, Direction.DOWN);
 
-        this.teleporterBlockEntity = teleporterBlockEntity;
+        this.mechanicalTeleporterBlockEntity = mechanicalTeleporterBlockEntity;
 
         /*fluidInstance = new SmartRecycler<>(sprite -> visualizationContext.instancerProvider().instancer(AllInstanceTypes.FLUID, FluidMesh.stream(sprite))
                 .createInstance());*/
@@ -26,7 +26,7 @@ public class TeleporterVisual extends QuarterShaftVisual<TeleporterBlockEntity> 
         //ToDo: Figure out how to handle transparency
         /*
 
-        boolean canWork = this.teleporterBlockEntity.checkRequerimentsForTeleport();
+        boolean canWork = this.mechanicalTeleporterBlockEntity.checkRequerimentsForTeleport();
         PartialModel coreModel = (canWork) ? ModPartials.BLOCK_CORE_GLOW : ModPartials.BLOCK_CORE;
 
 
@@ -60,7 +60,7 @@ public class TeleporterVisual extends QuarterShaftVisual<TeleporterBlockEntity> 
 
         int direction = (blockEntity.getSpeed() >=0) ? 1 : -1;
 
-        boolean canWork = this.teleporterBlockEntity.checkRequerimentsForTeleport();
+        boolean canWork = this.mechanicalTeleporterBlockEntity.checkRequerimentsForTeleport();
 
         float floating = (canWork) ?  Mth.sin(worldTime) * .05f : 0;
         float angle = (canWork) ? direction * worldTime * -10 % 360 : 0;

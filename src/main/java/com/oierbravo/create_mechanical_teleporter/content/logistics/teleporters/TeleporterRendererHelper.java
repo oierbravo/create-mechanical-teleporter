@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

@@ -3,10 +3,10 @@ package com.oierbravo.create_mechanical_teleporter.registrate;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.items.controller.HandTeleporterBlockItem;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterBlock;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.MechanicalTeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterBlockItem;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterInteractionBehaviour;
-import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical.TeleporterMovementBehaviour;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterInteractionBehaviour;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.TeleporterMovementBehaviour;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.creative.CreativeTeleporterBlock;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.manager.TeleporterManagerBlock;
 import com.oierbravo.create_mechanical_teleporter.infrastructure.config.ModStress;
@@ -44,7 +44,7 @@ public class ModBlocks {
 
     private static final CreateRegistrate REGISTRATE = MechanicalTeleporter.registrate();
 
-    public static final BlockEntry<TeleporterBlock> MECHANICAL_TELEPORTER = REGISTRATE.block("mechanical_teleporter", TeleporterBlock::new)
+    public static final BlockEntry<MechanicalTeleporterBlock> MECHANICAL_TELEPORTER = REGISTRATE.block("mechanical_teleporter", MechanicalTeleporterBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.METAL))
             .properties(p -> p.lightLevel($ -> 5))
@@ -57,7 +57,7 @@ public class ModBlocks {
                         String modelFileName = "create_mechanical_teleporter:block/mechanical_teleporter/block";
                         if (state.getValue(BlockStateProperties.POWERED))
                             modelFileName += "_powered";
-                        if (state.getValue(TeleporterBlock.ACTIVE))
+                        if (state.getValue(MechanicalTeleporterBlock.ACTIVE))
                             modelFileName += "_active";
                         return ConfiguredModel.builder().modelFile(prov.models().getExistingFile(ResourceLocation.parse(modelFileName)))
                                 .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();

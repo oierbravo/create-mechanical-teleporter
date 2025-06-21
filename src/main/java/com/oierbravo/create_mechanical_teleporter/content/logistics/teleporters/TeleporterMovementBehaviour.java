@@ -1,4 +1,4 @@
-package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters.mechanical;
+package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters;
 
 import com.mojang.logging.LogUtils;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
@@ -26,6 +26,7 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
 
     @Override
     public boolean isActive(MovementContext context) {
+        boolean a = MovementBehaviour.super.isActive(context);
         return MovementBehaviour.super.isActive(context);
     }
 
@@ -77,8 +78,12 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
 
     @Override
     public void tick(MovementContext context) {
+        if (context.world.isClientSide || !(context.world instanceof ServerLevel))
+            return;
         MovementBehaviour.super.tick(context);
     }
+
+
 
     @Override
     public void writeExtraData(MovementContext context) {

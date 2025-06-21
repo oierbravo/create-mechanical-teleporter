@@ -19,6 +19,7 @@ import net.createmod.catnip.data.Glob;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -43,6 +44,7 @@ import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -215,11 +217,21 @@ public class TeleportHandler {
         Carriage carriage = train.carriages.get(carriageIndex);
         CarriageContraptionEntity carriageContraptionEntity = carriage.anyAvailableEntity();
         Contraption contraption = carriageContraptionEntity.getContraption();
+        ResourceKey<Level> destinationDimension = player.level().dimension();
+        List<ResourceKey<Level>> trainDimensions = train.getPresentDimensions();
+        boolean sameDirection = false;
+        for( ResourceKey<Level> dimension : trainDimensions) {
+            if (dimension == player.level().dimension()) {
+                sameDirection = true;
+            }
+        }
+        if(!sameDirection)
+            destinationDimension = trainDimensions.getFirst();
 
         for(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor : contraption.getActors()){
             if(actor.getLeft().state().getBlock() instanceof ITeleporterBlock iTeleporter){
                 if(actor.getRight().blockEntityData.getString("SignAddress").equals(address)){
-                    return teleportToContraption(contraption, player);
+                    return teleportToContraption( contraption, player, destinationDimension);
                 }
             }
         }
@@ -227,12 +239,18 @@ public class TeleportHandler {
     }
 
 
-    private static boolean teleportToContraption(Contraption contraption, Player player){
-        for(BlockPos seatPos :  contraption.getSeats()){
-            int seatIndex = contraption.getSeats().indexOf(seatPos);
-            if(!contraption.getSeatMapping().containsValue(seatIndex)){
-                contraption.entity.addSittingPassenger(player,seatIndex);
-                return true;
+    private static boolean teleportToContraption(Contraption contraption, Player player, ResourceKey<Level> destinationDimension){
+        if(player instanceof ServerPlayer serverPlayer){
+            if(player.level().dimension() != destinationDimension){
+                teleportToGlobalPosSimple(GlobalPos.of(destinationDimension, contraption.anchor), serverPlayer);
+            }
+
+            for(BlockPos seatPos :  contraption.getSeats()){
+                int seatIndex = contraption.getSeats().indexOf(seatPos);
+                if(!contraption.getSeatMapping().containsValue(seatIndex)){
+                    contraption.entity.addSittingPassenger(player,seatIndex);
+                    return true;
+                }
             }
         }
         return false;

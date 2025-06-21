@@ -2,7 +2,7 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters
 
 import net.createmod.catnip.config.ConfigBase;
 
-public class TeleporterConfigs  extends ConfigBase {
+public class MechanicalTeleporterConfigs extends ConfigBase {
     public final ConfigBool autoChunkLoad = b(true, "autoChunkLoad", Comments.autoChunkLoad);
     public final ConfigInt autoChunkLoadRange = i(2, 1, "autoChunkLoadRange", Comments.autoChunkLoadRange);
     public final ConfigInt requiredFluidAmount = i(500,1,"requiredFluidAmount", Comments.requiredFluidAmount);
