@@ -147,7 +147,10 @@ repositories {
             includeGroup "dev.architectury"
         }
     }
-
+    maven {
+        name = "fosil"
+        url = "https://maven.fosil.eu/releases"
+    }
     mavenLocal()
     flatDir {
         dirs 'libs'
@@ -168,8 +171,8 @@ dependencies {
 
     implementation("mezz.jei:jei-${jei_minecraft_version}-neoforge:${jei_version}")
 
-    compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
-    runtimeOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
+    compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api")
+    runtimeOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}")
 
     implementation("curse.maven:jade-324717:${jade_id}")
 
