@@ -33,7 +33,7 @@ public class CreateRecipeGen extends AbstractCreateRecipeGen {
 
         createFilling("ender_soup")
                 .require(Items.BOWL)
-                .require(ModFluids.ENDER_FLUID.get().getSource(),500)
+                .require((net.minecraft.world.level.material.FlowingFluid) ModFluids.ENDER_FLUID.get().getSource(),500)
                 .output(ModItems.ENDER_SOUP)
                 .build(pRecipeOutput);
 
