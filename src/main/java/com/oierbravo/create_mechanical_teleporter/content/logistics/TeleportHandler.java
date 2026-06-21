@@ -10,6 +10,7 @@ import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
@@ -203,6 +204,14 @@ public class TeleportHandler {
                     return true;
                 }
             }
+
+            for(TeleportersNetwork.ContraptionLink contraptionLink : network.contraptionLinks){
+                boolean success = teleportToContraptionLink(contraptionLink, player);
+                if(success) {
+                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    return true;
+                }
+            }
         }
         player.displayClientMessage(ModLang.ui_no_valide_teleporter.t().component(),true);
         player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
@@ -254,6 +263,32 @@ public class TeleportHandler {
         return false;
     }
 
+
+    public static boolean teleportToContraptionLink(TeleportersNetwork.ContraptionLink link, Player player){
+        if(!(player instanceof ServerPlayer serverPlayer))
+            return false;
+        if(link.dimension != player.level().dimension())
+            return false;
+        ServerLevel level = serverPlayer.serverLevel().getServer().getLevel(link.dimension);
+        if(level == null)
+            return false;
+
+        Entity entity = level.getEntity(link.entityId);
+
+        if(entity instanceof OrientedContraptionEntity contraptionEntity){
+            Contraption contraption = contraptionEntity.getContraption();
+            for(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor : contraption.getActors()){
+                if(actor.getLeft().state().getBlock() instanceof ITeleporterBlock
+                        && actor.getRight().blockEntityData.getString("SignAddress").equals(link.address)){
+                    return trySeat(contraption, serverPlayer);
+                }
+            }
+            return false;
+        }
+
+        PendingContraptionSeats.enqueue(serverPlayer.serverLevel().getServer(), serverPlayer.getUUID(), link.entityId, link.dimension, link.lastKnownPos);
+        return true;
+    }
 
     private static boolean teleportToContraption(Contraption contraption, Player player, ResourceKey<Level> destinationDimension){
         if(player instanceof ServerPlayer serverPlayer){

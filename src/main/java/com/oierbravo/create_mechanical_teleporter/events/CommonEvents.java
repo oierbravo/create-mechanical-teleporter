@@ -1,6 +1,7 @@
 package com.oierbravo.create_mechanical_teleporter.events;
 
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.PendingContraptionSeats;
 import com.oierbravo.create_mechanical_teleporter.content.logistics.PendingTrainSeats;
 import com.simibubi.create.Create;
 import net.minecraft.server.MinecraftServer;
@@ -24,8 +25,11 @@ public class CommonEvents {
 	public static void onServerTick(ServerTickEvent.Post event) {
 		MinecraftServer server = event.getServer();
 		PendingTrainSeats.tick(server);
-		if (server.getTickCount() % 20 == 0)
+		PendingContraptionSeats.tick(server);
+		if (server.getTickCount() % 20 == 0) {
 			MechanicalTeleporter.TELEPORTERS.pruneTrainLinks(Create.RAILWAYS.trains.keySet());
+			MechanicalTeleporter.TELEPORTERS.pruneContraptionLinks(server);
+		}
 	}
 	@SubscribeEvent
 	public static void onLoadWorld(LevelEvent.Load event) {

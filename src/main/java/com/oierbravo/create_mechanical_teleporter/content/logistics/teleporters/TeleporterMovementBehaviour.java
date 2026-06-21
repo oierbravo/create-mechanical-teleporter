@@ -2,8 +2,10 @@ package com.oierbravo.create_mechanical_teleporter.content.logistics.teleporters
 
 import com.mojang.logging.LogUtils;
 import com.oierbravo.create_mechanical_teleporter.MechanicalTeleporter;
+import com.oierbravo.create_mechanical_teleporter.content.logistics.TeleportersNetwork;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
@@ -43,6 +45,13 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
         AbstractContraptionEntity ce = context.contraption.entity;
         if(ce instanceof CarriageContraptionEntity carriageContraptionEntity){
             MechanicalTeleporter.TELEPORTERS.trainLinkAdded(teleporterData.getUUID("Freq"),carriageContraptionEntity.trainId, carriageContraptionEntity.carriageIndex, teleporterData.getString("SignAddress"), teleporterData.getUUID("PlacedBy"));
+        } else if (ce instanceof OrientedContraptionEntity o) {
+            UUID freq = teleporterData.getUUID("Freq");
+            TeleportersNetwork.ContraptionLink link = new TeleportersNetwork.ContraptionLink(
+                    TeleportersNetwork.ContraptionKind.CART, o.level().dimension(), o.getUUID(), teleporterData.getString("SignAddress"));
+            link.lastKnownPos = o.blockPosition();
+            MechanicalTeleporter.TELEPORTERS.contraptionLinkAdded(freq, link, teleporterData.getUUID("PlacedBy"));
+            context.temporaryData = new CartLinkData(freq, link);
         }
     }
 
@@ -65,6 +74,8 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
     public void stopMoving(MovementContext context) {
         if (context.world.isClientSide || !(context.world instanceof ServerLevel))
             return;
+        if (context.temporaryData instanceof CartLinkData cartLinkData)
+            MechanicalTeleporter.TELEPORTERS.contraptionLinkRemoved(cartLinkData.freq, cartLinkData.link);
         context.temporaryData = null;
     }
 
@@ -81,8 +92,23 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
             String address = teleporterData.getString("SignAddress");
             if (!MechanicalTeleporter.TELEPORTERS.hasTrainLink(freq, carriageContraptionEntity.trainId, carriageContraptionEntity.carriageIndex, address))
                 MechanicalTeleporter.TELEPORTERS.trainLinkAdded(freq, carriageContraptionEntity.trainId, carriageContraptionEntity.carriageIndex, address, teleporterData.getUUID("PlacedBy"));
+        } else if (context.contraption.entity instanceof OrientedContraptionEntity o) {
+            CompoundTag teleporterData = context.blockEntityData;
+            UUID freq = teleporterData.getUUID("Freq");
+            String address = teleporterData.getString("SignAddress");
+            TeleportersNetwork.ContraptionLink link = new TeleportersNetwork.ContraptionLink(
+                    TeleportersNetwork.ContraptionKind.CART, o.level().dimension(), o.getUUID(), address);
+            link.lastKnownPos = o.blockPosition();
+            if (!MechanicalTeleporter.TELEPORTERS.hasContraptionLink(freq, link))
+                MechanicalTeleporter.TELEPORTERS.contraptionLinkAdded(freq, link, teleporterData.getUUID("PlacedBy"));
+            context.temporaryData = new CartLinkData(freq, link);
+            if (context.world.getGameTime() % 20 == 0)
+                MechanicalTeleporter.TELEPORTERS.updateContraptionPos(freq, link, o.blockPosition());
         }
         MovementBehaviour.super.tick(context);
+    }
+
+    private record CartLinkData(UUID freq, TeleportersNetwork.ContraptionLink link) {
     }
 
 

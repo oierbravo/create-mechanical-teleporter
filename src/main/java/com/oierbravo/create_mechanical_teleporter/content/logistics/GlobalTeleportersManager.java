@@ -1,11 +1,14 @@
 package com.oierbravo.create_mechanical_teleporter.content.logistics;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -124,6 +127,63 @@ public class GlobalTeleportersManager {
         boolean changed = false;
         for (TeleportersNetwork network : teleportersNetworks.values())
             changed |= network.trainLinks.removeIf(link -> !validTrainIds.contains(link.trainId()));
+        if (changed)
+            markDirty();
+    }
+
+    public void contraptionLinkAdded(UUID networkId, TeleportersNetwork.ContraptionLink link, UUID ownedBy) {
+        TeleportersNetwork network = teleportersNetworks.computeIfAbsent(networkId, $ -> new TeleportersNetwork(networkId));
+        network.contraptionLinks.add(link);
+        if (ownedBy != null && network.owner == null)
+            network.owner = ownedBy;
+        markDirty();
+    }
+
+    public void contraptionLinkRemoved(UUID networkId, TeleportersNetwork.ContraptionLink link) {
+        TeleportersNetwork teleportersNetwork = teleportersNetworks.get(networkId);
+        if (teleportersNetwork == null)
+            return;
+        teleportersNetwork.contraptionLinks.remove(link);
+        markDirty();
+    }
+
+    public boolean hasContraptionLink(UUID networkId, TeleportersNetwork.ContraptionLink link) {
+        TeleportersNetwork network = teleportersNetworks.get(networkId);
+        return network != null && network.contraptionLinks.contains(link);
+    }
+
+    public void updateContraptionPos(UUID networkId, TeleportersNetwork.ContraptionLink link, BlockPos newPos) {
+        TeleportersNetwork network = teleportersNetworks.get(networkId);
+        if (network == null)
+            return;
+        for (TeleportersNetwork.ContraptionLink existing : network.contraptionLinks) {
+            if (existing.equals(link)) {
+                existing.lastKnownPos = newPos;
+                markDirty();
+                return;
+            }
+        }
+    }
+
+    public Set<TeleportersNetwork.ContraptionLink> getContraptionLinks(UUID networkId) {
+        TeleportersNetwork network = teleportersNetworks.get(networkId);
+        if (network == null)
+            return new HashSet<>();
+        return network.contraptionLinks;
+    }
+
+    public void pruneContraptionLinks(MinecraftServer server) {
+        boolean changed = false;
+        for (TeleportersNetwork network : teleportersNetworks.values()) {
+            changed |= network.contraptionLinks.removeIf(link -> {
+                ServerLevel level = server.getLevel(link.dimension);
+                if (level == null)
+                    return false;
+                if (!level.isLoaded(link.lastKnownPos))
+                    return false;
+                return level.getEntity(link.entityId) == null;
+            });
+        }
         if (changed)
             markDirty();
     }
