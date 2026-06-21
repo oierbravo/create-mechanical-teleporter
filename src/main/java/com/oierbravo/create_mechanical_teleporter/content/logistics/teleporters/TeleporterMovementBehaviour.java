@@ -16,6 +16,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.slf4j.Logger;
 
+import java.util.UUID;
+
 
 public class TeleporterMovementBehaviour implements MovementBehaviour {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -80,6 +82,16 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
     public void tick(MovementContext context) {
         if (context.world.isClientSide || !(context.world instanceof ServerLevel))
             return;
+        // Self-heal: startMoving only fires once at assembly; chunk reload rebuilds the actor context
+        // without calling it, so re-register the train link here. The link is removed on unload via
+        // stopMoving and must be restored when the carriage loads back in.
+        if (context.contraption.entity instanceof CarriageContraptionEntity carriageContraptionEntity) {
+            CompoundTag teleporterData = context.blockEntityData;
+            UUID freq = teleporterData.getUUID("Freq");
+            String address = teleporterData.getString("SignAddress");
+            if (!MechanicalTeleporter.TELEPORTERS.hasTrainLink(freq, carriageContraptionEntity.trainId, carriageContraptionEntity.carriageIndex, address))
+                MechanicalTeleporter.TELEPORTERS.trainLinkAdded(freq, carriageContraptionEntity.trainId, carriageContraptionEntity.carriageIndex, address, teleporterData.getUUID("PlacedBy"));
+        }
         MovementBehaviour.super.tick(context);
     }
 

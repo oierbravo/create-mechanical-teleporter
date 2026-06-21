@@ -116,6 +116,6 @@ public class GlobalTeleportersManager {
 
     public boolean hasTrainLink(UUID networkId, UUID trainId, int carriageIndex, String address) {
         TeleportersNetwork network = teleportersNetworks.get(networkId);
-        return teleportersNetworks.get(networkId).trainLinks.contains(new TeleportersNetwork.TrainLink(trainId, carriageIndex, address));
+        return network != null && network.trainLinks.contains(new TeleportersNetwork.TrainLink(trainId, carriageIndex, address));
     }
 }

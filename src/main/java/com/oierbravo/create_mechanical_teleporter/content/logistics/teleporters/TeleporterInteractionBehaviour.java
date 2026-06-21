@@ -17,7 +17,7 @@ public class TeleporterInteractionBehaviour extends MovingInteractionBehaviour {
         ItemStack stack = player.getItemInHand(activeHand);
         if(TeleporterItemUtils.isHandTeleporterItem(stack)){
             Contraption contraption = contraptionEntity.getContraption();
-            BlockEntity blockEntity = contraption.presentBlockEntities.get(localPos);
+            BlockEntity blockEntity = contraption.getBlockEntityClientSide(localPos);
             if(blockEntity instanceof ITeleporterBlockEntity iTeleporterBlockEntity){
                 TeleporterItemUtils.setFrequency(stack, player, iTeleporterBlockEntity.getTeleporter().freqId, iTeleporterBlockEntity.getTeleporter().signBasedAddress);
             }
