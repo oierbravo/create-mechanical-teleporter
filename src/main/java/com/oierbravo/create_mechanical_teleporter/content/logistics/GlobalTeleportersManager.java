@@ -7,6 +7,7 @@ import net.minecraft.world.level.LevelAccessor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class GlobalTeleportersManager {
@@ -117,5 +118,13 @@ public class GlobalTeleportersManager {
     public boolean hasTrainLink(UUID networkId, UUID trainId, int carriageIndex, String address) {
         TeleportersNetwork network = teleportersNetworks.get(networkId);
         return network != null && network.trainLinks.contains(new TeleportersNetwork.TrainLink(trainId, carriageIndex, address));
+    }
+
+    public void pruneTrainLinks(Set<UUID> validTrainIds) {
+        boolean changed = false;
+        for (TeleportersNetwork network : teleportersNetworks.values())
+            changed |= network.trainLinks.removeIf(link -> !validTrainIds.contains(link.trainId()));
+        if (changed)
+            markDirty();
     }
 }

@@ -65,16 +65,6 @@ public class TeleporterMovementBehaviour implements MovementBehaviour {
     public void stopMoving(MovementContext context) {
         if (context.world.isClientSide || !(context.world instanceof ServerLevel))
             return;
-        if (context.contraption.entity == null)
-            return;
-
-        CompoundTag teleporterData = context.blockEntityData;
-        boolean dis = context.contraption.disassembled;
-        boolean a = context.contraption.entity.blocksBuilding;
-        if(context.contraption.entity instanceof CarriageContraptionEntity carriageContraptionEntity){
-            if(!context.firstMovement)
-                MechanicalTeleporter.TELEPORTERS.trainLinkRemoved(teleporterData.getUUID("Freq"),carriageContraptionEntity.trainId,carriageContraptionEntity.carriageIndex, teleporterData.getString("SignAddress"));
-        }
         context.temporaryData = null;
     }
 

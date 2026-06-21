@@ -7,9 +7,9 @@ import com.oierbravo.create_mechanical_teleporter.infrastructure.config.MConfigs
 import com.oierbravo.create_mechanical_teleporter.infrastructure.network.RequestTeleportToFrequencyPayload;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModItems;
 import com.oierbravo.create_mechanical_teleporter.registrate.ModMessages;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.Contraption;
-import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
@@ -187,7 +187,7 @@ public class TeleportHandler {
             if(destinationGlobalPos != null){
                 boolean succes = TeleportHandler.tryTeleportToGlobalPos(destinationGlobalPos, address, player, false);
 
-                if(succes && player.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock){
+                if(succes && AllBlockTags.SEATS.matches(player.level().getBlockState(destinationGlobalPos.pos().above()))){
                     sitDown(player.level(),destinationGlobalPos.pos().above(), player);
                 }
                 if(succes){
@@ -209,31 +209,47 @@ public class TeleportHandler {
         return false;
     }
     public static boolean teleportToTrain(UUID trainId, int carriageId, String address, Player player){
+        if(!(player instanceof ServerPlayer serverPlayer))
+            return false;
         Train train = Create.RAILWAYS.trains.get(trainId);
         if(train == null)
             return false;
+        if(carriageId < 0 || carriageId >= train.carriages.size())
+            return false;
+        Carriage carriage = train.carriages.get(carriageId);
 
-        int carriageIndex = carriageId;
-        Carriage carriage = train.carriages.get(carriageIndex);
         CarriageContraptionEntity carriageContraptionEntity = carriage.anyAvailableEntity();
-        Contraption contraption = carriageContraptionEntity.getContraption();
-        ResourceKey<Level> destinationDimension = player.level().dimension();
-        List<ResourceKey<Level>> trainDimensions = train.getPresentDimensions();
-        boolean sameDirection = false;
-        for( ResourceKey<Level> dimension : trainDimensions) {
-            if (dimension == player.level().dimension()) {
-                sameDirection = true;
-            }
-        }
-        if(!sameDirection)
-            destinationDimension = trainDimensions.getFirst();
 
-        for(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor : contraption.getActors()){
-            if(actor.getLeft().state().getBlock() instanceof ITeleporterBlock iTeleporter){
-                if(actor.getRight().blockEntityData.getString("SignAddress").equals(address)){
-                    return teleportToContraption( contraption, player, destinationDimension);
+        // Loaded path: the carriage entity exists (same dimension, or another loaded dimension).
+        // Match the teleporter by address, then move + seat synchronously.
+        if(carriageContraptionEntity != null){
+            Contraption contraption = carriageContraptionEntity.getContraption();
+            ResourceKey<Level> destinationDimension = player.level().dimension();
+            List<ResourceKey<Level>> trainDimensions = train.getPresentDimensions();
+            if(!trainDimensions.contains(player.level().dimension()))
+                destinationDimension = trainDimensions.getFirst();
+
+            for(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor : contraption.getActors()){
+                if(actor.getLeft().state().getBlock() instanceof ITeleporterBlock
+                        && actor.getRight().blockEntityData.getString("SignAddress").equals(address)){
+                    return teleportToContraption(contraption, player, destinationDimension);
                 }
             }
+            return false;
+        }
+
+        // Unloaded path: the carriage lives in an unloaded (typically another) dimension, so there is
+        // no entity and no contraption to inspect. The link was already validated by address upstream.
+        // We do NOT teleport the player yet: the carriage is an entity, not solid blocks, so dropping
+        // the player onto the anchor before the entity exists means a lethal mid-air fall (lava/void in
+        // the nether). Instead PendingTrainSeats force-loads the carriage chunk so Create respawns the
+        // entity, and only then teleports the player straight onto a free seat.
+        for(ResourceKey<Level> dimension : carriage.getPresentDimensions()){
+            Optional<BlockPos> anchor = carriage.getPositionInDimension(dimension);
+            if(anchor.isEmpty())
+                continue;
+            PendingTrainSeats.enqueue(serverPlayer.serverLevel().getServer(), serverPlayer.getUUID(), trainId, carriageId, dimension, anchor.get());
+            return true;
         }
         return false;
     }
@@ -242,18 +258,37 @@ public class TeleportHandler {
     private static boolean teleportToContraption(Contraption contraption, Player player, ResourceKey<Level> destinationDimension){
         if(player instanceof ServerPlayer serverPlayer){
             if(player.level().dimension() != destinationDimension){
-                teleportToGlobalPosSimple(GlobalPos.of(destinationDimension, contraption.anchor), serverPlayer);
+                ServerLevel target = serverPlayer.serverLevel().getServer().getLevel(destinationDimension);
+                if(target == null)
+                    return false;
+                serverPlayer.teleportTo(target, contraption.anchor.getX() + 0.5, contraption.anchor.getY() + 1, contraption.anchor.getZ() + 0.5, serverPlayer.getYRot(), serverPlayer.getXRot());
             }
-
-            for(BlockPos seatPos :  contraption.getSeats()){
-                int seatIndex = contraption.getSeats().indexOf(seatPos);
-                if(!contraption.getSeatMapping().containsValue(seatIndex)){
-                    contraption.entity.addSittingPassenger(player,seatIndex);
-                    return true;
-                }
-            }
+            return trySeat(contraption, serverPlayer);
         }
         return false;
+    }
+
+    static boolean trySeat(Contraption contraption, ServerPlayer player){
+        int seatIndex = findFreeSeatIndex(contraption);
+        if(seatIndex < 0)
+            return false;
+        seat(contraption, player, seatIndex);
+        return true;
+    }
+
+    static int findFreeSeatIndex(Contraption contraption){
+        if(contraption.entity == null)
+            return -1;
+        List<BlockPos> seats = contraption.getSeats();
+        for(int i = 0; i < seats.size(); i++){
+            if(!contraption.getSeatMapping().containsValue(i))
+                return i;
+        }
+        return -1;
+    }
+
+    static void seat(Contraption contraption, ServerPlayer player, int seatIndex){
+        contraption.entity.addSittingPassenger(player, seatIndex);
     }
 
     public static boolean blockTeleport(Level level, Player player) {
@@ -521,7 +556,7 @@ public class TeleportHandler {
 
         boolean succes = TeleportHandler.tryTeleportToGlobalPos(destinationGlobalPos, address, serverPlayer, false);
 
-        if (succes && serverPlayer.level().getBlockState(destinationGlobalPos.pos().above()).getBlock() instanceof SeatBlock) {
+        if (succes && AllBlockTags.SEATS.matches(serverPlayer.level().getBlockState(destinationGlobalPos.pos().above()))) {
             sitDown(serverPlayer.level(), destinationGlobalPos.pos().above(), serverPlayer);
         }
         if (succes) {
