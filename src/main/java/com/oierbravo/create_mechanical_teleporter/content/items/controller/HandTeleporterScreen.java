@@ -54,13 +54,13 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
 
     @Override
     protected void init() {
+        setWindowSize(bgWidth, bgHeight);
         super.init();
 
+        int x = guiLeft;
+        int y = guiTop;
 
-        int x = guiLeft/2;
-        int y = guiTop/2;
-
-        addressBox = new EditBox(new NoShadowFontWrapper(font), bgWidth / 2 + 23, y + bgHeight - 50, 110, 10,
+        addressBox = new EditBox(new NoShadowFontWrapper(font), x + 24, y + 29, 140, 10,
                Component.empty());
         addressBox.setBordered(false);
         addressBox.setMaxLength(25);
@@ -72,16 +72,15 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
 
         addRenderableWidget(addressBox);
 
-        confirmButton = new IconButton(x + bgWidth - 33, y + bgHeight - 23, AllIcons.I_CONFIRM);
-        confirmButton.withCallback(() -> minecraft.player.closeContainer());
-        addRenderableWidget(confirmButton);
-
-        resetButton = new IconButton(x + bgWidth - 55, y + bgHeight - 23, AllIcons.I_TRASH);
+        resetButton = new IconButton(x + 158, y + 55, AllIcons.I_TRASH);
         resetButton.withCallback(() -> {
             sendClearPacket();
         });
         addRenderableWidget(resetButton);
 
+        confirmButton = new IconButton(x + 180, y + 55, AllIcons.I_CONFIRM);
+        confirmButton.withCallback(() -> minecraft.player.closeContainer());
+        addRenderableWidget(confirmButton);
     }
 
     @Override
@@ -92,17 +91,17 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
     }
 
     @Override
-    protected void renderWindowBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderWindowBackground(graphics, mouseX, mouseY, partialTicks);
+    protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.renderWindowForeground(graphics, mouseX, mouseY, partialTicks);
         String itemName = "";
         if(item != null)
             itemName = ItemStackUtils.getName(item);
         else if(handTeleporterBlockEntity != null)
             itemName = handTeleporterBlockEntity.getCustomName().getString();
 
-        graphics.drawString(font, itemName, guiLeft - bgWidth/2 + 6, guiTop - bgHeight + 21, Color.BLACK.brighter().getRGB());
+        graphics.drawString(font, itemName, guiLeft + 8, guiTop + 4, Color.BLACK.brighter().getRGB(), false);
 
-        GuiGameElement.of(icon).scale(4).at(guiLeft + (float) bgWidth /2, guiTop - (float) bgHeight /2, -200)
+        GuiGameElement.of(icon).scale(3).at(guiLeft + bgWidth - 5, guiTop + 33, 100)
                 .render(graphics);
 
     }
@@ -135,10 +134,7 @@ public class HandTeleporterScreen  extends AbstractSimiScreen {
 
     @Override
     protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        int x = guiLeft/2;
-        int y = guiTop/2;
-
-        ModGuiTextures.HAND_TELEPORTER.render(graphics, x, y);
+        ModGuiTextures.HAND_TELEPORTER.render(graphics, guiLeft, guiTop);
     }
 
 }
